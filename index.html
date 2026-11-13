@@ -15,149 +15,166 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
 .app {
     position: relative;
     width: 100vw;
-    max-width: 100dvh; /* Ограничиваем ширину по высоте экрана */
-    aspect-ratio: 16 / 9; /* Строгие пропорции фона */
-    background: url('bg.png.PNG?v=16') no-repeat center center;
-    background-size: 100% 100%; /* Картинка заполняет ровно этот блок */
+    max-height: 100dvh;
+    aspect-ratio: 16 / 9; /* Пропорции твоей картинки */
+    /* ВОТ ТУТ МЫ УКАЗАЛИ ТОЧНОЕ ИМЯ ФАЙЛА */
+    background: url('bg.png.PNG?v=12') no-repeat center center;
+    background-size: 100% 100%;
     margin: auto;
-    overflow: hidden;
 }
 
-/* ---------------- ДИНАМИЧЕСКИЙ ТЕКСТ (ЛОЖИТСЯ ПОВЕРХ НАРИСОВАННОГО) ---------------- */
-.ui-text {
-    position: absolute; z-index: 20;
-    display: flex; align-items: center; justify-content: center;
-    color: #ffd966; font-weight: 900; text-shadow: 1px 1px 2px #000, 0 0 5px #000;
+/* Подстройка под вертикальный экран телефона */
+@media (max-aspect-ratio: 16/9) {
+    .app { width: 100vw; height: auto; }
+}
+/* Подстройка под горизонтальный экран */
+@media (min-aspect-ratio: 16/9) {
+    .app { width: auto; height: 100dvh; }
 }
 
-/* Верхний баланс */
-.ui-balance { top: 3.5%; left: 14%; width: 14%; height: 5%; font-size: 2.2vh; }
-/* Верхний выигрыш */
-.ui-win { top: 3.5%; right: 13%; width: 14%; height: 5%; font-size: 2.2vh; }
-
-/* Нижние цифры */
-.ui-lines { bottom: 22%; left: 12%; width: 8%; height: 5%; font-size: 1.8vh; }
-.ui-bet { bottom: 22%; left: 38%; width: 8%; height: 5%; font-size: 1.8vh; }
-.ui-total { bottom: 22%; right: 27%; width: 8%; height: 5%; font-size: 1.8vh; }
+/* ---------------- ДИНАМИЧЕСКИЙ ТЕКСТ ПОВЕРХ КАРТИНКИ ---------------- */
+.ui-balance { position: absolute; top: 3.5%; left: 14%; width: 14%; height: 5%; display: flex; align-items: center; justify-content: center; color: #ffd966; font-size: 2.2vh; font-weight: 900; text-shadow: 1px 1px 2px #000; }
+.ui-win { position: absolute; top: 3.5%; right: 13%; width: 14%; height: 5%; display: flex; align-items: center; justify-content: center; color: #ffd966; font-size: 2.2vh; font-weight: 900; text-shadow: 1px 1px 2px #000; }
+.ui-lines { position: absolute; bottom: 4.5%; left: 11%; width: 8%; height: 5%; display: flex; align-items: center; justify-content: center; color: #ffd966; font-size: 1.8vh; font-weight: 900; }
+.ui-bet { position: absolute; bottom: 4.5%; left: 33%; width: 8%; height: 5%; display: flex; align-items: center; justify-content: center; color: #ffd966; font-size: 1.8vh; font-weight: 900; }
+.ui-total { position: absolute; bottom: 4.5%; right: 26%; width: 8%; height: 5%; display: flex; align-items: center; justify-content: center; color: #ffd966; font-size: 1.8vh; font-weight: 900; }
 
 /* ---------------- БАРАБАНЫ ---------------- */
 .reels-frame {
     position: absolute;
-    top: 15%;    
-    left: 15.5%;   
-    right: 15.5%;  
-    bottom: 25%; 
+    top: 14.5%;    
+    left: 16%;   
+    right: 16%;  
+    bottom: 22%; 
     background: transparent; 
+    border-radius: 4px;
     overflow: hidden;
     z-index: 4;
 }
-.reels { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; height: 100%; }
+.reels { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; position: relative; z-index: 1; height: 100%; }
 .reel { background: transparent; height: 100%; overflow: hidden; position: relative; }
 .reel::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 15px; background: linear-gradient(180deg, rgba(0,0,0,0.6), transparent); z-index: 3; pointer-events: none; }
 .reel::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 15px; background: linear-gradient(0deg, rgba(0,0,0,0.6), transparent); z-index: 3; pointer-events: none; }
+.reel-flash { position: absolute; inset: 0; background: rgba(46,204,113,0); pointer-events: none; z-index: 4; transition: background .1s; }
+.reel-flash.flash { background: rgba(168,255,120,.9); }
 .track { position: absolute; left: 0; right: 0; top: 0; transform: translate3d(0,0,0); will-change: transform; }
 .cell { display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; } 
 .cell img { width: 85%; height: 85%; object-fit: contain; filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6)) drop-shadow(0 2px 4px rgba(0,0,0,0.9)); }
 .cell.win::before { content: ""; position: absolute; inset: 2px; border: 2px solid #a8ff78; border-radius: 6px; background: radial-gradient(circle, rgba(46,204,113,.5), transparent 70%); pointer-events: none; box-shadow: 0 0 15px rgba(46,204,113,1); animation: winPulse .5s infinite alternate; }
 @keyframes winPulse { 0%{transform:scale(.95)} 100%{transform:scale(1.05)} }
+.lines-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 5; overflow: visible; }
 
-/* ---------------- НЕВИДИМЫЕ КНОПКИ (ТОЧНО ПО НАРИСОВАННЫМ) ---------------- */
+/* ---------------- НЕВИДИМЫЕ КНОПКИ ---------------- */
 .btn-overlay { position: absolute; z-index: 10; cursor: pointer; border-radius: 10px; }
 .btn-overlay:active { background: rgba(255,255,255,0.2); }
-
-/* Кнопка SPIN */
-.btn-spin { bottom: 1.5%; left: 40%; width: 20%; height: 14%; border-radius: 50%; }
-/* Кнопка AUTO */
-.btn-auto { bottom: 5%; right: 12%; width: 8%; height: 9%; }
-
-/* Стрелки линий (слева) */
-.btn-lines-dec { bottom: 22%; left: 6%; width: 4%; height: 6%; }
-.btn-lines-inc { bottom: 22%; left: 21%; width: 4%; height: 6%; }
-/* Стрелки ставки (по центру) */
-.btn-bet-dec { bottom: 22%; left: 30%; width: 4%; height: 6%; }
-.btn-bet-inc { bottom: 22%; left: 46%; width: 4%; height: 6%; }
-
-/* Нижние кнопки (Колесо, Магазин и т.д.) */
-.btn-action { bottom: 1%; width: 8%; height: 9%; }
+.btn-spin { bottom: 1%; left: 41%; width: 18%; height: 16%; border-radius: 50%; }
+.btn-auto { bottom: 5%; right: 17%; width: 8%; height: 10%; }
+.btn-lines-down { bottom: 5%; left: 7%; width: 4%; height: 10%; }
+.btn-lines-up { bottom: 5%; left: 18%; width: 4%; height: 10%; }
+.btn-bet-down { bottom: 5%; left: 25%; width: 4%; height: 10%; }
+.btn-bet-up { bottom: 5%; left: 41%; width: 4%; height: 10%; }
+.btn-action { bottom: 1.5%; width: 7%; height: 8%; }
 .btn-wheel { left: 2.5%; }
-.btn-shop { left: 12%; }
-.btn-risk { left: 21.5%; }
-.btn-tasks { right: 23.5%; }
-.btn-top { right: 16%; }
-.btn-bonus { right: 8.5%; }
-.btn-rules { right: 1.5%; }
+.btn-shop { left: 11%; }
+.btn-risk { left: 19.5%; }
+.btn-tasks { right: 27%; }
+.btn-top { right: 19.5%; }
+.btn-bonus { right: 12%; }
+.btn-rules { right: 4.5%; }
+.btn-lang-ru { top: 1.5%; left: 9%; width: 5%; height: 4%; }
+.btn-lang-uk { top: 1.5%; left: 15%; width: 5%; height: 4%; }
+.btn-lang-en { top: 1.5%; left: 21%; width: 5%; height: 4%; }
 
-/* Языки (верхний левый угол) */
-.btn-lang-ru { top: 1.5%; left: 10%; width: 5%; height: 4%; }
-.btn-lang-uk { top: 1.5%; left: 16%; width: 5%; height: 4%; }
-.btn-lang-en { top: 1.5%; left: 22%; width: 5%; height: 4%; }
-
-/* ---------------- УВЕДОМЛЕНИЯ И МОДАЛКИ ---------------- */
-.notif{position:fixed;top:-80px;left:50%;transform:translateX(-50%);background:#2ecc71;color:#fff;padding:8px 18px;border-radius:20px;font-size:12px;font-weight:800;box-shadow:0 5px 15px rgba(0,0,0,.5);transition:top .3s;z-index:999;text-align:center}
+/* ---------------- МОДАЛКИ И УВЕДОМЛЕНИЯ ---------------- */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.9);display:flex;align-items:center;justify-content:center;z-index:100;opacity:0;pointer-events:none;transition:opacity .2s;padding:15px}
+.modal.active{opacity:1;pointer-events:auto}
+.modal-box{background:linear-gradient(180deg,#1a2e1a,#0a1208);border:2px solid #d4af37;border-radius:14px;padding:16px;max-width:380px;width:100%;box-shadow:0 10px 40px rgba(0,0,0,.8);text-align:center;max-height:90vh;overflow-y:auto;color:#fff}
+.modal-title{font-size:18px;font-weight:900;color:#ffd966;margin-bottom:10px;font-family:Georgia,serif}
+.modal-close{background:#576574;color:#fff;border:none;padding:8px 16px;border-radius:8px;font-weight:800;font-size:12px;cursor:pointer;margin-top:10px;width:100%}
+.notif{position:fixed;top:-80px;left:50%;transform:translateX(-50%);background:#2ecc71;color:#fff;padding:8px 18px;border-radius:20px;font-size:12px;font-weight:800;box-shadow:0 5px 15px rgba(0,0,0,.5);transition:top .3s;z-index:999;max-width:90vw;text-align:center}
 .notif.show{top:15px}
 .notif.error{background:#e74c3c}
 .notif.gold{background:linear-gradient(180deg,#ffd966,#b8860b);color:#1a1200}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.9);display:flex;align-items:center;justify-content:center;z-index:100;opacity:0;pointer-events:none;transition:opacity .2s;}
-.modal.active{opacity:1;pointer-events:auto}
-.modal-box{background:#1a2e1a;border:2px solid #d4af37;border-radius:14px;padding:16px;max-width:380px;width:90%;text-align:center;color:#fff}
-.modal-close{background:#576574;color:#fff;border:none;padding:8px 16px;border-radius:8px;font-weight:800;margin-top:10px;width:100%}
+.bigwin-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:2000;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+.bigwin-overlay.active{opacity:1;pointer-events:auto}
+.bigwin-text{font-size:50px;font-weight:900;color:#a8ff78;font-family:Georgia,serif;text-shadow:0 0 20px #a8ff78, 0 0 50px #2ecc71;animation:bigWinZoom 0.5s ease-out infinite alternate}
+@keyframes bigWinZoom{0%{transform:scale(1)}100%{transform:scale(1.1)}}
+.bigwin-amount{font-size:40px;font-weight:900;color:#fff;margin-top:20px;text-shadow:0 0 15px #2ecc71;animation:bigWinZoom 0.5s ease-out infinite alternate}
+.start-overlay{position:fixed;inset:0;background:radial-gradient(circle at center,#0a1a05,#000);z-index:1000;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+.start-overlay.hidden{opacity:0;pointer-events:none}
+.start-box{text-align:center;padding:20px;max-width:320px;color:#fff}
+.start-btn{width:100%;background:linear-gradient(180deg,#2ecc71,#1a7d43);color:#fff;border:none;padding:12px;border-radius:10px;font-size:14px;font-weight:900;cursor:pointer;margin-bottom:6px;box-shadow:0 4px 0 #0a1208}
 </style>
 </head>
 <body>
 
+<div class="start-overlay" id="startOverlay">
+  <div class="start-box">
+    <div style="font-size:70px;margin-bottom:10px;filter:drop-shadow(0 0 20px #2ecc71)">🦔</div>
+    <div style="font-size:28px;font-weight:900;letter-spacing:2px;color:#a8ff78;margin-bottom:6px;font-family:Georgia,serif">FOREST FORTUNE</div>
+    <div style="color:#8899aa;font-size:12px;margin-bottom:20px">Магия леса и сокровища</div>
+    <button class="start-btn" id="startSound">🔊 Играть со звуком</button>
+    <button class="start-btn" style="background:#576574" id="startMute">🔇 Без звука</button>
+  </div>
+</div>
+
+<!-- ИГРОВОЙ ЭКРАН -->
 <div class="app" id="gameArea">
     
     <!-- Динамический текст -->
-    <div class="ui-text ui-balance" id="balanceVal">50 000</div>
-    <div class="ui-text ui-win" id="winVal">0</div>
-    <div class="ui-text ui-lines" id="linesVal">21</div>
-    <div class="ui-text ui-bet" id="betVal">1</div>
-    <div class="ui-text ui-total" id="totalBetVal">21</div>
+    <div class="ui-balance" id="balanceVal">50 000</div>
+    <div class="ui-win" id="winVal">0</div>
+    <div class="ui-lines" id="linesVal">21</div>
+    <div class="ui-bet" id="betVal">1</div>
+    <div class="ui-total" id="totalBetVal">21</div>
 
     <!-- Сетка барабанов -->
     <div class="reels-frame">
         <div class="reels" id="reels"></div>
+        <svg class="lines-overlay" id="linesOverlay"></svg>
     </div>
 
-    <!-- НЕВИДИМЫЕ КНОПКИ (КЛИКАБЕЛЬНЫЕ ЗОНЫ) -->
+    <!-- НЕВИДИМЫЕ КНОПКИ ПОВЕРХ НАРИСОВАННЫХ -->
     <div class="btn-overlay btn-spin" id="spinBtn"></div>
     <div class="btn-overlay btn-auto" id="autoBtn"></div>
-    
-    <div class="btn-overlay btn-lines-dec" id="linesDec"></div>
-    <div class="btn-overlay btn-lines-inc" id="linesInc"></div>
-    
-    <div class="btn-overlay btn-bet-dec" id="betDec"></div>
-    <div class="btn-overlay btn-bet-inc" id="betInc"></div>
+    <div class="btn-overlay btn-lines-down" id="linesDec"></div>
+    <div class="btn-overlay btn-lines-up" id="linesInc"></div>
+    <div class="btn-overlay btn-bet-down" id="betDec"></div>
+    <div class="btn-overlay btn-bet-up" id="betInc"></div>
 
-    <div class="btn-overlay btn-action btn-wheel" onclick="openModal('wheelModal')"></div>
-    <div class="btn-overlay btn-action btn-shop" onclick="openModal('shopModal')"></div>
-    <div class="btn-overlay btn-action btn-risk" onclick="openModal('riskModal')"></div>
+    <div class="btn-overlay btn-action btn-wheel" id="wheelBtn"></div>
+    <div class="btn-overlay btn-action btn-shop" id="shopBtn"></div>
+    <div class="btn-overlay btn-action btn-risk" id="riskBtn"></div>
     
-    <div class="btn-overlay btn-action btn-tasks" onclick="openModal('tasksModal')"></div>
-    <div class="btn-overlay btn-action btn-top" onclick="openModal('topModal')"></div>
-    <div class="btn-overlay btn-action btn-bonus" onclick="notif('Бонус получен!')"></div>
-    <div class="btn-overlay btn-action btn-rules" onclick="openModal('rulesModal')"></div>
+    <div class="btn-overlay btn-action btn-tasks" id="tasksBtn"></div>
+    <div class="btn-overlay btn-action btn-top" id="topBtn"></div>
+    <div class="btn-overlay btn-action btn-bonus" id="bonusBtn"></div>
+    <div class="btn-overlay btn-action btn-rules" id="paytableBtn"></div>
 
-    <div class="btn-overlay btn-lang-ru" onclick="notif('Русский язык')"></div>
-    <div class="btn-overlay btn-lang-uk" onclick="notif('Українська мова')"></div>
-    <div class="btn-overlay btn-lang-en" onclick="notif('English language')"></div>
+    <div class="btn-overlay btn-lang-ru" onclick="setLang('ru')"></div>
+    <div class="btn-overlay btn-lang-uk" onclick="setLang('uk')"></div>
+    <div class="btn-overlay btn-lang-en" onclick="setLang('en')"></div>
 
 </div>
 
-<!-- Модалки -->
-<div class="modal" id="wheelModal"><div class="modal-box"><h2>🎡 Колесо</h2><button class="modal-close" onclick="closeModal('wheelModal')">Закрыть</button></div></div>
-<div class="modal" id="shopModal"><div class="modal-box"><h2>⭐ Магазин</h2><button class="modal-close" onclick="closeModal('shopModal')">Закрыть</button></div></div>
-<div class="modal" id="riskModal"><div class="modal-box"><h2>🃏 Риск</h2><button class="modal-close" onclick="closeModal('riskModal')">Закрыть</button></div></div>
-<div class="modal" id="tasksModal"><div class="modal-box"><h2>📜 Задания</h2><button class="modal-close" onclick="closeModal('tasksModal')">Закрыть</button></div></div>
-<div class="modal" id="topModal"><div class="modal-box"><h2>🏆 ТОП</h2><button class="modal-close" onclick="closeModal('topModal')">Закрыть</button></div></div>
-<div class="modal" id="rulesModal"><div class="modal-box"><h2>📋 Правила</h2><button class="modal-close" onclick="closeModal('rulesModal')">Закрыть</button></div></div>
+<!-- МОДАЛКИ -->
+<div class="modal" id="wheelModal"><div class="modal-box"><div class="modal-title">🎡 КОЛЕСО</div><button class="modal-close" onclick="closeModal('wheelModal')">Закрыть</button></div></div>
+<div class="modal" id="shopModal"><div class="modal-box"><div class="modal-title">⭐ МАГАЗИН</div><button class="modal-close" onclick="closeModal('shopModal')">Закрыть</button></div></div>
+<div class="modal" id="riskModal"><div class="modal-box"><div class="modal-title">🃏 РИСК</div><button class="modal-close" onclick="closeModal('riskModal')">Закрыть</button></div></div>
+<div class="modal" id="tasksModal"><div class="modal-box"><div class="modal-title">📜 ЗАДАНИЯ</div><button class="modal-close" onclick="closeModal('tasksModal')">Закрыть</button></div></div>
+<div class="modal" id="topModal"><div class="modal-box"><div class="modal-title">🏆 ТОП</div><button class="modal-close" onclick="closeModal('topModal')">Закрыть</button></div></div>
+<div class="modal" id="paytableModal"><div class="modal-box"><div class="modal-title">📋 ПРАВИЛА</div><button class="modal-close" onclick="closeModal('paytableModal')">Закрыть</button></div></div>
 
+<div class="bigwin-overlay" id="bigWinOverlay">
+  <div class="bigwin-text">BIG WIN!</div>
+  <div class="bigwin-amount" id="bigWinAmount">0 🪙</div>
+</div>
 <div class="notif" id="notif"></div>
 
 <script>
-// ЛОГИКА ИГРЫ
+// --- ЛОГИКА ИГРЫ ---
 const REELS=5, ROWS=3, MAX_LINES=21;
-const IMG_VER = '?v=16';
+const IMG_VER = '?v=12';
 const SYMBOLS=['gem.png','mushroom.png','hedgehog.png','acorn.png','leaf.png','coin.png'];
 const WEIGHTS={'gem.png':5,'mushroom.png':10,'hedgehog.png':15,'acorn.png':25,'leaf.png':25,'coin.png':40};
 const PAYTABLE={'gem.png':[15,60,250],'mushroom.png':[10,40,150],'hedgehog.png':[8,25,80],'acorn.png':[5,15,50],'leaf.png':[5,15,50],'coin.png':[2,5,15]};
@@ -170,24 +187,28 @@ const PAYLINES=[
   [[0,1],[1,0],[2,1],[3,0],[4,1]],[[0,1],[1,2],[2,1],[3,2],[4,1]],[[0,0],[1,0],[2,0],[3,1],[4,2]],
   [[0,2],[1,2],[2,2],[3,1],[4,0]],[[0,0],[1,1],[2,2],[3,2],[4,2]],[[0,2],[1,1],[2,0],[3,0],[4,0]]
 ];
+const LINE_COLORS=['#ff3b30','#ff9500','#ffcc00','#34c759','#00c7be','#30b0ff','#5856d6','#af52de','#ff2d95','#ff6b6b','#ffd93d','#6bcf7f','#4ecdc4','#95e1d3','#a8e6cf','#c7ceea','#e2a4d1','#f6d365','#b5eaea','#e0aaff','#ffb4a2'];
 const POOL=[];Object.entries(WEIGHTS).forEach(([s,w])=>{for(let i=0;i<w;i++)POOL.push(s)});
 
-let state={balance:50000,betPerLine:1,lines:21};
+let state={balance:50000,betPerLine:1,lines:21,lang:'ru',sound:true};
 let isSpinning=false, stopRequested=false;
 
 const reelsEl=document.getElementById('reels');
-const tracks=[];
+const tracks=[]; const flashes=[];
 
 function $(id){return document.getElementById(id)}
 function fmt(n){return Math.round(n).toLocaleString('ru-RU')}
-function notif(msg,type=''){ const n=$('notif'); n.textContent=msg; n.className='notif show '+type; clearTimeout(n._t); n._t=setTimeout(()=>{n.className='notif '+type},2400); }
-function openModal(id) { $(id).classList.add('active'); }
-function closeModal(id) { $(id).classList.remove('active'); }
+function save(){try{localStorage.setItem('forest_v2',JSON.stringify(state))}catch(e){}}
+function load(){try{const r=localStorage.getItem('forest_v2');if(r)Object.assign(state,JSON.parse(r))}catch(e){}}
 function totalBet(){return state.lines*state.betPerLine}
+function closeModal(id){ $(id).classList.remove('active'); }
+function notif(msg,type=''){ const n=$('notif'); n.textContent=msg; n.className='notif show '+type; clearTimeout(n._t); n._t=setTimeout(()=>{n.className='notif '+type},2400); }
+window.setLang = (l) => { state.lang = l; save(); notif(l.toUpperCase() + ' язык выбран'); }
+
 function randSym(){return POOL[Math.floor(Math.random()*POOL.length)]}
 
 function buildReels(){
-  reelsEl.innerHTML=''; tracks.length=0;
+  reelsEl.innerHTML=''; tracks.length=0; flashes.length=0;
   const frameHeight = document.querySelector('.reels-frame').clientHeight;
   const cellH = frameHeight / 3;
 
@@ -195,7 +216,8 @@ function buildReels(){
     const reel=document.createElement('div'); reel.className='reel';
     const track=document.createElement('div'); track.className='track';
     track.innerHTML=Array.from({length:ROWS},()=>`<div class="cell" style="height:${cellH}px"><img src="${randSym()}${IMG_VER}"></div>`).join('');
-    reel.appendChild(track); reelsEl.appendChild(reel); tracks.push(track);
+    const flash=document.createElement('div'); flash.className='reel-flash';
+    reel.appendChild(track); reel.appendChild(flash); reelsEl.appendChild(reel); tracks.push(track); flashes.push(flash);
   }
 }
 
@@ -236,6 +258,7 @@ function stopReelAnim(r, final3, cellH) {
       setTimeout(() => {
         track.style.transition = 'none'; track.style.transform = 'translate3d(0,0,0)'; 
         track.innerHTML = final3.map(s => `<div class="cell" style="height:${cellH}px"><img src="${s}${IMG_VER}"></div>`).join('');
+        try { flashes[r].classList.add('flash'); setTimeout(()=>flashes[r].classList.remove('flash'), 100); } catch(e) {}
         resolve();
       }, dur + 50);
     }, r * 200);
@@ -269,8 +292,9 @@ function calcWins(grid,perLine){
 function refreshUI(){
   $('balanceVal').textContent = fmt(state.balance); 
   $('betVal').textContent = fmt(state.betPerLine); 
+  $('totalBetVal').textContent = fmt(totalBet()); 
   $('linesVal').textContent = state.lines;
-  $('totalBetVal').textContent = fmt(totalBet());
+  
   if(!isSpinning) $('winVal').textContent = '0';
 }
 
@@ -281,7 +305,7 @@ async function startSpinAction() {
   
   state.balance -= bet; $('winVal').textContent = '0';
   isSpinning = true; stopRequested = false;
-  refreshUI();
+  save(); refreshUI();
   
   const frameHeight = document.querySelector('.reels-frame').clientHeight;
   const cellH = frameHeight / 3;
@@ -309,24 +333,41 @@ async function requestStop() {
     state.balance += total; 
     $('winVal').textContent = fmt(total);
     notif('Выигрыш: +' + fmt(total) + ' 🪙', 'gold');
+    $('bigWinAmount').textContent = '+' + fmt(total) + ' 🪙';
+    $('bigWinOverlay').classList.add('active');
+    setTimeout(() => { $('bigWinOverlay').classList.remove('active'); }, 2000);
   } else {
     notif('Повезет в следующий раз!', 'error');
   }
   
-  isSpinning = false; refreshUI();
+  isSpinning = false; save(); refreshUI();
 }
 
-// Привязка невидимых кнопок
-$('spinBtn').onclick = () => { if (isSpinning) requestStop(); else startSpinAction(); };
-$('linesDec').onclick = () => { if(!isSpinning){ state.lines = Math.max(1, state.lines-1); refreshUI(); } };
-$('linesInc').onclick = () => { if(!isSpinning){ state.lines = Math.min(MAX_LINES, state.lines+1); refreshUI(); } };
-$('betDec').onclick = () => { if(!isSpinning){ state.betPerLine = Math.max(1, state.betPerLine-1); refreshUI(); } };
-$('betInc').onclick = () => { if(!isSpinning){ state.betPerLine += 1; refreshUI(); } };
-$('autoBtn').onclick = () => notif('Автоспин включен');
+function bind(){
+  $('startSound').onclick = () => { state.sound=true; save(); $('startOverlay').classList.add('hidden'); };
+  $('startMute').onclick = () => { state.sound=false; save(); $('startOverlay').classList.add('hidden'); };
+
+  $('spinBtn').onclick = () => { if (isSpinning) requestStop(); else startSpinAction(); };
+  $('linesDec').onclick = () => { if(!isSpinning){ state.lines = Math.max(1, state.lines-1); save(); refreshUI(); } };
+  $('linesInc').onclick = () => { if(!isSpinning){ state.lines = Math.min(MAX_LINES, state.lines+1); save(); refreshUI(); } };
+  $('betDec').onclick = () => { if(!isSpinning){ state.betPerLine = Math.max(1, state.betPerLine-1); save(); refreshUI(); } };
+  $('betInc').onclick = () => { if(!isSpinning){ state.betPerLine += 1; save(); refreshUI(); } };
+  
+  $('wheelBtn').onclick = () => $('wheelModal').classList.add('active');
+  $('shopBtn').onclick = () => $('shopModal').classList.add('active');
+  $('riskBtn').onclick = () => $('riskModal').classList.add('active');
+  $('tasksBtn').onclick = () => $('tasksModal').classList.add('active');
+  $('topBtn').onclick = () => $('topModal').classList.add('active');
+  $('bonusBtn').onclick = () => notif('Бонус получен!');
+  $('paytableBtn').onclick = () => $('paytableModal').classList.add('active');
+  $('autoBtn').onclick = () => notif('Автоспин включен');
+  
+  document.querySelectorAll('.modal').forEach(m=>{ m.addEventListener('click',e=>{ if(e.target===m) m.classList.remove('active'); }); });
+}
 
 // Инициализация
 window.addEventListener('resize', () => { if(!isSpinning) buildReels(); });
-setTimeout(() => { buildReels(); refreshUI(); }, 100); // Небольшая задержка, чтобы фон успел прогрузиться
+load(); buildReels(); bind(); refreshUI();
 </script>
 </body>
 </html>
