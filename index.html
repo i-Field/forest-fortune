@@ -11,43 +11,52 @@
 html,body{height:100%;overflow:hidden;background:#000;}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--text);display:flex;align-items:center;justify-content:center;height:100dvh;}
 
-/* Главный контейнер с игрой (сохраняем пропорции картинки 16:9) */
+/* Главный контейнер с игрой */
 .app {
     position: relative;
     width: 100vw;
-    max-width: 100vh * 1.777; /* соотношение сторон 16:9 */
-    aspect-ratio: 16 / 9;
-    background: url('bg.png?v=8') no-repeat center center;
+    max-height: 100dvh;
+    aspect-ratio: 16 / 9; /* Пропорции твоей картинки */
+    background: url('bg.png?v=9') no-repeat center center;
     background-size: 100% 100%;
     margin: auto;
 }
 
+/* Если экран вертикальный (как у телефона) - подстраиваем */
+@media (max-aspect-ratio: 16/9) {
+    .app { width: 100vw; height: auto; }
+}
+/* Если экран горизонтальный (телефон повернули) - на весь экран */
+@media (min-aspect-ratio: 16/9) {
+    .app { width: auto; height: 100dvh; }
+}
+
 /* ---------------- ДИНАМИЧЕСКИЙ ТЕКСТ ПОВЕРХ КАРТИНКИ ---------------- */
-/* Баланс (верхний левый угол) */
+/* Баланс */
 .ui-balance {
     position: absolute; top: 3.5%; left: 14%; width: 14%; height: 5%;
     display: flex; align-items: center; justify-content: center;
     color: #ffd966; font-size: 2.2vh; font-weight: 900; text-shadow: 1px 1px 2px #000;
 }
-/* Выигрыш (верхний правый угол) */
+/* Выигрыш */
 .ui-win {
     position: absolute; top: 3.5%; right: 13%; width: 14%; height: 5%;
     display: flex; align-items: center; justify-content: center;
     color: #ffd966; font-size: 2.2vh; font-weight: 900; text-shadow: 1px 1px 2px #000;
 }
-/* Линии (внизу слева) */
+/* Линии */
 .ui-lines {
     position: absolute; bottom: 4.5%; left: 11%; width: 8%; height: 5%;
     display: flex; align-items: center; justify-content: center;
     color: #ffd966; font-size: 1.8vh; font-weight: 900;
 }
-/* Ставка (внизу по центру) */
+/* Ставка */
 .ui-bet {
     position: absolute; bottom: 4.5%; left: 33%; width: 8%; height: 5%;
     display: flex; align-items: center; justify-content: center;
     color: #ffd966; font-size: 1.8vh; font-weight: 900;
 }
-/* Всего (внизу справа) */
+/* Всего */
 .ui-total {
     position: absolute; bottom: 4.5%; right: 26%; width: 8%; height: 5%;
     display: flex; align-items: center; justify-content: center;
@@ -73,14 +82,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
 .reel-flash { position: absolute; inset: 0; background: rgba(46,204,113,0); pointer-events: none; z-index: 4; transition: background .1s; }
 .reel-flash.flash { background: rgba(168,255,120,.9); }
 .track { position: absolute; left: 0; right: 0; top: 0; transform: translate3d(0,0,0); will-change: transform; }
-.cell { height: 12.3vh; display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; } /* Высота подстраивается под экран */
+.cell { display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; } 
 .cell img { width: 85%; height: 85%; object-fit: contain; filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6)) drop-shadow(0 2px 4px rgba(0,0,0,0.9)); }
 .cell.win::before { content: ""; position: absolute; inset: 2px; border: 2px solid #a8ff78; border-radius: 6px; background: radial-gradient(circle, rgba(46,204,113,.5), transparent 70%); pointer-events: none; box-shadow: 0 0 15px rgba(46,204,113,1); animation: winPulse .5s infinite alternate; }
 @keyframes winPulse { 0%{transform:scale(.95)} 100%{transform:scale(1.05)} }
 .lines-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 5; overflow: visible; }
 
-/* ---------------- НЕВИДИМЫЕ КНОПКИ (КЛИКАБЕЛЬНЫЕ ЗОНЫ) ---------------- */
-/* Они прозрачные, но нажимаются! */
+/* ---------------- НЕВИДИМЫЕ КНОПКИ ---------------- */
 .btn-overlay {
     position: absolute;
     z-index: 10;
@@ -89,7 +97,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
 }
 .btn-overlay:active { background: rgba(255,255,255,0.2); }
 
-/* Позиции кнопок (подгоняем под картинку) */
 .btn-spin { bottom: 1%; left: 41%; width: 18%; height: 16%; border-radius: 50%; }
 .btn-auto { bottom: 5%; right: 17%; width: 8%; height: 10%; }
 .btn-lines-down { bottom: 5%; left: 7%; width: 4%; height: 10%; }
@@ -97,41 +104,25 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
 .btn-bet-down { bottom: 5%; left: 25%; width: 4%; height: 10%; }
 .btn-bet-up { bottom: 5%; left: 41%; width: 4%; height: 10%; }
 
-/* Кнопки действий внизу (Колесо, Магазин и т.д.) */
 .btn-action { bottom: 1.5%; width: 7%; height: 8%; }
 .btn-wheel { left: 2.5%; }
 .btn-shop { left: 11%; }
 .btn-risk { left: 19.5%; }
-/* Кнопки справа */
 .btn-tasks { right: 27%; }
 .btn-top { right: 19.5%; }
 .btn-bonus { right: 12%; }
 .btn-rules { right: 4.5%; }
 
-/* Языки наверху */
 .btn-lang-ru { top: 1.5%; left: 9%; width: 5%; height: 4%; }
 .btn-lang-uk { top: 1.5%; left: 15%; width: 5%; height: 4%; }
 .btn-lang-en { top: 1.5%; left: 21%; width: 5%; height: 4%; }
 
-/* ---------------- МОДАЛКИ, УВЕДОМЛЕНИЯ (Оставляем как было) ---------------- */
+/* ---------------- МОДАЛКИ И УВЕДОМЛЕНИЯ ---------------- */
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.9);display:flex;align-items:center;justify-content:center;z-index:100;opacity:0;pointer-events:none;transition:opacity .2s;padding:15px}
 .modal.active{opacity:1;pointer-events:auto}
 .modal-box{background:linear-gradient(180deg,#1a2e1a,#0a1208);border:2px solid #d4af37;border-radius:14px;padding:16px;max-width:380px;width:100%;box-shadow:0 10px 40px rgba(0,0,0,.8);text-align:center;max-height:90vh;overflow-y:auto;color:#fff}
 .modal-title{font-size:18px;font-weight:900;color:#ffd966;margin-bottom:10px;font-family:Georgia,serif}
-.modal-text{font-size:12px;color:#8899aa;margin-bottom:14px;line-height:1.4}
 .modal-close{background:#576574;color:#fff;border:none;padding:8px 16px;border-radius:8px;font-weight:800;font-size:12px;cursor:pointer;margin-top:10px;width:100%}
-/* Остальные стили модалок оставляем из предыдущей версии */
-.pt-table{width:100%;border-collapse:collapse;font-size:11px}
-.pt-table thead th{color:#ffd966;padding:4px;border-bottom:1px solid #455872;font-size:10px}
-.pt-table tbody td{padding:5px;border-bottom:1px solid rgba(69,88,114,.4);font-variant-numeric:tabular-nums}
-.pt-sym img{width:30px;height:30px;object-fit:contain;}
-.pt-val{color:#ffd966;font-weight:800}
-.shop-grid{display:flex;flex-direction:column;gap:6px}
-.shop-card{background:#1a2e1a;border:1px solid #2a4a2a;border-radius:10px;padding:10px;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
-.shop-left{text-align:left}
-.shop-name{font-size:11px;color:#8899aa;font-weight:700}
-.shop-coins{font-size:18px;font-weight:900;color:#ffd966}
-.shop-price{background:linear-gradient(180deg,#ffd966,#b8860b);color:#1a1200;padding:8px 12px;border-radius:8px;font-weight:900;font-size:13px}
 .notif{position:fixed;top:-80px;left:50%;transform:translateX(-50%);background:#2ecc71;color:#fff;padding:8px 18px;border-radius:20px;font-size:12px;font-weight:800;box-shadow:0 5px 15px rgba(0,0,0,.5);transition:top .3s;z-index:999;max-width:90vw;text-align:center}
 .notif.show{top:15px}
 .notif.error{background:#e74c3c}
@@ -198,7 +189,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
 
 </div>
 
-<!-- МОДАЛКИ (скрыты по умолчанию) -->
+<!-- МОДАЛКИ -->
 <div class="modal" id="wheelModal"><div class="modal-box"><div class="modal-title">🎡 КОЛЕСО</div><button class="modal-close" onclick="closeModal('wheelModal')">Закрыть</button></div></div>
 <div class="modal" id="shopModal"><div class="modal-box"><div class="modal-title">⭐ МАГАЗИН</div><button class="modal-close" onclick="closeModal('shopModal')">Закрыть</button></div></div>
 <div class="modal" id="riskModal"><div class="modal-box"><div class="modal-title">🃏 РИСК</div><button class="modal-close" onclick="closeModal('riskModal')">Закрыть</button></div></div>
@@ -215,7 +206,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
 <script>
 // --- ЛОГИКА ИГРЫ ---
 const REELS=5, ROWS=3, MAX_LINES=21;
-const IMG_VER = '?v=8';
+const IMG_VER = '?v=9';
 const SYMBOLS=['gem.png','mushroom.png','hedgehog.png','acorn.png','leaf.png','coin.png'];
 const WEIGHTS={'gem.png':5,'mushroom.png':10,'hedgehog.png':15,'acorn.png':25,'leaf.png':25,'coin.png':40};
 const PAYTABLE={'gem.png':[15,60,250],'mushroom.png':[10,40,150],'hedgehog.png':[8,25,80],'acorn.png':[5,15,50],'leaf.png':[5,15,50],'coin.png':[2,5,15]};
@@ -250,7 +241,6 @@ function randSym(){return POOL[Math.floor(Math.random()*POOL.length)]}
 
 function buildReels(){
   reelsEl.innerHTML=''; tracks.length=0; flashes.length=0;
-  // Высота ячейки рассчитывается относительно высоты контейнера
   const frameHeight = document.querySelector('.reels-frame').clientHeight;
   const cellH = frameHeight / 3;
 
@@ -355,7 +345,6 @@ async function startSpinAction() {
   reelPositions = [0, 0, 0, 0, 0]; 
   tracks.forEach((tr, i) => startReelSpin(i, cellH));
   
-  // Автостоп через 3 секунды, если игрок не нажал СТОП
   setTimeout(() => { if(isSpinning) requestStop(); }, 3000);
 }
 
@@ -396,7 +385,6 @@ function bind(){
   $('betDec').onclick = () => { if(!isSpinning){ state.betPerLine = Math.max(1, state.betPerLine-1); save(); refreshUI(); } };
   $('betInc').onclick = () => { if(!isSpinning){ state.betPerLine += 1; save(); refreshUI(); } };
   
-  // Заглушки для остальных кнопок, чтобы открывались модалки
   $('wheelBtn').onclick = () => $('wheelModal').classList.add('active');
   $('shopBtn').onclick = () => $('shopModal').classList.add('active');
   $('riskBtn').onclick = () => $('riskModal').classList.add('active');
