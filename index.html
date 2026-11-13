@@ -17,51 +17,27 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
     width: 100vw;
     max-height: 100dvh;
     aspect-ratio: 16 / 9; /* Пропорции твоей картинки */
-    background: url('bg.png?v=9') no-repeat center center;
+    /* ВОТ ТУТ МЫ УКАЗАЛИ ТОЧНОЕ ИМЯ ФАЙЛА */
+    background: url('bg.png.PNG?v=12') no-repeat center center;
     background-size: 100% 100%;
     margin: auto;
 }
 
-/* Если экран вертикальный (как у телефона) - подстраиваем */
+/* Подстройка под вертикальный экран телефона */
 @media (max-aspect-ratio: 16/9) {
     .app { width: 100vw; height: auto; }
 }
-/* Если экран горизонтальный (телефон повернули) - на весь экран */
+/* Подстройка под горизонтальный экран */
 @media (min-aspect-ratio: 16/9) {
     .app { width: auto; height: 100dvh; }
 }
 
 /* ---------------- ДИНАМИЧЕСКИЙ ТЕКСТ ПОВЕРХ КАРТИНКИ ---------------- */
-/* Баланс */
-.ui-balance {
-    position: absolute; top: 3.5%; left: 14%; width: 14%; height: 5%;
-    display: flex; align-items: center; justify-content: center;
-    color: #ffd966; font-size: 2.2vh; font-weight: 900; text-shadow: 1px 1px 2px #000;
-}
-/* Выигрыш */
-.ui-win {
-    position: absolute; top: 3.5%; right: 13%; width: 14%; height: 5%;
-    display: flex; align-items: center; justify-content: center;
-    color: #ffd966; font-size: 2.2vh; font-weight: 900; text-shadow: 1px 1px 2px #000;
-}
-/* Линии */
-.ui-lines {
-    position: absolute; bottom: 4.5%; left: 11%; width: 8%; height: 5%;
-    display: flex; align-items: center; justify-content: center;
-    color: #ffd966; font-size: 1.8vh; font-weight: 900;
-}
-/* Ставка */
-.ui-bet {
-    position: absolute; bottom: 4.5%; left: 33%; width: 8%; height: 5%;
-    display: flex; align-items: center; justify-content: center;
-    color: #ffd966; font-size: 1.8vh; font-weight: 900;
-}
-/* Всего */
-.ui-total {
-    position: absolute; bottom: 4.5%; right: 26%; width: 8%; height: 5%;
-    display: flex; align-items: center; justify-content: center;
-    color: #ffd966; font-size: 1.8vh; font-weight: 900;
-}
+.ui-balance { position: absolute; top: 3.5%; left: 14%; width: 14%; height: 5%; display: flex; align-items: center; justify-content: center; color: #ffd966; font-size: 2.2vh; font-weight: 900; text-shadow: 1px 1px 2px #000; }
+.ui-win { position: absolute; top: 3.5%; right: 13%; width: 14%; height: 5%; display: flex; align-items: center; justify-content: center; color: #ffd966; font-size: 2.2vh; font-weight: 900; text-shadow: 1px 1px 2px #000; }
+.ui-lines { position: absolute; bottom: 4.5%; left: 11%; width: 8%; height: 5%; display: flex; align-items: center; justify-content: center; color: #ffd966; font-size: 1.8vh; font-weight: 900; }
+.ui-bet { position: absolute; bottom: 4.5%; left: 33%; width: 8%; height: 5%; display: flex; align-items: center; justify-content: center; color: #ffd966; font-size: 1.8vh; font-weight: 900; }
+.ui-total { position: absolute; bottom: 4.5%; right: 26%; width: 8%; height: 5%; display: flex; align-items: center; justify-content: center; color: #ffd966; font-size: 1.8vh; font-weight: 900; }
 
 /* ---------------- БАРАБАНЫ ---------------- */
 .reels-frame {
@@ -89,21 +65,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
 .lines-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 5; overflow: visible; }
 
 /* ---------------- НЕВИДИМЫЕ КНОПКИ ---------------- */
-.btn-overlay {
-    position: absolute;
-    z-index: 10;
-    cursor: pointer;
-    border-radius: 10px;
-}
+.btn-overlay { position: absolute; z-index: 10; cursor: pointer; border-radius: 10px; }
 .btn-overlay:active { background: rgba(255,255,255,0.2); }
-
 .btn-spin { bottom: 1%; left: 41%; width: 18%; height: 16%; border-radius: 50%; }
 .btn-auto { bottom: 5%; right: 17%; width: 8%; height: 10%; }
 .btn-lines-down { bottom: 5%; left: 7%; width: 4%; height: 10%; }
 .btn-lines-up { bottom: 5%; left: 18%; width: 4%; height: 10%; }
 .btn-bet-down { bottom: 5%; left: 25%; width: 4%; height: 10%; }
 .btn-bet-up { bottom: 5%; left: 41%; width: 4%; height: 10%; }
-
 .btn-action { bottom: 1.5%; width: 7%; height: 8%; }
 .btn-wheel { left: 2.5%; }
 .btn-shop { left: 11%; }
@@ -112,7 +81,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
 .btn-top { right: 19.5%; }
 .btn-bonus { right: 12%; }
 .btn-rules { right: 4.5%; }
-
 .btn-lang-ru { top: 1.5%; left: 9%; width: 5%; height: 4%; }
 .btn-lang-uk { top: 1.5%; left: 15%; width: 5%; height: 4%; }
 .btn-lang-en { top: 1.5%; left: 21%; width: 5%; height: 4%; }
@@ -206,7 +174,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
 <script>
 // --- ЛОГИКА ИГРЫ ---
 const REELS=5, ROWS=3, MAX_LINES=21;
-const IMG_VER = '?v=9';
+const IMG_VER = '?v=12';
 const SYMBOLS=['gem.png','mushroom.png','hedgehog.png','acorn.png','leaf.png','coin.png'];
 const WEIGHTS={'gem.png':5,'mushroom.png':10,'hedgehog.png':15,'acorn.png':25,'leaf.png':25,'coin.png':40};
 const PAYTABLE={'gem.png':[15,60,250],'mushroom.png':[10,40,150],'hedgehog.png':[8,25,80],'acorn.png':[5,15,50],'leaf.png':[5,15,50],'coin.png':[2,5,15]};
