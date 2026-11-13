@@ -6,167 +6,93 @@
 <title>Forest Fortune</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-:root{--gold:#d4af37;--goldL:#ffd966;--green:#2ecc71;--text:#f0f4f8;--muted:#8899aa}
+:root{--text:#f0f4f8;}
 *{box-sizing:border-box;margin:0;padding:0;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden;background:#000;}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--text);display:flex;flex-direction:column;align-items:center;justify-content:center;height:100dvh;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--text);display:flex;align-items:center;justify-content:center;height:100dvh;}
 
-/* Игровое поле с твоим фоном */
-.game-container {
+/* Главный контейнер с игрой */
+.app {
     position: relative;
     width: 100vw;
-    max-width: 100vh; /* Ограничиваем ширину, чтобы на планшетах не растягивалось */
-    height: 100dvh;
-    display: flex;
-    flex-direction: column;
+    max-width: 100dvh; /* Ограничиваем ширину по высоте экрана */
+    aspect-ratio: 16 / 9; /* Строгие пропорции фона */
+    background: url('bg.png.PNG?v=16') no-repeat center center;
+    background-size: 100% 100%; /* Картинка заполняет ровно этот блок */
+    margin: auto;
+    overflow: hidden;
 }
 
-.machine-bg {
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: url('bg.png.PNG?v=14') no-repeat center center;
-    background-size: cover; /* Картинка заполняет экран, даже если обрежется по краям */
-    z-index: 1;
+/* ---------------- ДИНАМИЧЕСКИЙ ТЕКСТ (ЛОЖИТСЯ ПОВЕРХ НАРИСОВАННОГО) ---------------- */
+.ui-text {
+    position: absolute; z-index: 20;
+    display: flex; align-items: center; justify-content: center;
+    color: #ffd966; font-weight: 900; text-shadow: 1px 1px 2px #000, 0 0 5px #000;
 }
 
-/* Затемнение по краям для читаемости кнопок */
-.ui-overlay {
-    position: relative;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
-    padding: 10px 5px;
-}
+/* Верхний баланс */
+.ui-balance { top: 3.5%; left: 14%; width: 14%; height: 5%; font-size: 2.2vh; }
+/* Верхний выигрыш */
+.ui-win { top: 3.5%; right: 13%; width: 14%; height: 5%; font-size: 2.2vh; }
 
-/* Верхняя панель (Баланс и Выигрыш) */
-.top-stats {
-    display: flex;
-    justify-content: space-between;
-    padding: 0 10px;
-    margin-top: 2vh;
-}
-.stat-box {
-    background: rgba(20, 10, 5, 0.8);
-    border: 2px solid #5c3a21;
-    border-radius: 10px;
-    padding: 4px 12px;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.6);
-    min-width: 100px;
-}
-.stat-box .lbl { font-size: 10px; color: #8899aa; text-transform: uppercase; font-weight: 700; }
-.stat-box .val { font-size: 16px; font-weight: 900; color: #ffd966; text-shadow: 1px 1px 2px #000; }
+/* Нижние цифры */
+.ui-lines { bottom: 22%; left: 12%; width: 8%; height: 5%; font-size: 1.8vh; }
+.ui-bet { bottom: 22%; left: 38%; width: 8%; height: 5%; font-size: 1.8vh; }
+.ui-total { bottom: 22%; right: 27%; width: 8%; height: 5%; font-size: 1.8vh; }
 
-/* Сетка барабанов */
+/* ---------------- БАРАБАНЫ ---------------- */
 .reels-frame {
     position: absolute;
-    top: 16%; left: 16%; right: 16%; bottom: 30%;
-    background: transparent;
+    top: 15%;    
+    left: 15.5%;   
+    right: 15.5%;  
+    bottom: 25%; 
+    background: transparent; 
     overflow: hidden;
     z-index: 4;
 }
 .reels { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; height: 100%; }
 .reel { background: transparent; height: 100%; overflow: hidden; position: relative; }
-.reel::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 20px; background: linear-gradient(180deg, rgba(0,0,0,0.6), transparent); z-index: 3; pointer-events: none; }
-.reel::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 20px; background: linear-gradient(0deg, rgba(0,0,0,0.6), transparent); z-index: 3; pointer-events: none; }
+.reel::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 15px; background: linear-gradient(180deg, rgba(0,0,0,0.6), transparent); z-index: 3; pointer-events: none; }
+.reel::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 15px; background: linear-gradient(0deg, rgba(0,0,0,0.6), transparent); z-index: 3; pointer-events: none; }
 .track { position: absolute; left: 0; right: 0; top: 0; transform: translate3d(0,0,0); will-change: transform; }
 .cell { display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; } 
 .cell img { width: 85%; height: 85%; object-fit: contain; filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6)) drop-shadow(0 2px 4px rgba(0,0,0,0.9)); }
 .cell.win::before { content: ""; position: absolute; inset: 2px; border: 2px solid #a8ff78; border-radius: 6px; background: radial-gradient(circle, rgba(46,204,113,.5), transparent 70%); pointer-events: none; box-shadow: 0 0 15px rgba(46,204,113,1); animation: winPulse .5s infinite alternate; }
 @keyframes winPulse { 0%{transform:scale(.95)} 100%{transform:scale(1.05)} }
 
-/* НИЖНЯЯ ПАНЕЛЬ С КНОПКАМИ */
-.bottom-panel {
-    margin-top: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding-bottom: 2vh;
-}
+/* ---------------- НЕВИДИМЫЕ КНОПКИ (ТОЧНО ПО НАРИСОВАННЫМ) ---------------- */
+.btn-overlay { position: absolute; z-index: 10; cursor: pointer; border-radius: 10px; }
+.btn-overlay:active { background: rgba(255,255,255,0.2); }
 
-/* Блок с линиями и ставкой */
-.controls-row {
-    display: flex;
-    justify-content: space-between;
-    background: rgba(20, 10, 5, 0.85);
-    border: 2px solid #5c3a21;
-    border-radius: 10px;
-    padding: 6px;
-    margin: 0 5px;
-}
-.control-group { display: flex; align-items: center; gap: 4px; }
-.control-group button {
-    background: linear-gradient(180deg, #2a4a2a, #1a2e1a);
-    border: 1px solid #5c3a21; color: #fff;
-    width: 28px; height: 28px; border-radius: 6px;
-    font-weight: 900; cursor: pointer;
-}
-.control-group .val { font-size: 14px; color: #ffd966; font-weight: 900; width: 30px; text-align: center; }
+/* Кнопка SPIN */
+.btn-spin { bottom: 1.5%; left: 40%; width: 20%; height: 14%; border-radius: 50%; }
+/* Кнопка AUTO */
+.btn-auto { bottom: 5%; right: 12%; width: 8%; height: 9%; }
 
-/* Кнопки SPIN и AUTO */
-.action-row {
-    display: flex;
-    gap: 8px;
-    padding: 0 5px;
-}
-.btn-spin {
-    flex: 2;
-    background: linear-gradient(180deg, #2ecc71, #1a7d43);
-    border: 2px solid #a8ff78;
-    color: #fff; font-size: 20px; font-weight: 900;
-    padding: 12px; border-radius: 10px;
-    box-shadow: 0 4px 0 #0f3d22, 0 6px 10px rgba(0,0,0,.5);
-    cursor: pointer; text-shadow: 1px 1px 2px #000;
-}
-.btn-spin:active { transform: translateY(3px); box-shadow: none; }
-.btn-auto {
-    flex: 1;
-    background: linear-gradient(180deg, #3498db, #1a5f8a);
-    border: 2px solid #5dade2;
-    color: #fff; font-size: 16px; font-weight: 900;
-    border-radius: 10px; padding: 8px;
-    box-shadow: 0 4px 0 #0f3d54, 0 6px 10px rgba(0,0,0,.5);
-    cursor: pointer;
-}
+/* Стрелки линий (слева) */
+.btn-lines-dec { bottom: 22%; left: 6%; width: 4%; height: 6%; }
+.btn-lines-inc { bottom: 22%; left: 21%; width: 4%; height: 6%; }
+/* Стрелки ставки (по центру) */
+.btn-bet-dec { bottom: 22%; left: 30%; width: 4%; height: 6%; }
+.btn-bet-inc { bottom: 22%; left: 46%; width: 4%; height: 6%; }
 
-/* Сетка из 8 кнопок */
-.buttons-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 6px;
-    padding: 0 5px;
-}
-.btn-menu {
-    background: linear-gradient(180deg, #3e2723, #1e110b);
-    border: 2px solid #8d6e63;
-    border-radius: 8px;
-    color: #fff;
-    padding: 8px 2px;
-    font-size: 10px;
-    font-weight: 800;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 2px;
-    cursor: pointer;
-    box-shadow: 0 3px 0 #0a0502;
-}
-.btn-menu:active { transform: translateY(2px); box-shadow: none; }
-.btn-menu .ico { font-size: 16px; }
-/* Цвета для кнопок */
-.btn-menu.wheel { background: linear-gradient(180deg, #f39c12, #d35400); border-color: #ffb84d; }
-.btn-menu.shop { background: linear-gradient(180deg, #8e44ad, #5b2c6f); border-color: #af7ac5; }
-.btn-menu.risk { background: linear-gradient(180deg, #e74c3c, #922b21); border-color: #ff8a7a; }
-.btn-menu.friends { background: linear-gradient(180deg, #9b59b6, #6c3483); border-color: #af7ac5; }
-.btn-menu.tasks { background: linear-gradient(180deg, #3498db, #1a5f8a); border-color: #5dade2; }
-.btn-menu.top { background: linear-gradient(180deg, #f1c40f, #b8860b); border-color: #ffe9a0; color: #1a1200;}
-.btn-menu.bonus { background: linear-gradient(180deg, #2ecc71, #1a7d43); border-color: #58e896; }
-.btn-menu.rules { background: linear-gradient(180deg, #7f8c8d, #576574); border-color: #bdc3c7; }
+/* Нижние кнопки (Колесо, Магазин и т.д.) */
+.btn-action { bottom: 1%; width: 8%; height: 9%; }
+.btn-wheel { left: 2.5%; }
+.btn-shop { left: 12%; }
+.btn-risk { left: 21.5%; }
+.btn-tasks { right: 23.5%; }
+.btn-top { right: 16%; }
+.btn-bonus { right: 8.5%; }
+.btn-rules { right: 1.5%; }
 
-/* Модалки и уведомления */
+/* Языки (верхний левый угол) */
+.btn-lang-ru { top: 1.5%; left: 10%; width: 5%; height: 4%; }
+.btn-lang-uk { top: 1.5%; left: 16%; width: 5%; height: 4%; }
+.btn-lang-en { top: 1.5%; left: 22%; width: 5%; height: 4%; }
+
+/* ---------------- УВЕДОМЛЕНИЯ И МОДАЛКИ ---------------- */
 .notif{position:fixed;top:-80px;left:50%;transform:translateX(-50%);background:#2ecc71;color:#fff;padding:8px 18px;border-radius:20px;font-size:12px;font-weight:800;box-shadow:0 5px 15px rgba(0,0,0,.5);transition:top .3s;z-index:999;text-align:center}
 .notif.show{top:15px}
 .notif.error{background:#e74c3c}
@@ -179,69 +105,49 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
 </head>
 <body>
 
-<div class="game-container">
-    <div class="machine-bg"></div>
+<div class="app" id="gameArea">
     
-    <div class="ui-overlay">
-        <!-- Верхняя панель -->
-        <div class="top-stats">
-            <div class="stat-box">
-                <div class="lbl">БАЛАНС</div>
-                <div class="val" id="balanceVal">50 000</div>
-            </div>
-            <div class="stat-box">
-                <div class="lbl">ВЫИГРЫШ</div>
-                <div class="val" id="winVal">0</div>
-            </div>
-        </div>
+    <!-- Динамический текст -->
+    <div class="ui-text ui-balance" id="balanceVal">50 000</div>
+    <div class="ui-text ui-win" id="winVal">0</div>
+    <div class="ui-text ui-lines" id="linesVal">21</div>
+    <div class="ui-text ui-bet" id="betVal">1</div>
+    <div class="ui-text ui-total" id="totalBetVal">21</div>
 
-        <!-- Барабаны -->
-        <div class="reels-frame">
-            <div class="reels" id="reels"></div>
-        </div>
-
-        <!-- Панель управления -->
-        <div class="bottom-panel">
-            <div class="controls-row">
-                <div class="control-group">
-                    <span style="font-size:10px;color:#8899aa;">ЛИНИИ</span>
-                    <button id="linesDec">-</button>
-                    <span class="val" id="linesVal">21</span>
-                    <button id="linesInc">+</button>
-                </div>
-                <div class="control-group">
-                    <span style="font-size:10px;color:#8899aa;">СТАВКА</span>
-                    <button id="betDec">-</button>
-                    <span class="val" id="betVal">1</span>
-                    <button id="betInc">+</button>
-                </div>
-            </div>
-
-            <div class="action-row">
-                <button class="btn-spin" id="spinBtn">SPIN</button>
-                <button class="btn-auto" id="autoBtn">AUTO<br><span style="font-size:10px;">10x</span></button>
-            </div>
-
-            <!-- 8 Кнопок в один ряд (сетка 4х2) -->
-            <div class="buttons-grid">
-                <button class="btn-menu wheel" onclick="openModal('wheelModal')"><span class="ico">🎡</span>Колесо</button>
-                <button class="btn-menu shop" onclick="openModal('shopModal')"><span class="ico">⭐</span>Магазин</button>
-                <button class="btn-menu risk" onclick="openModal('riskModal')"><span class="ico">🃏</span>Риск</button>
-                <button class="btn-menu friends" onclick="openModal('friendsModal')"><span class="ico">🤝</span>Друзья</button>
-                <button class="btn-menu tasks" onclick="openModal('tasksModal')"><span class="ico">📜</span>Задания</button>
-                <button class="btn-menu top" onclick="openModal('topModal')"><span class="ico">🏆</span>ТОП</button>
-                <button class="btn-menu bonus" onclick="notif('Бонус получен!')"><span class="ico">🎁</span>Бонус</button>
-                <button class="btn-menu rules" onclick="openModal('rulesModal')"><span class="ico">📋</span>Правила</button>
-            </div>
-        </div>
+    <!-- Сетка барабанов -->
+    <div class="reels-frame">
+        <div class="reels" id="reels"></div>
     </div>
+
+    <!-- НЕВИДИМЫЕ КНОПКИ (КЛИКАБЕЛЬНЫЕ ЗОНЫ) -->
+    <div class="btn-overlay btn-spin" id="spinBtn"></div>
+    <div class="btn-overlay btn-auto" id="autoBtn"></div>
+    
+    <div class="btn-overlay btn-lines-dec" id="linesDec"></div>
+    <div class="btn-overlay btn-lines-inc" id="linesInc"></div>
+    
+    <div class="btn-overlay btn-bet-dec" id="betDec"></div>
+    <div class="btn-overlay btn-bet-inc" id="betInc"></div>
+
+    <div class="btn-overlay btn-action btn-wheel" onclick="openModal('wheelModal')"></div>
+    <div class="btn-overlay btn-action btn-shop" onclick="openModal('shopModal')"></div>
+    <div class="btn-overlay btn-action btn-risk" onclick="openModal('riskModal')"></div>
+    
+    <div class="btn-overlay btn-action btn-tasks" onclick="openModal('tasksModal')"></div>
+    <div class="btn-overlay btn-action btn-top" onclick="openModal('topModal')"></div>
+    <div class="btn-overlay btn-action btn-bonus" onclick="notif('Бонус получен!')"></div>
+    <div class="btn-overlay btn-action btn-rules" onclick="openModal('rulesModal')"></div>
+
+    <div class="btn-overlay btn-lang-ru" onclick="notif('Русский язык')"></div>
+    <div class="btn-overlay btn-lang-uk" onclick="notif('Українська мова')"></div>
+    <div class="btn-overlay btn-lang-en" onclick="notif('English language')"></div>
+
 </div>
 
 <!-- Модалки -->
 <div class="modal" id="wheelModal"><div class="modal-box"><h2>🎡 Колесо</h2><button class="modal-close" onclick="closeModal('wheelModal')">Закрыть</button></div></div>
 <div class="modal" id="shopModal"><div class="modal-box"><h2>⭐ Магазин</h2><button class="modal-close" onclick="closeModal('shopModal')">Закрыть</button></div></div>
 <div class="modal" id="riskModal"><div class="modal-box"><h2>🃏 Риск</h2><button class="modal-close" onclick="closeModal('riskModal')">Закрыть</button></div></div>
-<div class="modal" id="friendsModal"><div class="modal-box"><h2>🤝 Друзья</h2><button class="modal-close" onclick="closeModal('friendsModal')">Закрыть</button></div></div>
 <div class="modal" id="tasksModal"><div class="modal-box"><h2>📜 Задания</h2><button class="modal-close" onclick="closeModal('tasksModal')">Закрыть</button></div></div>
 <div class="modal" id="topModal"><div class="modal-box"><h2>🏆 ТОП</h2><button class="modal-close" onclick="closeModal('topModal')">Закрыть</button></div></div>
 <div class="modal" id="rulesModal"><div class="modal-box"><h2>📋 Правила</h2><button class="modal-close" onclick="closeModal('rulesModal')">Закрыть</button></div></div>
@@ -251,7 +157,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
 <script>
 // ЛОГИКА ИГРЫ
 const REELS=5, ROWS=3, MAX_LINES=21;
-const IMG_VER = '?v=14';
+const IMG_VER = '?v=16';
 const SYMBOLS=['gem.png','mushroom.png','hedgehog.png','acorn.png','leaf.png','coin.png'];
 const WEIGHTS={'gem.png':5,'mushroom.png':10,'hedgehog.png':15,'acorn.png':25,'leaf.png':25,'coin.png':40};
 const PAYTABLE={'gem.png':[15,60,250],'mushroom.png':[10,40,150],'hedgehog.png':[8,25,80],'acorn.png':[5,15,50],'leaf.png':[5,15,50],'coin.png':[2,5,15]};
@@ -364,6 +270,7 @@ function refreshUI(){
   $('balanceVal').textContent = fmt(state.balance); 
   $('betVal').textContent = fmt(state.betPerLine); 
   $('linesVal').textContent = state.lines;
+  $('totalBetVal').textContent = fmt(totalBet());
   if(!isSpinning) $('winVal').textContent = '0';
 }
 
@@ -409,7 +316,7 @@ async function requestStop() {
   isSpinning = false; refreshUI();
 }
 
-// Привязка кнопок
+// Привязка невидимых кнопок
 $('spinBtn').onclick = () => { if (isSpinning) requestStop(); else startSpinAction(); };
 $('linesDec').onclick = () => { if(!isSpinning){ state.lines = Math.max(1, state.lines-1); refreshUI(); } };
 $('linesInc').onclick = () => { if(!isSpinning){ state.lines = Math.min(MAX_LINES, state.lines+1); refreshUI(); } };
@@ -419,7 +326,7 @@ $('autoBtn').onclick = () => notif('Автоспин включен');
 
 // Инициализация
 window.addEventListener('resize', () => { if(!isSpinning) buildReels(); });
-buildReels(); refreshUI();
+setTimeout(() => { buildReels(); refreshUI(); }, 100); // Небольшая задержка, чтобы фон успел прогрузиться
 </script>
 </body>
 </html>
