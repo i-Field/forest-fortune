@@ -13,7 +13,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
 
 .app {
     position: relative; width: 100vw; height: 100dvh;
-    background: url('bg.png?v=110') no-repeat center center;
+    background: url('bg.png?v=120') no-repeat center center;
     background-size: 100% 100%; overflow: hidden;
 }
 
@@ -28,18 +28,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
 .f4 { bottom: 25%; right: 10%; animation-delay: 1.5s; } .f5 { bottom: 30%; left: 3%; animation-delay: 2s; } .f6 { bottom: 35%; right: 4%; animation-delay: 0.8s; }
 @keyframes floatFly { 0%, 100% { transform: translateY(0) scale(0.5); opacity: 0; } 50% { transform: translateY(-30px) scale(1.5); opacity: 1; } }
 
-/* ТЕКСТ (ОПУЩЕН В ПЛАШКИ) */
+/* ТЕКСТ (ИДЕАЛЬНО ПО ЦЕНТРУ ОКОШЕК) */
 .ui-text { position: absolute; z-index: 50; display: flex; align-items: center; justify-content: center; color: var(--gold); font-weight: 900; text-shadow: 1px 1px 2px #000, 0 0 5px #000; font-variant-numeric: tabular-nums; }
-.ui-balance { top: 18.5%; left: 14%; width: 22%; height: 3%; font-size: 1.8vh; }
-.ui-win { top: 18.5%; right: 14%; width: 22%; height: 3%; font-size: 1.8vh; }
-/* Опустили нижние цифры ровно в окошки */
-.ui-lines { bottom: 28.5%; left: 12%; width: 16%; height: 3%; font-size: 1.6vh; }
-.ui-bet { bottom: 28.5%; left: 42%; width: 16%; height: 3%; font-size: 1.6vh; }
-.ui-total { bottom: 28.5%; right: 12%; width: 16%; height: 3%; font-size: 1.6vh; }
+.ui-balance { top: 19%; left: 15%; width: 20%; height: 3.5%; font-size: 1.8vh; }
+.ui-win { top: 19%; right: 15%; width: 20%; height: 3.5%; font-size: 1.8vh; }
+.ui-lines { bottom: 28.5%; left: 13%; width: 14%; height: 3.5%; font-size: 1.6vh; }
+.ui-bet { bottom: 28.5%; left: 43%; width: 14%; height: 3.5%; font-size: 1.6vh; }
+.ui-total { bottom: 28.5%; right: 13%; width: 14%; height: 3.5%; font-size: 1.6vh; }
 
-/* Опустили текст SPIN ровно на зеленую кнопку */
-.ui-spin-text { bottom: 20.5%; left: 34%; width: 32%; height: 4%; font-size: 1.8vh; color: #fff; text-shadow: 0 2px 4px #000; letter-spacing: 1px; }
-.ui-auto-text { bottom: 21.5%; right: 10%; width: 12%; height: 5%; font-size: 1.4vh; color: #fff; display: flex; flex-direction: column; line-height: 1.1; text-shadow: 0 2px 2px #000; }
+/* Кнопка Spin */
+.ui-spin-text { bottom: 20.5%; left: 35%; width: 30%; height: 4%; font-size: 1.8vh; color: #fff; text-shadow: 0 2px 4px #000; letter-spacing: 1px; }
+/* Текст MAX BET */
+.ui-max-text { bottom: 21.5%; right: 9%; width: 15%; height: 5%; font-size: 1.2vh; color: #fff; display: flex; align-items: center; justify-content: center; text-shadow: 0 2px 2px #000; font-weight: 900; }
 
 /* СЕТКА */
 .reels-frame { position: absolute; top: 24.5%; left: 13.5%; right: 13.5%; height: 41%; background: #0d2112; border-radius: 4px; overflow: hidden; z-index: 10; border: 2px solid #3a2311; box-shadow: inset 0 0 20px #000; }
@@ -51,17 +51,19 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
 .cell.win::before { content: ""; position: absolute; inset: 2px; border: 2px solid #a8ff78; border-radius: 50%; background: radial-gradient(circle, rgba(46,204,113,.6), transparent 70%); box-shadow: 0 0 15px #2ecc71; animation: winPulse .4s infinite alternate; }
 @keyframes winPulse { 0%{transform:scale(.9)} 100%{transform:scale(1.1)} }
 
-/* КНОПКИ */
+/* КЛИКАБЕЛЬНЫЕ ЗОНЫ */
 .btn-overlay { position: absolute; z-index: 99; cursor: pointer; border-radius: 10px; }
 .btn-overlay:active { background: rgba(255,255,255,0.2); }
 .btn-spin { bottom: 19.5%; left: 34%; width: 32%; height: 7%; border-radius: 20px; }
-.btn-auto { bottom: 20.5%; right: 9%; width: 14%; height: 6%; }
+.btn-max { bottom: 20.5%; right: 9%; width: 15%; height: 6%; }
 
-.btn-lines-dec { bottom: 28.5%; left: 7%; width: 4%; height: 3%; }
-.btn-lines-inc { bottom: 28.5%; left: 27%; width: 4%; height: 3%; }
-.btn-bet-dec { bottom: 28.5%; left: 37%; width: 4%; height: 3%; }
-.btn-bet-inc { bottom: 28.5%; left: 57%; width: 4%; height: 3%; }
+/* Стрелки линий и ставки (⏪ ⏩) */
+.btn-lines-dec { bottom: 28.5%; left: 9%; width: 4%; height: 3.5%; }
+.btn-lines-inc { bottom: 28.5%; left: 28%; width: 4%; height: 3.5%; }
+.btn-bet-dec { bottom: 28.5%; left: 38%; width: 4%; height: 3.5%; }
+.btn-bet-inc { bottom: 28.5%; left: 57%; width: 4%; height: 3.5%; }
 
+/* Кнопки 1, 3, 5, 9, 15, 21 */
 .btn-l1 { bottom: 25%; left: 11%; width: 3.5%; height: 2.5%; }
 .btn-l3 { bottom: 25%; left: 15.5%; width: 3.5%; height: 2.5%; }
 .btn-l5 { bottom: 25%; left: 20%; width: 3.5%; height: 2.5%; }
@@ -73,7 +75,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
 .btn-wheel { left: 1.5%; } .btn-shop { left: 14%; } .btn-risk { left: 26.5%; } .btn-friends { left: 39%; }
 .btn-tasks { right: 39%; } .btn-top { right: 26.5%; } .btn-bonus { right: 14%; } .btn-rules { right: 1.5%; }
 
-/* Кнопка Риск */
+/* Подсветка кнопки Риск */
 @keyframes riskPulse { 0% { box-shadow: 0 0 10px #f1c40f; background: rgba(241, 196, 15, 0.2); } 100% { box-shadow: 0 0 20px #f1c40f; background: rgba(241, 196, 15, 0.6); } }
 .btn-risk.active-risk { animation: riskPulse 0.8s infinite alternate; border-radius: 8px; z-index: 100; }
 
@@ -119,6 +121,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
     <div class="firefly f1"></div><div class="firefly f2"></div><div class="firefly f3"></div>
     <div class="firefly f4"></div><div class="firefly f5"></div><div class="firefly f6"></div>
 
+    <!-- Тексты -->
     <div class="ui-text ui-balance" id="balanceVal">50 000</div>
     <div class="ui-text ui-win" id="winVal">0</div>
     <div class="ui-text ui-lines" id="linesVal">21</div>
@@ -126,18 +129,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
     <div class="ui-text ui-total" id="totalBetVal">21</div>
     
     <div class="ui-text ui-spin-text" id="spinText">КРУТИТЬ</div>
-    <div class="ui-text ui-auto-text">AUTO<br><span style="font-size:1.1vh;">10x</span></div>
+    <div class="ui-text ui-max-text">MAX BET</div>
 
+    <!-- Сетка -->
     <div class="reels-frame" id="reelsFrame"><div class="reels" id="reels"></div></div>
 
+    <!-- Кнопки -->
     <div class="btn-overlay btn-spin" id="spinBtn"></div>
-    <div class="btn-overlay btn-auto" id="autoBtn"></div>
+    <div class="btn-overlay btn-max" id="maxBetBtn"></div>
     
+    <!-- Стрелки -->
     <div class="btn-overlay btn-lines-dec" id="linesDec"></div>
     <div class="btn-overlay btn-lines-inc" id="linesInc"></div>
     <div class="btn-overlay btn-bet-dec" id="betDec"></div>
     <div class="btn-overlay btn-bet-inc" id="betInc"></div>
 
+    <!-- Быстрые линии -->
     <div class="btn-overlay btn-l1" onclick="setLines(1)"></div>
     <div class="btn-overlay btn-l3" onclick="setLines(3)"></div>
     <div class="btn-overlay btn-l5" onclick="setLines(5)"></div>
@@ -145,6 +152,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
     <div class="btn-overlay btn-l15" onclick="setLines(15)"></div>
     <div class="btn-overlay btn-l21" onclick="setLines(21)"></div>
 
+    <!-- Нижнее меню -->
     <div class="btn-overlay btn-action btn-wheel" onclick="openModal('wheelModal')"></div>
     <div class="btn-overlay btn-action btn-shop" onclick="openModal('shopModal')"></div>
     <div class="btn-overlay btn-action btn-risk" id="btnRiskUI" onclick="openRiskModal()"></div>
@@ -155,6 +163,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
     <div class="btn-overlay btn-action btn-rules" onclick="openModal('paytableModal')"></div>
 </div>
 
+<!-- МОДАЛКИ -->
 <div class="modal" id="wheelModal"><div class="modal-box"><div class="modal-title">🎡 КОЛЕСО</div><div class="modal-text">Крути раз в 24 часа!</div><button class="modal-close" onclick="closeModal('wheelModal')">Закрыть</button></div></div>
 <div class="modal" id="shopModal"><div class="modal-box"><div class="modal-title">⭐ МАГАЗИН</div><div class="modal-text">Покупка звезд (в разработке)</div><button class="modal-close" onclick="closeModal('shopModal')">Закрыть</button></div></div>
 
@@ -178,9 +187,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
 <div class="notif" id="notif"></div>
 
 <script>
-// --- НАСТРОЙКИ ---
 const REELS = 5, ROWS = 5; 
-const IMG_VER = '?v=110';
+const IMG_VER = '?v=120';
 const SYMBOLS = ['gem.png', 'mushroom.png', 'hedgehog.png', 'acorn.png', 'leaf.png', 'coin.png'];
 const WEIGHTS = {'gem.png':5, 'mushroom.png':10, 'hedgehog.png':15, 'acorn.png':25, 'leaf.png':25, 'coin.png':30};
 const PAYTABLE = { 'gem.png': [15, 60, 250], 'mushroom.png': [10, 40, 150], 'hedgehog.png': [8, 25, 80], 'acorn.png': [5, 15, 50], 'leaf.png': [5, 15, 50], 'coin.png': [2, 5, 15] };
@@ -193,17 +201,14 @@ const PAYLINES = [
 ];
 const POOL=[];Object.entries(WEIGHTS).forEach(([s,w])=>{for(let i=0;i<w;i++)POOL.push(s)});
 
-// --- СОСТОЯНИЕ ---
 let state = { balance: 50000, betPerLine: 1, lines: 21, lang: 'ru', lastDaily: 0 };
-let isSpinning = false, stopRequested = false, cellH = 0, audioReady = false;
-let freeSpins = 0, isFreeSpin = false, autoSpinsLeft = 0;
+let isSpinning = false, stopRequested = false, cellH = 0;
+let freeSpins = 0, isFreeSpin = false;
 let pendingRisk = 0;
 
 const reelsEl = document.getElementById('reels');
-const overlay = document.getElementById('linesOverlay');
 const tracks = [];
 
-// --- УТИЛИТЫ ---
 const $ = (id) => document.getElementById(id);
 const fmt = (n) => Math.round(n).toLocaleString('ru-RU');
 function notif(msg, type='') { const n=$('notif'); n.textContent=msg; n.className='notif show '+type; clearTimeout(n._t); n._t=setTimeout(()=>{n.className='notif '+type}, 3000); }
@@ -212,7 +217,6 @@ const totalBet = () => state.lines * state.betPerLine;
 const openModal = (id) => $(id).classList.add('active');
 const closeModal = (id) => $(id).classList.remove('active');
 
-// --- ЯЗЫКИ ---
 const locales = {
     ru: { spin: 'КРУТИТЬ', stop: 'СТОП', win: 'Выигрыш: +', noMoney: 'Мало монет!' },
     uk: { spin: 'КРУТИТИ', stop: 'СТОП', win: 'Виграш: +', noMoney: 'Мало монет!' },
@@ -222,11 +226,10 @@ function setLang(lang, btn) {
     state.lang = lang;
     document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
     if(btn) btn.classList.add('active');
-    $('spinText').textContent = locales[lang].spin;
+    if(!isSpinning) $('spinText').textContent = locales[lang].spin;
     notif('Language: ' + lang.toUpperCase());
 }
 
-// --- СЕТКА ---
 function buildReels() {
     reelsEl.innerHTML = ''; tracks.length = 0;
     const frame = document.querySelector('.reels-frame');
@@ -244,7 +247,6 @@ function buildReels() {
     }, 300);
 }
 
-// --- ЛОГИКА АНИМАЦИИ (КАК В LUCKY ROGER) ---
 let reelAnimFrames = [null, null, null, null, null];
 let reelPositions = [0, 0, 0, 0, 0];
 
@@ -256,7 +258,7 @@ function startReelSpin(r) {
     const speed = 2000;
     
     function frame(now) {
-        if (!isSpinning) return; // Если спин отменен - прерываем
+        if (!isSpinning) return;
         const dt = (now - lastTime) / 1000; lastTime = now;
         reelPositions[r] -= speed * dt; 
         if (reelPositions[r] <= -(20 * cellH)) reelPositions[r] += 20 * cellH;
@@ -282,7 +284,7 @@ function stopReelAnim(r, final5) {
             
             track.style.transition = 'none'; 
             track.style.transform = `translate3d(0, ${startY}px, 0)`; 
-            track.getBoundingClientRect(); // force reflow
+            track.getBoundingClientRect(); 
             
             track.style.transition = `transform ${800 + r*200}ms cubic-bezier(0.1, 0.8, 0.2, 1)`; 
             track.style.transform = `translate3d(0, -${15 * cellH}px, 0)`;
@@ -297,7 +299,6 @@ function stopReelAnim(r, final5) {
     });
 }
 
-// --- СПИН ---
 function updateUI() {
     $('balanceVal').textContent = fmt(state.balance); 
     $('betVal').textContent = fmt(state.betPerLine); 
@@ -310,7 +311,6 @@ function setLines(num) {
     if(isSpinning) return; 
     state.lines = num; 
     updateUI(); 
-    notif('Линий: ' + num);
 }
 
 async function startSpin() {
@@ -331,8 +331,8 @@ async function startSpin() {
     reelPositions = [0, 0, 0, 0, 0]; 
     tracks.forEach((tr, i) => startReelSpin(i));
     
-    // Автостоп если игрок не нажал (через 5 сек)
-    setTimeout(() => { if(!stopRequested && isSpinning) requestStop(finalGrid); }, 5000);
+    // Если игрок не нажал СТОП, барабаны остановятся сами через 10 секунд
+    setTimeout(() => { if(!stopRequested && isSpinning) requestStop(finalGrid); }, 10000);
 }
 
 async function requestStop(pregeneratedGrid) {
@@ -340,7 +340,6 @@ async function requestStop(pregeneratedGrid) {
     stopRequested = true;
     
     const finalGrid = pregeneratedGrid || genGrid(); 
-    // Останавливаем по одному с задержкой
     await Promise.all(tracks.map((tr, i) => stopReelAnim(i, finalGrid[i])));
     
     let total = 0, scatterCount = 0;
@@ -372,25 +371,19 @@ async function requestStop(pregeneratedGrid) {
     if (scatterCount >= 3 && !isFreeSpin) { 
         freeSpins = 10; 
         notif('🎉 3 ГРИБА! 10 ФРИСПИНОВ x2!', 'gold'); 
-        autoSpinsLeft = 0;
     }
     
     isSpinning = false; 
     $('spinText').textContent = locales[state.lang].spin; 
     updateUI();
 
-    if (autoSpinsLeft > 0) {
-        autoSpinsLeft--;
-        if (autoSpinsLeft > 0) setTimeout(startSpin, 1000);
-        else { notif('Автоспин завершен', 'success'); }
-    } else if (freeSpins > 0) { 
+    if (freeSpins > 0) { 
         freeSpins--; isFreeSpin = true; setTimeout(startSpin, 1000); 
     } else { 
         isFreeSpin = false; 
     }
 }
 
-// --- ВСПОМОГАТЕЛЬНЫЕ ---
 function genGrid() {
     const g = [];
     for (let r = 0; r < REELS; r++) { const col = []; for (let row = 0; row < ROWS; row++) col.push(randSym()); g.push(col); }
@@ -434,19 +427,17 @@ function claimDaily() {
     state.lastDaily = Date.now(); state.balance += 1000; updateUI(); notif('🎁 Ежедневный бонус: +1000 🪙', 'gold');
 }
 
-function toggleAuto() {
-    if (isSpinning) return;
-    if (autoSpinsLeft > 0) {
-        autoSpinsLeft = 0; notif('Автоспин остановлен', 'error');
-    } else {
-        autoSpinsLeft = 10; notif('Автоспин 10x запущен', 'success'); startSpin();
-    }
-}
-
-// --- СОБЫТИЯ ---
+// СОБЫТИЯ
 $('startBtn').onclick = () => { $('startOverlay').style.display = 'none'; buildReels(); };
 $('spinBtn').onclick = () => { if (isSpinning) requestStop(); else startSpin(); };
-$('autoBtn').onclick = toggleAuto;
+
+// MAX BET
+$('maxBetBtn').onclick = () => {
+    if(isSpinning) return;
+    state.betPerLine = 1000; // Максимальная ставка на линию
+    updateUI();
+    notif('Ставка MAX', 'success');
+};
 
 $('linesDec').onclick = () => { if(!isSpinning){ state.lines = Math.max(1, state.lines-1); updateUI(); } };
 $('linesInc').onclick = () => { if(!isSpinning){ state.lines = Math.min(21, state.lines+1); updateUI(); } };
@@ -456,4 +447,4 @@ $('betInc').onclick = () => { if(!isSpinning){ state.betPerLine += 1; updateUI()
 window.addEventListener('resize', () => { if(!isSpinning) buildReels(); });
 </script>
 </body>
-</html> 
+</html>
