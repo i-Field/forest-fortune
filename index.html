@@ -10,7 +10,6 @@
     --text: #f0f4f8;
     --gold: #ffd966;
     --green: #2ecc71;
-    --red: #e74c3c;
 }
 
 * {
@@ -20,6 +19,7 @@
     user-select: none;
     -webkit-user-select: none;
     -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation; /* Убирает задержку клика на iOS */
 }
 
 html, body {
@@ -38,17 +38,16 @@ body {
 }
 
 /* ============================================================
-   ГЛАВНЫЙ КОНТЕЙНЕР
+   КОНТЕЙНЕР (ЖЕСТКИЕ ПРОПОРЦИИ)
    ============================================================ */
 .game-board {
     position: relative;
-    aspect-ratio: 768 / 1370; 
+    height: 100dvh;
     width: 100vw;
-    max-height: 100dvh;
-    background: url('bg.png?v=500') no-repeat center center;
-    background-size: 100% 100%;
+    /* Насильно растягиваем фон на весь экран */
+    background: url('bg.png?v=600') no-repeat center center;
+    background-size: 100% 100%; 
     overflow: hidden;
-    container-type: inline-size;
 }
 
 /* ============================================================
@@ -58,24 +57,24 @@ body {
     position: absolute;
     top: 9.8%; left: 22%; width: 56%; height: 6.5%;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    z-index: 60;
+    z-index: 100; /* Высокий приоритет */
     background: radial-gradient(ellipse, rgba(30, 15, 5, 0.95) 60%, transparent 100%);
     border-radius: 10px;
     transition: all 0.3s;
 }
-.top-title { font-size: 2.6cqw; color: #fff; font-weight: 900; letter-spacing: 1px; text-shadow: 0 0 5px #000; line-height: 1.1; }
-.top-value { font-size: 5.2cqw; color: var(--gold); font-weight: 900; text-shadow: 0 0 10px #ff8c00, 0 2px 2px #000; }
+.top-title { font-size: 2.6vh; color: #fff; font-weight: 900; letter-spacing: 1px; text-shadow: 0 0 5px #000; line-height: 1.1; }
+.top-value { font-size: 5.2vh; color: var(--gold); font-weight: 900; text-shadow: 0 0 10px #ff8c00, 0 2px 2px #000; }
 .top-banner.freespins { background: radial-gradient(ellipse, rgba(243, 156, 18, 0.95) 60%, transparent 100%); }
 .top-banner.freespins .top-value { color: #fff; text-shadow: 0 0 10px #fff; }
 
 /* Глобус (Язык) */
 .lang-btn {
     position: absolute; top: 1.5%; left: 2.5%; width: 9%; height: 4.5%;
-    z-index: 100; border-radius: 50%; background: transparent; border: none; cursor: pointer;
+    z-index: 9999; border-radius: 50%; background: transparent; border: none; cursor: pointer;
 }
 
 /* ============================================================
-   ДИНАМИЧЕСКИЕ ЦИФРЫ (ПЛАШКИ)
+   ДИНАМИЧЕСКИЕ ЦИФРЫ (ПЕРЕКРЫВАЮТ СТАРЫЕ)
    ============================================================ */
 .ui-val {
     position: absolute;
@@ -83,7 +82,7 @@ body {
     background: #1a0a02; /* Темное дерево */
     color: #ffd966;
     font-weight: 900;
-    font-size: 2.8cqw;
+    font-size: 2.8vh;
     text-shadow: 1px 1px 2px #000;
     border-radius: 4px;
     z-index: 50;
@@ -119,23 +118,25 @@ body {
 @keyframes winPulse { 0%{transform:scale(.9)} 100%{transform:scale(1.1)} }
 
 /* ============================================================
-   КНОПКИ (УВЕЛИЧЕНЫ ЗОНЫ КЛИКА)
+   НЕВИДИМЫЕ КНОПКИ (МАКСИМАЛЬНЫЙ ПРИОРИТЕТ)
    ============================================================ */
 .btn-overlay { 
     position: absolute; 
-    z-index: 999; /* Максимальный приоритет, чтобы ничто не перекрывало */
+    z-index: 9999; /* Выше всех */
     cursor: pointer; 
     border-radius: 8px; 
     pointer-events: auto;
+    transition: background 0.1s;
 }
-.btn-overlay:active { background: rgba(255,255,255,0.2); }
+/* Подсветка при нажатии, чтобы ты видел, что кнопка работает */
+.btn-overlay:active { background: rgba(255,255,255,0.4); box-shadow: 0 0 15px rgba(255, 255, 255, 0.6); }
 
-/* Кнопка Spin */
+/* Кнопка Spin (Текст внутри) */
 .btn-spin { top: 69.3%; left: 34%; width: 32%; height: 6.5%; border-radius: 20px; }
 .ui-spin-text {
     position: absolute; top: 69.3%; left: 34%; width: 32%; height: 6.5%;
     display: flex; align-items: center; justify-content: center;
-    color: #fff; font-size: 3.8cqw; font-weight: 900; text-shadow: 0 2px 4px #000;
+    color: #fff; font-size: 4vh; font-weight: 900; text-shadow: 0 2px 4px #000;
     z-index: 50; pointer-events: none;
 }
 
@@ -155,25 +156,25 @@ body {
 .btn-l15 { top: 69%; left: 33%; width: 4.5%; height: 3.5%; }
 .btn-l21 { top: 69%; left: 38.5%; width: 4.5%; height: 3.5%; }
 
-/* НИЖНИЕ КНОПКИ (Подняли выше и увеличили в размере) */
-.btn-action { bottom: 3.5%; width: 11.5%; height: 6%; z-index: 999; }
-.btn-wheel { left: 2.5%; }
-.btn-shop { left: 15%; }
-.btn-risk { left: 27.5%; }
-.btn-friends { left: 40%; }
-.btn-tasks { right: 40%; }
-.btn-top { right: 27.5%; }
-.btn-bonus { right: 15%; }
-.btn-rules { right: 2.5%; }
+/* НИЖНИЕ КНОПКИ (Подняли выше от края экрана) */
+.btn-action { bottom: 5%; width: 11%; height: 5.5%; z-index: 9999; }
+.btn-wheel { left: 3%; }
+.btn-shop { left: 15.5%; }
+.btn-risk { left: 28%; }
+.btn-friends { left: 40.5%; }
+.btn-tasks { right: 40.5%; }
+.btn-top { right: 28%; }
+.btn-bonus { right: 15.5%; }
+.btn-rules { right: 3%; }
 
 /* Подсветка Риска */
 @keyframes riskPulse { 0% { box-shadow: 0 0 10px #f1c40f; background: rgba(241, 196, 15, 0.2); } 100% { box-shadow: 0 0 20px #f1c40f; background: rgba(241, 196, 15, 0.6); } }
-.btn-risk.active-risk { animation: riskPulse 0.8s infinite alternate; border-radius: 12px; }
+.btn-risk.active-risk { animation: riskPulse 0.8s infinite alternate; border-radius: 12px; background: rgba(241, 196, 15, 0.4); }
 
 /* ============================================================
    МОДАЛКИ
    ============================================================ */
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.9);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity .2s;padding:15px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.9);display:flex;align-items:center;justify-content:center;z-index:10000;opacity:0;pointer-events:none;transition:opacity .2s;padding:15px}
 .modal.active{opacity:1;pointer-events:auto}
 .modal-box{background:linear-gradient(180deg,#1a2e1a,#0a1208);border:2px solid var(--gold);border-radius:14px;padding:20px;max-width:340px;width:100%;text-align:center;color:#fff;box-shadow:0 10px 30px rgba(0,0,0,0.8);}
 .modal-title{font-size:20px;font-weight:900;color:var(--gold);margin-bottom:15px;font-family:Georgia,serif;}
@@ -185,13 +186,13 @@ body {
 .modal-btn.red{background:linear-gradient(180deg,#e74c3c,#922b21); box-shadow:0 4px 0 #4d0e07;}
 .modal-btn:active{transform:translateY(3px); box-shadow:none;}
 
-.notif{position:fixed;top:-80px;left:50%;transform:translateX(-50%);background:#2ecc71;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:800;transition:top .3s;z-index:2000;text-align:center;box-shadow:0 5px 15px rgba(0,0,0,.5);}
+.notif{position:fixed;top:-80px;left:50%;transform:translateX(-50%);background:#2ecc71;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:800;transition:top .3s;z-index:99999;text-align:center;box-shadow:0 5px 15px rgba(0,0,0,.5);}
 .notif.show{top:15px} .notif.error{background:#e74c3c} .notif.gold{background:linear-gradient(180deg,#ffd966,#b8860b);color:#1a1200}
 </style>
 </head>
 <body>
 
-<div style="position:fixed; inset:0; background:radial-gradient(circle at center, #0a1a05, #000); z-index:2000; display:flex; flex-direction:column; align-items:center; justify-content:center;" id="startOverlay">
+<div style="position:fixed; inset:0; background:radial-gradient(circle at center, #0a1a05, #000); z-index:20000; display:flex; flex-direction:column; align-items:center; justify-content:center;" id="startOverlay">
     <div style="font-size:80px; margin-bottom:10px; filter:drop-shadow(0 0 20px #2ecc71);">🦔</div>
     <div style="font-size:32px; font-weight:900; color:#a8ff78; font-family:Georgia,serif; margin-bottom:10px; text-shadow:0 0 15px #2ecc71;">FOREST FORTUNE</div>
     <div style="color:#8899aa; font-size:14px; margin-bottom:30px;">Магия леса и сокровища</div>
@@ -207,18 +208,21 @@ body {
         <div class="top-value" id="topValue">500 000</div>
     </div>
 
+    <!-- Цифры -->
     <div class="ui-val ui-balance" id="balanceVal">1 120</div>
     <div class="ui-val ui-win" id="winVal">0</div>
     <div class="ui-val ui-lines" id="linesVal">21/21</div>
     <div class="ui-val ui-bet" id="betVal">1</div>
     <div class="ui-val ui-total" id="totalBetVal">21</div>
 
+    <!-- Текст кнопки Spin -->
     <div class="ui-spin-text" id="spinText">КРУТИТЬ</div>
 
     <div class="reels-frame" id="reelsFrame">
         <div class="reels" id="reels"></div>
     </div>
 
+    <!-- Кнопки -->
     <div class="btn-overlay btn-spin" id="spinBtn"></div>
     <div class="btn-overlay btn-auto" onclick="toggleAuto()"></div>
     
@@ -258,7 +262,7 @@ body {
 
 <script>
 const REELS = 5, ROWS = 5; 
-const IMG_VER = '?v=500';
+const IMG_VER = '?v=600';
 const SYMBOLS = ['gem.png', 'mushroom.png', 'hedgehog.png', 'acorn.png', 'leaf.png', 'coin.png'];
 const WEIGHTS = {'gem.png':5, 'mushroom.png':10, 'hedgehog.png':15, 'acorn.png':25, 'leaf.png':25, 'coin.png':30};
 const PAYTABLE = { 'gem.png': [15, 60, 250], 'mushroom.png': [10, 40, 150], 'hedgehog.png': [8, 25, 80], 'acorn.png': [5, 15, 50], 'leaf.png': [5, 15, 50], 'coin.png': [2, 5, 15] };
@@ -285,7 +289,7 @@ const fmt = (n) => Math.round(n).toLocaleString('ru-RU');
 function notif(msg, type='') { const n=$('notif'); n.textContent=msg; n.className='notif show '+type; clearTimeout(n._t); n._t=setTimeout(()=>{n.className='notif '+type}, 3000); }
 const randSym = () => POOL[Math.floor(Math.random()*POOL.length)];
 const totalBet = () => state.lines * state.betPerLine;
-const openModal = (id) => $(id).classList.add('active');
+const openModal = (id) => { $(id).classList.add('active'); notif('Открыто!', 'success'); };
 const closeModal = (id) => $(id).classList.remove('active');
 
 const langs = ['ru', 'uk', 'en'];
@@ -404,6 +408,7 @@ function setLines(num) {
     if(isSpinning) return; 
     state.lines = num; 
     updateUI(); 
+    notif('Линий: ' + num);
 }
 
 async function startSpin() {
@@ -530,6 +535,7 @@ function claimDaily() {
     state.lastDaily = Date.now(); state.balance += 1000; updateUI(); notif('🎁 Ежедневный бонус: +1000 🪙', 'gold');
 }
 
+// Привязка событий через JS
 $('startBtn').onclick = () => { $('startOverlay').style.display = 'none'; buildReels(); };
 $('spinBtn').onclick = () => { if (isSpinning) requestStop(); else startSpin(); };
 
@@ -537,6 +543,15 @@ $('linesDec').onclick = () => { if(!isSpinning){ state.lines = Math.max(1, state
 $('linesInc').onclick = () => { if(!isSpinning){ state.lines = Math.min(21, state.lines+1); updateUI(); } };
 $('betDec').onclick = () => { if(!isSpinning){ state.betPerLine = Math.max(1, state.betPerLine-1); updateUI(); } };
 $('betInc').onclick = () => { if(!isSpinning){ state.betPerLine += 1; updateUI(); } };
+
+// Обработка кликов по нижним кнопкам
+document.querySelector('.btn-wheel').onclick = () => openModal('wheelModal');
+document.querySelector('.btn-shop').onclick = () => openModal('shopModal');
+document.querySelector('.btn-friends').onclick = () => openModal('friendsModal');
+document.querySelector('.btn-tasks').onclick = () => openModal('tasksModal');
+document.querySelector('.btn-top').onclick = () => openModal('topModal');
+document.querySelector('.btn-rules').onclick = () => openModal('paytableModal');
+document.querySelector('.btn-bonus').onclick = () => claimDaily();
 
 window.addEventListener('resize', () => { if(!isSpinning) buildReels(); });
 </script>
