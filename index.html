@@ -16,12 +16,58 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
     position: relative;
     width: 100vw;
     height: 100dvh;
-    background: url('bg.png?v=35') no-repeat center center;
+    background: url('bg.png?v=45') no-repeat center center;
     background-size: 100% 100%; 
     overflow: hidden;
 }
 
-/* ---------------- ДИНАМИЧЕСКИЙ ТЕКСТ (Точно по центру плашек) ---------------- */
+/* ---------------- МАГИЯ ЛЕСА (ОГНИ И СВЕТЛЯЧКИ) ---------------- */
+
+/* Пульсирующее свечение на месте огней */
+.fire-glow {
+    position: absolute; top: 14%; width: 12%; height: 4%;
+    background: radial-gradient(circle, rgba(255, 140, 0, 0.8) 0%, transparent 70%);
+    mix-blend-mode: screen; pointer-events: none; z-index: 5;
+    animation: fireFlicker 1.5s infinite alternate;
+}
+.fire-left { left: 12%; }
+.fire-right { right: 12%; }
+@keyframes fireFlicker {
+    0% { opacity: 0.4; transform: scale(0.9); }
+    100% { opacity: 1; transform: scale(1.2); }
+}
+
+/* Тонкое неоновое свечение по краям (Голограмма) */
+.app::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 1;
+    box-shadow: inset 0 0 40px rgba(46, 204, 113, 0.3);
+    animation: holoPulse 3s infinite alternate;
+}
+@keyframes holoPulse {
+    0% { box-shadow: inset 0 0 20px rgba(46, 204, 113, 0.2); }
+    100% { box-shadow: inset 0 0 60px rgba(46, 204, 113, 0.6); }
+}
+
+/* Светлячки вокруг грибов */
+.firefly {
+    position: absolute; width: 6px; height: 6px; border-radius: 50%;
+    background: #a8ff78; box-shadow: 0 0 15px 4px #2ecc71, 0 0 5px #fff;
+    pointer-events: none; z-index: 6; opacity: 0;
+    animation: floatFly 3s infinite ease-in-out;
+}
+.f1 { bottom: 15%; left: 5%; animation-delay: 0s; }
+.f2 { bottom: 22%; left: 9%; animation-delay: 1s; }
+.f3 { bottom: 16%; right: 6%; animation-delay: 0.5s; }
+.f4 { bottom: 25%; right: 10%; animation-delay: 1.5s; }
+.f5 { bottom: 30%; left: 3%; animation-delay: 2s; }
+.f6 { bottom: 35%; right: 4%; animation-delay: 0.8s; }
+
+@keyframes floatFly {
+    0%, 100% { transform: translateY(0) scale(0.5); opacity: 0; }
+    50% { transform: translateY(-30px) scale(1.5); opacity: 1; }
+}
+
+/* ---------------- ДИНАМИЧЕСКИЙ ТЕКСТ ---------------- */
 .ui-text {
     position: absolute; z-index: 50;
     display: flex; align-items: center; justify-content: center;
@@ -29,17 +75,19 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
     text-shadow: 1px 1px 2px #000, 0 0 5px #000;
 }
 
-/* Верхний баланс и выигрыш */
 .ui-balance { top: 21%; left: 15%; width: 25%; height: 3%; font-size: 2vh; }
 .ui-win { top: 21%; right: 15%; width: 25%; height: 3%; font-size: 2vh; }
 
-/* Нижние цифры (Линии, Ставка, Всего) - опущены вниз */
-.ui-lines { bottom: 28%; left: 11%; width: 18%; height: 3%; font-size: 1.8vh; }
-.ui-bet { bottom: 28%; left: 41%; width: 18%; height: 3%; font-size: 1.8vh; }
-.ui-total { bottom: 28%; right: 11%; width: 18%; height: 3%; font-size: 1.8vh; }
+.ui-lines { bottom: 29%; left: 11%; width: 18%; height: 3%; font-size: 1.8vh; }
+.ui-bet { bottom: 29%; left: 41%; width: 18%; height: 3%; font-size: 1.8vh; }
+.ui-total { bottom: 29%; right: 11%; width: 18%; height: 3%; font-size: 1.8vh; }
 
-/* Текст на большой зеленой кнопке */
-.ui-spin-text { bottom: 22%; left: 35%; width: 30%; height: 5%; font-size: 2.5vh; color: #fff; text-shadow: 0 2px 4px #000; }
+.ui-spin-text { 
+    bottom: 21.5%; left: 35%; width: 30%; height: 5%; 
+    font-size: 2.2vh; color: #ffd966; 
+    text-shadow: 0 0 10px #000, 0 2px 2px #000; 
+    letter-spacing: 2px;
+}
 
 /* ---------------- СЕТКА БАРАБАНОВ 5x5 ---------------- */
 .reels-frame {
@@ -47,8 +95,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
     top: 25.5%;    
     left: 11.5%;   
     right: 11.5%;  
-    height: 45%; /* Фиксированная высота, чтобы не съезжало */
-    background: #0d2112; /* Глухой фон, чтобы скрыть нарисованных зверей */
+    height: 44%; 
+    background: #0d2112; /* Глухой фон */
     border-radius: 4px;
     overflow: hidden;
     z-index: 10;
@@ -59,38 +107,29 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
 .reel { background: #0d2112; overflow: hidden; position: relative; display: flex; flex-direction: column; }
 .track { position: absolute; left: 0; right: 0; top: 0; display: flex; flex-direction: column; }
 .cell { display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; width: 100%; } 
-.cell img { width: 90%; height: 90%; object-fit: contain; filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.5)) drop-shadow(0 2px 2px rgba(0,0,0,0.8)); }
+.cell img { width: 88%; height: 88%; object-fit: contain; filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.5)) drop-shadow(0 2px 2px rgba(0,0,0,0.8)); }
 .cell.win::before { content: ""; position: absolute; inset: 2px; border: 2px solid #a8ff78; border-radius: 50%; background: radial-gradient(circle, rgba(46,204,113,.6), transparent 70%); box-shadow: 0 0 15px #2ecc71; animation: winPulse .4s infinite alternate; }
 @keyframes winPulse { 0%{transform:scale(.9)} 100%{transform:scale(1.1)} }
 
-/* ---------------- НЕВИДИМЫЕ КНОПКИ ---------------- */
-.btn-overlay { 
-    position: absolute; 
-    z-index: 99; /* Самый высокий приоритет для кликов */
-    cursor: pointer; 
-    border-radius: 10px; 
-}
+/* ---------------- КНОПКИ ---------------- */
+.btn-overlay { position: absolute; z-index: 99; cursor: pointer; border-radius: 10px; }
 .btn-overlay:active { background: rgba(255,255,255,0.2); box-shadow: 0 0 15px rgba(255, 255, 255, 0.4); }
 
-/* Главные кнопки */
-.btn-spin { bottom: 21.5%; left: 35%; width: 30%; height: 7%; border-radius: 20px; }
+.btn-spin { bottom: 21%; left: 35%; width: 30%; height: 7%; border-radius: 20px; }
 .btn-auto { bottom: 22.5%; right: 8.5%; width: 15%; height: 5.5%; }
 
-/* Стрелки линий и ставки */
-.btn-lines-dec { bottom: 28%; left: 7%; width: 4%; height: 3%; }
-.btn-lines-inc { bottom: 28%; left: 26%; width: 4%; height: 3%; }
-.btn-bet-dec { bottom: 28%; left: 37%; width: 4%; height: 3%; }
-.btn-bet-inc { bottom: 28%; left: 56%; width: 4%; height: 3%; }
+.btn-lines-dec { bottom: 29%; left: 7%; width: 4%; height: 3%; }
+.btn-lines-inc { bottom: 29%; left: 26%; width: 4%; height: 3%; }
+.btn-bet-dec { bottom: 29%; left: 37%; width: 4%; height: 3%; }
+.btn-bet-inc { bottom: 29%; left: 56%; width: 4%; height: 3%; }
 
-/* Кнопки 1, 3, 5, 9, 15, 21 */
-.btn-l1 { bottom: 28%; left: 10.5%; width: 3.5%; height: 3%; }
-.btn-l3 { bottom: 28%; left: 15%; width: 3.5%; height: 3%; }
-.btn-l5 { bottom: 28%; left: 19.5%; width: 3.5%; height: 3%; }
-.btn-l9 { bottom: 28%; left: 24%; width: 3.5%; height: 3%; }
-.btn-l15 { bottom: 28%; left: 28.5%; width: 3.5%; height: 3%; }
-.btn-l21 { bottom: 28%; left: 33%; width: 3.5%; height: 3%; }
+.btn-l1 { bottom: 26.5%; left: 10.5%; width: 3.5%; height: 2.5%; }
+.btn-l3 { bottom: 26.5%; left: 15%; width: 3.5%; height: 2.5%; }
+.btn-l5 { bottom: 26.5%; left: 19.5%; width: 3.5%; height: 2.5%; }
+.btn-l9 { bottom: 26.5%; left: 24%; width: 3.5%; height: 2.5%; }
+.btn-l15 { bottom: 26.5%; left: 28.5%; width: 3.5%; height: 2.5%; }
+.btn-l21 { bottom: 26.5%; left: 33%; width: 3.5%; height: 2.5%; }
 
-/* Нижние кнопки меню */
 .btn-action { bottom: 13%; width: 11%; height: 5%; }
 .btn-wheel { left: 1.5%; }
 .btn-shop { left: 14%; }
@@ -101,7 +140,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
 .btn-bonus { right: 14%; }
 .btn-rules { right: 1.5%; }
 
-/* Уведомления */
 .notif{position:fixed;top:-80px;left:50%;transform:translateX(-50%);background:#2ecc71;color:#fff;padding:8px 18px;border-radius:20px;font-size:12px;font-weight:800;box-shadow:0 5px 15px rgba(0,0,0,.5);transition:top .3s;z-index:999;text-align:center}
 .notif.show{top:15px}
 .notif.error{background:#e74c3c}
@@ -111,6 +149,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
 <body>
 
 <div class="app" id="gameArea">
+    <!-- Магия леса -->
+    <div class="fire-glow fire-left"></div>
+    <div class="fire-glow fire-right"></div>
+    
+    <div class="firefly f1"></div>
+    <div class="firefly f2"></div>
+    <div class="firefly f3"></div>
+    <div class="firefly f4"></div>
+    <div class="firefly f5"></div>
+    <div class="firefly f6"></div>
+
     <!-- Тексты -->
     <div class="ui-text ui-balance" id="balanceVal">50 000</div>
     <div class="ui-text ui-win" id="winVal">0</div>
@@ -118,7 +167,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
     <div class="ui-text ui-bet" id="betVal">1</div>
     <div class="ui-text ui-total" id="totalBetVal">21</div>
     
-    <!-- Текст на зеленой кнопке -->
     <div class="ui-text ui-spin-text" id="spinText">КРУТИТЬ</div>
 
     <!-- Сетка -->
@@ -130,22 +178,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
     <div class="btn-overlay btn-spin" id="spinBtn"></div>
     <div class="btn-overlay btn-auto" id="autoBtn"></div>
     
-    <!-- Стрелки +/- Линии -->
     <div class="btn-overlay btn-lines-dec" id="linesDec"></div>
     <div class="btn-overlay btn-lines-inc" id="linesInc"></div>
-    <!-- Стрелки +/- Ставка -->
     <div class="btn-overlay btn-bet-dec" id="betDec"></div>
     <div class="btn-overlay btn-bet-inc" id="betInc"></div>
 
-    <!-- Кнопки быстрой ставки -->
-    <div class="btn-overlay btn-l1" onclick="setLines(1)"></div>
-    <div class="btn-overlay btn-l3" onclick="setLines(3)"></div>
-    <div class="btn-overlay btn-l5" onclick="setLines(5)"></div>
-    <div class="btn-overlay btn-l9" onclick="setLines(9)"></div>
-    <div class="btn-overlay btn-l15" onclick="setLines(15)"></div>
-    <div class="btn-overlay btn-l21" onclick="setLines(21)"></div>
+    <div class="btn-overlay btn-l1" id="btnL1"></div>
+    <div class="btn-overlay btn-l3" id="btnL3"></div>
+    <div class="btn-overlay btn-l5" id="btnL5"></div>
+    <div class="btn-overlay btn-l9" id="btnL9"></div>
+    <div class="btn-overlay btn-l15" id="btnL15"></div>
+    <div class="btn-overlay btn-l21" id="btnL21"></div>
 
-    <!-- Нижнее меню -->
     <div class="btn-overlay btn-action btn-wheel" onclick="notif('Колесо')"></div>
     <div class="btn-overlay btn-action btn-shop" onclick="notif('Магазин')"></div>
     <div class="btn-overlay btn-action btn-risk" onclick="notif('Риск')"></div>
@@ -160,9 +204,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
 
 <script>
 const REELS = 5, ROWS = 5; 
-const IMG_VER = '?v=35';
+const IMG_VER = '?v=45';
 
-// Символы (Убедись, что эти файлы есть в твоей папке!)
 const SYMBOLS = ['gem.png', 'mushroom.png', 'hedgehog.png', 'acorn.png', 'leaf.png', 'coin.png'];
 const WEIGHTS = {'gem.png':5, 'mushroom.png':10, 'hedgehog.png':15, 'acorn.png':25, 'leaf.png':25, 'coin.png':30};
 
@@ -175,7 +218,6 @@ const PAYTABLE = {
     'coin.png': [2, 5, 15]
 };
 
-// Классические линии, адаптированные под 5x5 (от 0 до 4)
 const PAYLINES = [
     [[0,0],[1,0],[2,0],[3,0],[4,0]], [[0,1],[1,1],[2,1],[3,1],[4,1]], [[0,2],[1,2],[2,2],[3,2],[4,2]], [[0,3],[1,3],[2,3],[3,3],[4,3]], [[0,4],[1,4],[2,4],[3,4],[4,4]],
     [[0,0],[1,1],[2,2],[3,1],[4,0]], [[0,4],[1,3],[2,2],[3,3],[4,4]], [[0,1],[1,2],[2,3],[3,2],[4,1]], [[0,3],[1,2],[2,1],[3,2],[4,3]],
@@ -184,7 +226,6 @@ const PAYLINES = [
     [[0,1],[1,1],[2,2],[3,3],[4,3]], [[0,3],[1,3],[2,2],[3,1],[4,1]], [[0,0],[1,2],[2,4],[3,2],[4,0]], [[0,4],[1,2],[2,0],[3,2],[4,4]]
 ];
 
-const LINE_COLORS=['#ff3b30','#ff9500','#ffcc00','#34c759','#00c7be','#30b0ff','#5856d6','#af52de','#ff2d95','#ff6b6b','#ffd93d','#6bcf7f','#4ecdc4','#95e1d3','#a8e6cf','#c7ceea','#e2a4d1','#f6d365','#b5eaea','#e0aaff','#ffb4a2'];
 const POOL=[];Object.entries(WEIGHTS).forEach(([s,w])=>{for(let i=0;i<w;i++)POOL.push(s)});
 
 let state = { balance: 50000, betPerLine: 1, lines: 21 };
@@ -200,37 +241,37 @@ function notif(msg, type='') { const n=$('notif'); n.textContent=msg; n.classNam
 function randSym() { return POOL[Math.floor(Math.random()*POOL.length)]; }
 function totalBet() { return state.lines * state.betPerLine; }
 
-// Глобальная функция для кнопок 1,3,5...
-window.setLines = function(num) {
+function setLines(num) {
     if(isSpinning) return;
     state.lines = num;
     updateUI();
     notif('Активных линий: ' + num);
-};
+}
 
-// Сборка сетки
 function buildReels() {
     reelsEl.innerHTML = ''; tracks.length = 0;
-    const frameHeight = document.querySelector('.reels-frame').clientHeight;
-    // ЖЕСТКО делим высоту на 5, округляя вниз, чтобы не было багов
-    cellH = Math.floor(frameHeight / ROWS);
+    const frame = document.querySelector('.reels-frame');
+    setTimeout(() => {
+        const frameHeight = frame.getBoundingClientRect().height;
+        cellH = frameHeight / ROWS;
 
-    for (let r = 0; r < REELS; r++) {
-        const reel = document.createElement('div'); 
-        reel.className = 'reel';
-        const track = document.createElement('div'); 
-        track.className = 'track';
-        
-        let html = '';
-        for (let row = 0; row < ROWS; row++) {
-            html += `<div class="cell" style="height:${cellH}px"><img src="${randSym()}${IMG_VER}"></div>`;
+        for (let r = 0; r < REELS; r++) {
+            const reel = document.createElement('div'); 
+            reel.className = 'reel';
+            const track = document.createElement('div'); 
+            track.className = 'track';
+            
+            let html = '';
+            for (let row = 0; row < ROWS; row++) {
+                html += `<div class="cell" style="height:${cellH}px"><img src="${randSym()}${IMG_VER}"></div>`;
+            }
+            track.innerHTML = html;
+            reel.appendChild(track); 
+            reelsEl.appendChild(reel); 
+            tracks.push(track);
         }
-        track.innerHTML = html;
-        reel.appendChild(track); 
-        reelsEl.appendChild(reel); 
-        tracks.push(track);
-    }
-    updateUI();
+        updateUI();
+    }, 100);
 }
 
 function genGrid() {
@@ -243,17 +284,6 @@ function genGrid() {
     return g;
 }
 
-function renderGrid(grid) {
-    for (let r = 0; r < REELS; r++) {
-        let html = '';
-        for (let row = 0; row < ROWS; row++) {
-            html += `<div class="cell" style="height:${cellH}px"><img src="${grid[r][row]}${IMG_VER}"></div>`;
-        }
-        tracks[r].innerHTML = html;
-    }
-}
-
-// Анимация прокрутки (Покадровая)
 let reelAnimFrames = [null, null, null, null, null];
 let reelPositions = [0, 0, 0, 0, 0];
 
@@ -305,7 +335,6 @@ function stopReelAnim(r, final5) {
     });
 }
 
-// Подсчет выигрышей
 function calcWins(grid, perLine) {
     const wins = []; let total = 0;
     PAYLINES.slice(0, state.lines).forEach((line,idx)=>{
@@ -325,7 +354,6 @@ function calcWins(grid, perLine) {
     return {total, wins};
 }
 
-// Обновление интерфейса
 function updateUI() {
     $('balanceVal').textContent = fmt(state.balance); 
     $('betVal').textContent = fmt(state.betPerLine); 
@@ -334,7 +362,6 @@ function updateUI() {
     if(!isSpinning) $('winVal').textContent = '0';
 }
 
-// Запуск спина
 async function startSpin() {
     if (isSpinning) return;
     if (state.balance < totalBet()) { notif('Мало монет!', 'error'); return; }
@@ -349,13 +376,11 @@ async function startSpin() {
     reelPositions = [0, 0, 0, 0, 0]; 
     tracks.forEach((tr, i) => startReelSpin(i));
 
-    // Автоматическая остановка через 2 секунды (или по клику)
     setTimeout(() => {
         if(!stopRequested) requestStop(finalGrid);
     }, 1500);
 }
 
-// Остановка барабанов и подсчет
 async function requestStop(pregeneratedGrid) {
     if (!isSpinning || stopRequested) return; 
     stopRequested = true;
@@ -380,22 +405,19 @@ async function requestStop(pregeneratedGrid) {
     updateUI();
 }
 
-// Привязка кликов
-$('spinBtn').onclick = () => { 
-    if (isSpinning) {
-        // Если уже крутится, останавливаем принудительно
-        requestStop(); 
-    } else {
-        startSpin(); 
-    }
-};
-
+$('spinBtn').onclick = () => { if (isSpinning) requestStop(); else startSpin(); };
 $('linesDec').onclick = () => { if(!isSpinning){ state.lines = Math.max(1, state.lines-1); updateUI(); } };
 $('linesInc').onclick = () => { if(!isSpinning){ state.lines = Math.min(21, state.lines+1); updateUI(); } };
 $('betDec').onclick = () => { if(!isSpinning){ state.betPerLine = Math.max(1, state.betPerLine-1); updateUI(); } };
 $('betInc').onclick = () => { if(!isSpinning){ state.betPerLine += 1; updateUI(); } };
 
-// Запуск после загрузки
+$('btnL1').onclick = () => setLines(1);
+$('btnL3').onclick = () => setLines(3);
+$('btnL5').onclick = () => setLines(5);
+$('btnL9').onclick = () => setLines(9);
+$('btnL15').onclick = () => setLines(15);
+$('btnL21').onclick = () => setLines(21);
+
 window.addEventListener('resize', () => { if(!isSpinning) buildReels(); });
 setTimeout(buildReels, 200);
 </script>
