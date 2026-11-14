@@ -39,34 +39,21 @@ export default {
       } catch(e) { return new Response('[]', { headers: { 'Content-Type': 'application/json' } }); }
     }
 
-    if (url.pathname === '/api/wheel' && request.method === 'POST') {
-      try {
-        const { initData } = await request.json();
-        if (!await validateTelegramData(initData, env.BOT_TOKEN)) return new Response('Forbidden', { status: 403 });
-        const userId = JSON.parse(new URLSearchParams(initData).get('user')).id;
-        let lastWheel = parseInt(await env.FOREST_DB.get(`wheel_${userId}`) || '0');
-        if (Date.now() - lastWheel < 24 * 3600 * 1000) return new Response(JSON.stringify({ error: 'Wait 24h' }), { status: 400 });
-        let balance = parseInt(await env.FOREST_DB.get(`user_${userId}`) || '1000');
-        const prizes = [100, 200, 500, 1000, 2000, 5000, 10000];
-        const prize = prizes[Math.floor(Math.random() * prizes.length)];
-        balance += prize;
-        await env.FOREST_DB.put(`user_${userId}`, balance.toString());
-        await env.FOREST_DB.put(`wheel_${userId}`, Date.now().toString());
-        return new Response(JSON.stringify({ ok: true, prize, balance }), { headers: { 'Content-Type': 'application/json' } });
-      } catch(e) { return new Response(JSON.stringify({ error: e.message }), { status: 500 }); }
-    }
-
     if (url.pathname === '/api/balance' && request.method === 'POST') {
       try {
         const { initData, startParam } = await request.json();
         if (!await validateTelegramData(initData, env.BOT_TOKEN)) return new Response('Forbidden', { status: 403 });
         const userObj = JSON.parse(new URLSearchParams(initData).get('user'));
         const userId = userObj.id;
+        
         if (userObj.first_name) await env.FOREST_DB.put(`name_${userId}`, userObj.first_name);
+
         let balance = await env.FOREST_DB.get(`user_${userId}`);
+        
         if (balance === null) {
-          balance = 1000;
+          balance = 50000;
           await env.FOREST_DB.put(`user_${userId}`, balance.toString());
+          
           if (startParam && startParam.startsWith('ref_')) {
             const referrerId = startParam.replace('ref_', '');
             if (referrerId !== userId.toString()) {
@@ -77,13 +64,19 @@ export default {
             }
           }
         }
+        
         let jackpot = await env.FOREST_DB.get('global_jackpot');
         if (jackpot === null) { jackpot = 50000; await env.FOREST_DB.put('global_jackpot', jackpot.toString()); }
+        
         let refCount = await env.FOREST_DB.get(`refcount_${userId}`) || '0';
         let spins = await env.FOREST_DB.get(`spins_${userId}`) || '0';
-        let lastWheel = parseInt(await env.FOREST_DB.get(`wheel_${userId}`) || '0');
-        let wheelAvailable = (Date.now() - lastWheel > 24 * 3600 * 1000);
-        return new Response(JSON.stringify({ balance: parseInt(balance), jackpot: parseInt(jackpot), refCount: parseInt(refCount), spins: parseInt(spins), wheelAvailable: wheelAvailable }), { headers: { 'Content-Type': 'application/json' } });
+
+        return new Response(JSON.stringify({ 
+          balance: parseInt(balance), 
+          jackpot: parseInt(jackpot),
+          refCount: parseInt(refCount),
+          spins: parseInt(spins)
+        }), { headers: { 'Content-Type': 'application/json' } });
       } catch(e) { return new Response(JSON.stringify({ error: e.message }), { status: 500 }); }
     }
 
@@ -92,14 +85,27 @@ export default {
         let { initData, newBalance, betAmount } = await request.json();
         if (!await validateTelegramData(initData, env.BOT_TOKEN)) return new Response('Forbidden', { status: 403 });
         const userId = JSON.parse(new URLSearchParams(initData).get('user')).id;
+        
         let spins = parseInt(await env.FOREST_DB.get(`spins_${userId}`) || '0');
         await env.FOREST_DB.put(`spins_${userId}`, (spins + 1).toString());
+
         let jackpot = parseInt(await env.FOREST_DB.get('global_jackpot') || '50000');
         jackpot += Math.floor(betAmount * 0.02); 
-        let jackpotWon = false; let winAmount = 0;
-        if (Math.random() < 0.001) { jackpotWon = true; winAmount = jackpot; newBalance += jackpot; jackpot = 50000; }
+        
+        let jackpotWon = false;
+        let winAmount = 0;
+        
+        // Шанс на джекпот 0.1%
+        if (Math.random() < 0.001) { 
+          jackpotWon = true;
+          winAmount = jackpot;
+          newBalance += jackpot;
+          jackpot = 50000; 
+        }
+        
         await env.FOREST_DB.put(`user_${userId}`, newBalance.toString());
         await env.FOREST_DB.put('global_jackpot', jackpot.toString());
+
         return new Response(JSON.stringify({ ok: true, jackpot, jackpotWon, winAmount, newBalance }), { headers: { 'Content-Type': 'application/json' } });
       } catch(e) { return new Response(JSON.stringify({ error: e.message }), { status: 500 }); }
     }
@@ -124,23 +130,39 @@ export default {
     if (url.pathname === '/api/webhook' && request.method === 'POST') {
       try {
         const update = await request.json();
+
         if (update.message && update.message.text && update.message.text.startsWith('/start')) {
           const chatId = update.message.chat.id;
           const gameUrl = `https://${url.host}/?v=${Date.now()}`; 
-          const replyMarkup = { inline_keyboard: [[ { text: "🌿 Открыть Forest Fortune", web_app: { url: gameUrl } } ]] };
+
+          const replyMarkup = {
+            inline_keyboard: [[
+              { text: "🦔 Открыть Forest Fortune", web_app: { url: gameUrl } }
+            ]]
+          };
+
           await fetch(`https://api.telegram.org/bot${env.BOT_TOKEN}/sendMessage`, {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ chat_id: chatId, text: "🌿 **Добро пожаловать в Forest Fortune!**\n\nТебя ждут лесные духи, магия и сокровища! На старт мы выдаем **1000 монет**.\n\nЖми кнопку ниже и испытай удачу!", parse_mode: 'Markdown', reply_markup: replyMarkup })
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              chat_id: chatId,
+              text: "🌿 **Добро пожаловать в Forest Fortune!**\n\nТебя ждут лесные духи и сокровища! На старт мы выдаем **50 000 монет**.\n\nЖми кнопку ниже и испытай удачу!",
+              parse_mode: 'Markdown',
+              reply_markup: replyMarkup
+            })
           });
         }
+
         if (update.message?.successful_payment) {
           const payload = JSON.parse(update.message.successful_payment.invoice_payload);
           let balance = parseInt(await env.FOREST_DB.get(`user_${payload.userId}`) || '0');
           await env.FOREST_DB.put(`user_${payload.userId}`, (balance + payload.coins).toString());
         }
+        
         return new Response('ok');
       } catch(e) { return new Response('ok'); }
     }
+
     return env.ASSETS.fetch(request);
   }
 };
