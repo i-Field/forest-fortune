@@ -38,16 +38,17 @@ body {
 }
 
 /* ============================================================
-   КОНТЕЙНЕР (ЖЕСТКИЕ ПРОПОРЦИИ)
+   ГЛАВНЫЙ КОНТЕЙНЕР
    ============================================================ */
 .game-board {
     position: relative;
-    height: 100dvh;
+    aspect-ratio: 768 / 1370; /* Точные пропорции новой картинки */
     width: 100vw;
-    /* Насильно растягиваем фон на весь экран */
-    background: url('bg.png?v=600') no-repeat center center;
-    background-size: 100% 100%; 
+    max-height: 100dvh;
+    background: url('bg.png?v=700') no-repeat center center;
+    background-size: 100% 100%;
     overflow: hidden;
+    container-type: inline-size;
 }
 
 /* ============================================================
@@ -55,26 +56,26 @@ body {
    ============================================================ */
 .top-banner {
     position: absolute;
-    top: 9.8%; left: 22%; width: 56%; height: 6.5%;
+    top: 9.5%; left: 22%; width: 56%; height: 6.5%;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    z-index: 100; /* Высокий приоритет */
+    z-index: 60;
     background: radial-gradient(ellipse, rgba(30, 15, 5, 0.95) 60%, transparent 100%);
     border-radius: 10px;
     transition: all 0.3s;
 }
-.top-title { font-size: 2.6vh; color: #fff; font-weight: 900; letter-spacing: 1px; text-shadow: 0 0 5px #000; line-height: 1.1; }
-.top-value { font-size: 5.2vh; color: var(--gold); font-weight: 900; text-shadow: 0 0 10px #ff8c00, 0 2px 2px #000; }
+.top-title { font-size: 2.6cqw; color: #fff; font-weight: 900; letter-spacing: 1px; text-shadow: 0 0 5px #000; line-height: 1.1; }
+.top-value { font-size: 5.2cqw; color: var(--gold); font-weight: 900; text-shadow: 0 0 10px #ff8c00, 0 2px 2px #000; }
 .top-banner.freespins { background: radial-gradient(ellipse, rgba(243, 156, 18, 0.95) 60%, transparent 100%); }
 .top-banner.freespins .top-value { color: #fff; text-shadow: 0 0 10px #fff; }
 
 /* Глобус (Язык) */
 .lang-btn {
     position: absolute; top: 1.5%; left: 2.5%; width: 9%; height: 4.5%;
-    z-index: 9999; border-radius: 50%; background: transparent; border: none; cursor: pointer;
+    z-index: 1000; border-radius: 50%; background: transparent; border: none; cursor: pointer;
 }
 
 /* ============================================================
-   ДИНАМИЧЕСКИЕ ЦИФРЫ (ПЕРЕКРЫВАЮТ СТАРЫЕ)
+   ДИНАМИЧЕСКИЕ ЦИФРЫ (ПЛАШКИ ПОД ДЕРЕВО)
    ============================================================ */
 .ui-val {
     position: absolute;
@@ -82,7 +83,7 @@ body {
     background: #1a0a02; /* Темное дерево */
     color: #ffd966;
     font-weight: 900;
-    font-size: 2.8vh;
+    font-size: 2.8cqw;
     text-shadow: 1px 1px 2px #000;
     border-radius: 4px;
     z-index: 50;
@@ -128,15 +129,14 @@ body {
     pointer-events: auto;
     transition: background 0.1s;
 }
-/* Подсветка при нажатии, чтобы ты видел, что кнопка работает */
-.btn-overlay:active { background: rgba(255,255,255,0.4); box-shadow: 0 0 15px rgba(255, 255, 255, 0.6); }
+.btn-overlay:active { background: rgba(255,255,255,0.3); box-shadow: 0 0 15px rgba(255, 255, 255, 0.6); }
 
 /* Кнопка Spin (Текст внутри) */
 .btn-spin { top: 69.3%; left: 34%; width: 32%; height: 6.5%; border-radius: 20px; }
 .ui-spin-text {
     position: absolute; top: 69.3%; left: 34%; width: 32%; height: 6.5%;
     display: flex; align-items: center; justify-content: center;
-    color: #fff; font-size: 4vh; font-weight: 900; text-shadow: 0 2px 4px #000;
+    color: #fff; font-size: 4cqw; font-weight: 900; text-shadow: 0 2px 4px #000;
     z-index: 50; pointer-events: none;
 }
 
@@ -156,8 +156,8 @@ body {
 .btn-l15 { top: 69%; left: 33%; width: 4.5%; height: 3.5%; }
 .btn-l21 { top: 69%; left: 38.5%; width: 4.5%; height: 3.5%; }
 
-/* НИЖНИЕ КНОПКИ (Подняли выше от края экрана) */
-.btn-action { bottom: 5%; width: 11%; height: 5.5%; z-index: 9999; }
+/* НИЖНИЕ КНОПКИ (Подняты выше от системного свайпа) */
+.btn-action { bottom: 4.5%; width: 11%; height: 6%; z-index: 9999; }
 .btn-wheel { left: 3%; }
 .btn-shop { left: 15.5%; }
 .btn-risk { left: 28%; }
@@ -208,21 +208,18 @@ body {
         <div class="top-value" id="topValue">500 000</div>
     </div>
 
-    <!-- Цифры -->
     <div class="ui-val ui-balance" id="balanceVal">1 120</div>
     <div class="ui-val ui-win" id="winVal">0</div>
     <div class="ui-val ui-lines" id="linesVal">21/21</div>
     <div class="ui-val ui-bet" id="betVal">1</div>
     <div class="ui-val ui-total" id="totalBetVal">21</div>
 
-    <!-- Текст кнопки Spin -->
     <div class="ui-spin-text" id="spinText">КРУТИТЬ</div>
 
     <div class="reels-frame" id="reelsFrame">
         <div class="reels" id="reels"></div>
     </div>
 
-    <!-- Кнопки -->
     <div class="btn-overlay btn-spin" id="spinBtn"></div>
     <div class="btn-overlay btn-auto" onclick="toggleAuto()"></div>
     
@@ -238,7 +235,6 @@ body {
     <div class="btn-overlay btn-l15" onclick="setLines(15)"></div>
     <div class="btn-overlay btn-l21" onclick="setLines(21)"></div>
 
-    <!-- Нижнее меню -->
     <div class="btn-overlay btn-action btn-wheel" onclick="openModal('wheelModal')"></div>
     <div class="btn-overlay btn-action btn-shop" onclick="openModal('shopModal')"></div>
     <div class="btn-overlay btn-action btn-risk" id="btnRiskUI" onclick="openRiskModal()"></div>
@@ -262,7 +258,7 @@ body {
 
 <script>
 const REELS = 5, ROWS = 5; 
-const IMG_VER = '?v=600';
+const IMG_VER = '?v=700';
 const SYMBOLS = ['gem.png', 'mushroom.png', 'hedgehog.png', 'acorn.png', 'leaf.png', 'coin.png'];
 const WEIGHTS = {'gem.png':5, 'mushroom.png':10, 'hedgehog.png':15, 'acorn.png':25, 'leaf.png':25, 'coin.png':30};
 const PAYTABLE = { 'gem.png': [15, 60, 250], 'mushroom.png': [10, 40, 150], 'hedgehog.png': [8, 25, 80], 'acorn.png': [5, 15, 50], 'leaf.png': [5, 15, 50], 'coin.png': [2, 5, 15] };
@@ -289,7 +285,7 @@ const fmt = (n) => Math.round(n).toLocaleString('ru-RU');
 function notif(msg, type='') { const n=$('notif'); n.textContent=msg; n.className='notif show '+type; clearTimeout(n._t); n._t=setTimeout(()=>{n.className='notif '+type}, 3000); }
 const randSym = () => POOL[Math.floor(Math.random()*POOL.length)];
 const totalBet = () => state.lines * state.betPerLine;
-const openModal = (id) => { $(id).classList.add('active'); notif('Открыто!', 'success'); };
+const openModal = (id) => { $(id).classList.add('active'); };
 const closeModal = (id) => $(id).classList.remove('active');
 
 const langs = ['ru', 'uk', 'en'];
@@ -535,7 +531,6 @@ function claimDaily() {
     state.lastDaily = Date.now(); state.balance += 1000; updateUI(); notif('🎁 Ежедневный бонус: +1000 🪙', 'gold');
 }
 
-// Привязка событий через JS
 $('startBtn').onclick = () => { $('startOverlay').style.display = 'none'; buildReels(); };
 $('spinBtn').onclick = () => { if (isSpinning) requestStop(); else startSpin(); };
 
@@ -544,7 +539,7 @@ $('linesInc').onclick = () => { if(!isSpinning){ state.lines = Math.min(21, stat
 $('betDec').onclick = () => { if(!isSpinning){ state.betPerLine = Math.max(1, state.betPerLine-1); updateUI(); } };
 $('betInc').onclick = () => { if(!isSpinning){ state.betPerLine += 1; updateUI(); } };
 
-// Обработка кликов по нижним кнопкам
+// Привязка нижних кнопок через JS для надежности
 document.querySelector('.btn-wheel').onclick = () => openModal('wheelModal');
 document.querySelector('.btn-shop').onclick = () => openModal('shopModal');
 document.querySelector('.btn-friends').onclick = () => openModal('friendsModal');
