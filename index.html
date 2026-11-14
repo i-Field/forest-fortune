@@ -6,294 +6,101 @@
 <title>Forest Fortune 5x5</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-/* ============================================================
-   БАЗОВЫЕ СТИЛИ И ПЕРЕМЕННЫЕ
-   ============================================================ */
-:root {
-    --text: #f0f4f8;
-    --gold: #ffd966;
-    --green: #2ecc71;
-    --red: #e74c3c;
-    --bg-dark: #0a1208;
-}
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    user-select: none;
-    -webkit-user-select: none;
-    -webkit-tap-highlight-color: transparent;
-}
-html, body {
-    height: 100%;
-    overflow: hidden;
-    background: #000;
-}
-body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    color: var(--text);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100dvh;
-}
+:root{--text:#f0f4f8;--gold:#ffd966;--green:#2ecc71;--red:#e74c3c;}
+*{box-sizing:border-box;margin:0;padding:0;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;background:#000;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--text);display:flex;align-items:center;justify-content:center;height:100dvh;}
 
-/* ============================================================
-   ГЛАВНЫЙ КОНТЕЙНЕР И ФОН
-   ============================================================ */
 .app {
-    position: relative;
-    width: 100vw;
-    height: 100dvh;
-    background: url('bg.png?v=100') no-repeat center center;
-    background-size: 100% 100%;
-    overflow: hidden;
+    position: relative; width: 100vw; height: 100dvh;
+    background: url('bg.png?v=110') no-repeat center center;
+    background-size: 100% 100%; overflow: hidden;
 }
 
-/* ============================================================
-   ЯЗЫКОВОЕ МЕНЮ (ВИДИМОЕ, КАК НА РЕФЕРЕНСЕ)
-   ============================================================ */
-.lang-switch {
-    position: absolute;
-    top: 1.5%;
-    left: 2%;
-    display: flex;
-    gap: 5px;
-    z-index: 100;
-    background: rgba(0, 0, 0, 0.4);
-    padding: 3px 6px;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-.lang-btn {
-    background: transparent;
-    color: #ccc;
-    border: none;
-    font-size: 11px;
-    font-weight: 900;
-    padding: 4px 8px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: 0.2s;
-}
-.lang-btn.active {
-    background: var(--gold);
-    color: #000;
-    box-shadow: 0 0 8px var(--gold);
-}
+/* МАГИЯ */
+.fire-glow { position: absolute; top: 14%; width: 12%; height: 4%; background: radial-gradient(circle, rgba(255, 140, 0, 0.8) 0%, transparent 70%); mix-blend-mode: screen; pointer-events: none; z-index: 5; animation: fireFlicker 1.5s infinite alternate; }
+.fire-left { left: 12%; } .fire-right { right: 12%; }
+@keyframes fireFlicker { 0% { opacity: 0.4; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1.2); } }
+.app::after { content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 1; box-shadow: inset 0 0 40px rgba(46, 204, 113, 0.3); animation: holoPulse 3s infinite alternate; }
+@keyframes holoPulse { 0% { box-shadow: inset 0 0 20px rgba(46, 204, 113, 0.2); } 100% { box-shadow: inset 0 0 60px rgba(46, 204, 113, 0.6); } }
+.firefly { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: #a8ff78; box-shadow: 0 0 15px 4px #2ecc71, 0 0 5px #fff; pointer-events: none; z-index: 6; opacity: 0; animation: floatFly 3s infinite ease-in-out; }
+.f1 { bottom: 15%; left: 5%; animation-delay: 0s; } .f2 { bottom: 22%; left: 9%; animation-delay: 1s; } .f3 { bottom: 16%; right: 6%; animation-delay: 0.5s; }
+.f4 { bottom: 25%; right: 10%; animation-delay: 1.5s; } .f5 { bottom: 30%; left: 3%; animation-delay: 2s; } .f6 { bottom: 35%; right: 4%; animation-delay: 0.8s; }
+@keyframes floatFly { 0%, 100% { transform: translateY(0) scale(0.5); opacity: 0; } 50% { transform: translateY(-30px) scale(1.5); opacity: 1; } }
 
-/* ============================================================
-   МАГИЧЕСКИЕ ЭФФЕКТЫ (ОГНИ, СВЕТЛЯЧКИ)
-   ============================================================ */
-.fire-glow {
-    position: absolute;
-    top: 14%;
-    width: 12%;
-    height: 4%;
-    background: radial-gradient(circle, rgba(255, 140, 0, 0.8) 0%, transparent 70%);
-    mix-blend-mode: screen;
-    pointer-events: none;
-    z-index: 5;
-    animation: fireFlicker 1.5s infinite alternate;
-}
-.fire-left { left: 12%; }
-.fire-right { right: 12%; }
-@keyframes fireFlicker {
-    0% { opacity: 0.4; transform: scale(0.9); }
-    100% { opacity: 1; transform: scale(1.2); }
-}
-
-.app::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 1;
-    box-shadow: inset 0 0 40px rgba(46, 204, 113, 0.3);
-    animation: holoPulse 3s infinite alternate;
-}
-@keyframes holoPulse {
-    0% { box-shadow: inset 0 0 20px rgba(46, 204, 113, 0.2); }
-    100% { box-shadow: inset 0 0 60px rgba(46, 204, 113, 0.6); }
-}
-
-.firefly {
-    position: absolute;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #a8ff78;
-    box-shadow: 0 0 15px 4px #2ecc71, 0 0 5px #fff;
-    pointer-events: none;
-    z-index: 6;
-    opacity: 0;
-    animation: floatFly 3s infinite ease-in-out;
-}
-.f1 { bottom: 15%; left: 5%; animation-delay: 0s; }
-.f2 { bottom: 22%; left: 9%; animation-delay: 1s; }
-.f3 { bottom: 16%; right: 6%; animation-delay: 0.5s; }
-.f4 { bottom: 25%; right: 10%; animation-delay: 1.5s; }
-.f5 { bottom: 30%; left: 3%; animation-delay: 2s; }
-.f6 { bottom: 35%; right: 4%; animation-delay: 0.8s; }
-@keyframes floatFly {
-    0%, 100% { transform: translateY(0) scale(0.5); opacity: 0; }
-    50% { transform: translateY(-30px) scale(1.5); opacity: 1; }
-}
-
-/* ============================================================
-   ТЕКСТОВЫЕ ЗНАЧЕНИЯ (ИДЕАЛЬНО В ОКНАХ)
-   ============================================================ */
-.ui-text {
-    position: absolute;
-    z-index: 50;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--gold);
-    font-weight: 900;
-    text-shadow: 1px 1px 2px #000, 0 0 5px #000;
-    font-variant-numeric: tabular-nums;
-}
-
-/* Верхние значения (опущены в деревянные пустые плашки) */
+/* ТЕКСТ (ОПУЩЕН В ПЛАШКИ) */
+.ui-text { position: absolute; z-index: 50; display: flex; align-items: center; justify-content: center; color: var(--gold); font-weight: 900; text-shadow: 1px 1px 2px #000, 0 0 5px #000; font-variant-numeric: tabular-nums; }
 .ui-balance { top: 18.5%; left: 14%; width: 22%; height: 3%; font-size: 1.8vh; }
 .ui-win { top: 18.5%; right: 14%; width: 22%; height: 3%; font-size: 1.8vh; }
+/* Опустили нижние цифры ровно в окошки */
+.ui-lines { bottom: 28.5%; left: 12%; width: 16%; height: 3%; font-size: 1.6vh; }
+.ui-bet { bottom: 28.5%; left: 42%; width: 16%; height: 3%; font-size: 1.6vh; }
+.ui-total { bottom: 28.5%; right: 12%; width: 16%; height: 3%; font-size: 1.6vh; }
 
-/* Нижние значения (ровно по центру под надписями "ЛИНИИ", "СТАВКА" и т.д.) */
-.ui-lines { bottom: 30.5%; left: 12%; width: 16%; height: 3%; font-size: 1.6vh; }
-.ui-bet { bottom: 30.5%; left: 42%; width: 16%; height: 3%; font-size: 1.6vh; }
-.ui-total { bottom: 30.5%; right: 12%; width: 16%; height: 3%; font-size: 1.6vh; }
+/* Опустили текст SPIN ровно на зеленую кнопку */
+.ui-spin-text { bottom: 20.5%; left: 34%; width: 32%; height: 4%; font-size: 1.8vh; color: #fff; text-shadow: 0 2px 4px #000; letter-spacing: 1px; }
+.ui-auto-text { bottom: 21.5%; right: 10%; width: 12%; height: 5%; font-size: 1.4vh; color: #fff; display: flex; flex-direction: column; line-height: 1.1; text-shadow: 0 2px 2px #000; }
 
-/* Кнопка Spin */
-.ui-spin-text { bottom: 22.5%; left: 34%; width: 32%; height: 4%; font-size: 1.8vh; color: #fff; text-shadow: 0 2px 4px #000; letter-spacing: 1px; }
-/* Текст AUTO */
-.ui-auto-text { bottom: 24.5%; right: 10%; width: 12%; height: 5%; font-size: 1.4vh; color: #fff; display: flex; flex-direction: column; line-height: 1.1; text-shadow: 0 2px 2px #000; }
+/* СЕТКА */
+.reels-frame { position: absolute; top: 24.5%; left: 13.5%; right: 13.5%; height: 41%; background: #0d2112; border-radius: 4px; overflow: hidden; z-index: 10; border: 2px solid #3a2311; box-shadow: inset 0 0 20px #000; }
+.reels { display: grid; grid-template-columns: repeat(5, 1fr); height: 100%; width: 100%; background: #000; gap: 1px; }
+.reel { background: #0d2112; overflow: hidden; position: relative; height: 100%; }
+.track { position: absolute; left: 0; right: 0; top: 0; display: flex; flex-direction: column; will-change: transform; }
+.cell { display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; width: 100%; } 
+.cell img { width: 88%; height: 88%; object-fit: contain; filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.5)) drop-shadow(0 2px 2px rgba(0,0,0,0.8)); }
+.cell.win::before { content: ""; position: absolute; inset: 2px; border: 2px solid #a8ff78; border-radius: 50%; background: radial-gradient(circle, rgba(46,204,113,.6), transparent 70%); box-shadow: 0 0 15px #2ecc71; animation: winPulse .4s infinite alternate; }
+@keyframes winPulse { 0%{transform:scale(.9)} 100%{transform:scale(1.1)} }
 
-/* ============================================================
-   БАРАБАНЫ 5x5 (ТОЧНО В РАМКАХ)
-   ============================================================ */
-.reels-frame { 
-    position: absolute; 
-    top: 24.5%; 
-    left: 13.5%; 
-    right: 13.5%; 
-    height: 41%;
-    background: #0d2112; 
-    border-radius: 4px; 
-    overflow: hidden; 
-    z-index: 10; 
-    border: 2px solid #3a2311; 
-    box-shadow: inset 0 0 20px #000; 
-}
-.reels { 
-    display: grid; 
-    grid-template-columns: repeat(5, 1fr); 
-    height: 100%; 
-    width: 100%; 
-    background: #000; 
-    gap: 1px; 
-}
-.reel { 
-    background: #0d2112; 
-    overflow: hidden; 
-    position: relative; 
-    height: 100%; 
-}
-.track { 
-    position: absolute; 
-    left: 0; 
-    right: 0; 
-    top: 0; 
-    display: flex; 
-    flex-direction: column; 
-    will-change: transform;
-}
-.cell { 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    position: relative; 
-    flex-shrink: 0; 
-    width: 100%; 
-} 
-.cell img { 
-    width: 88%; 
-    height: 88%; 
-    object-fit: contain; 
-    filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.5)) drop-shadow(0 2px 2px rgba(0,0,0,0.8)); 
-}
-.cell.win::before { 
-    content: ""; 
-    position: absolute; 
-    inset: 2px; 
-    border: 2px solid #a8ff78; 
-    border-radius: 50%; 
-    background: radial-gradient(circle, rgba(46,204,113,.6), transparent 70%); 
-    box-shadow: 0 0 15px #2ecc71; 
-    animation: winPulse .4s infinite alternate; 
-}
-@keyframes winPulse { 
-    0% { transform: scale(.9); } 
-    100% { transform: scale(1.1); } 
-}
-
-/* ============================================================
-   НЕВИДИМЫЕ КЛИКАБЕЛЬНЫЕ ЗОНЫ
-   ============================================================ */
+/* КНОПКИ */
 .btn-overlay { position: absolute; z-index: 99; cursor: pointer; border-radius: 10px; }
-.btn-overlay:active { background: rgba(255,255,255,0.15); }
+.btn-overlay:active { background: rgba(255,255,255,0.2); }
+.btn-spin { bottom: 19.5%; left: 34%; width: 32%; height: 7%; border-radius: 20px; }
+.btn-auto { bottom: 20.5%; right: 9%; width: 14%; height: 6%; }
 
-.btn-spin { bottom: 21.5%; left: 34%; width: 32%; height: 7%; border-radius: 20px; }
-.btn-auto { bottom: 23.5%; right: 9%; width: 14%; height: 5.5%; }
+.btn-lines-dec { bottom: 28.5%; left: 7%; width: 4%; height: 3%; }
+.btn-lines-inc { bottom: 28.5%; left: 27%; width: 4%; height: 3%; }
+.btn-bet-dec { bottom: 28.5%; left: 37%; width: 4%; height: 3%; }
+.btn-bet-inc { bottom: 28.5%; left: 57%; width: 4%; height: 3%; }
 
-.btn-lines-dec { bottom: 30.5%; left: 7%; width: 4%; height: 3%; }
-.btn-lines-inc { bottom: 30.5%; left: 27%; width: 4%; height: 3%; }
-.btn-bet-dec { bottom: 30.5%; left: 37%; width: 4%; height: 3%; }
-.btn-bet-inc { bottom: 30.5%; left: 57%; width: 4%; height: 3%; }
+.btn-l1 { bottom: 25%; left: 11%; width: 3.5%; height: 2.5%; }
+.btn-l3 { bottom: 25%; left: 15.5%; width: 3.5%; height: 2.5%; }
+.btn-l5 { bottom: 25%; left: 20%; width: 3.5%; height: 2.5%; }
+.btn-l9 { bottom: 25%; left: 24.5%; width: 3.5%; height: 2.5%; }
+.btn-l15 { bottom: 25%; left: 29%; width: 3.5%; height: 2.5%; }
+.btn-l21 { bottom: 25%; left: 33.5%; width: 3.5%; height: 2.5%; }
 
-.btn-l1 { bottom: 27%; left: 11%; width: 3.5%; height: 2.5%; }
-.btn-l3 { bottom: 27%; left: 15.5%; width: 3.5%; height: 2.5%; }
-.btn-l5 { bottom: 27%; left: 20%; width: 3.5%; height: 2.5%; }
-.btn-l9 { bottom: 27%; left: 24.5%; width: 3.5%; height: 2.5%; }
-.btn-l15 { bottom: 27%; left: 29%; width: 3.5%; height: 2.5%; }
-.btn-l21 { bottom: 27%; left: 33.5%; width: 3.5%; height: 2.5%; }
-
-.btn-action { bottom: 13%; width: 11%; height: 5%; }
-.btn-wheel { left: 1.5%; } .btn-shop { left: 14%; } 
-.btn-risk { left: 26.5%; } .btn-friends { left: 39%; }
+.btn-action { bottom: 12%; width: 11%; height: 5%; }
+.btn-wheel { left: 1.5%; } .btn-shop { left: 14%; } .btn-risk { left: 26.5%; } .btn-friends { left: 39%; }
 .btn-tasks { right: 39%; } .btn-top { right: 26.5%; } .btn-bonus { right: 14%; } .btn-rules { right: 1.5%; }
 
-/* Подсветка кнопки Риск при выигрыше */
-@keyframes riskPulse { 
-    0% { box-shadow: 0 0 10px #f1c40f; background: rgba(241, 196, 15, 0.2); } 
-    100% { box-shadow: 0 0 20px #f1c40f; background: rgba(241, 196, 15, 0.6); } 
-}
-.btn-risk.active-risk { animation: riskPulse 0.8s infinite alternate; border-radius: 8px; z-index: 100; pointer-events: auto; }
+/* Кнопка Риск */
+@keyframes riskPulse { 0% { box-shadow: 0 0 10px #f1c40f; background: rgba(241, 196, 15, 0.2); } 100% { box-shadow: 0 0 20px #f1c40f; background: rgba(241, 196, 15, 0.6); } }
+.btn-risk.active-risk { animation: riskPulse 0.8s infinite alternate; border-radius: 8px; z-index: 100; }
 
-/* ============================================================
-   МОДАЛЬНЫЕ ОКНА
-   ============================================================ */
-.modal { position: fixed; inset: 0; background: rgba(0,0,0,.9); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity .2s; padding: 15px; }
-.modal.active { opacity: 1; pointer-events: auto; }
-.modal-box { background: linear-gradient(180deg, #1a2e1a, #0a1208); border: 2px solid var(--gold); border-radius: 14px; padding: 20px; max-width: 340px; width: 100%; text-align: center; color: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
-.modal-title { font-size: 20px; font-weight: 900; color: var(--gold); margin-bottom: 15px; font-family: Georgia,serif; }
-.modal-text { font-size: 14px; color: #ccc; margin-bottom: 15px; line-height: 1.4; }
-.modal-close { background: #576574; color: #fff; border: none; padding: 12px; border-radius: 8px; font-weight: 800; margin-top: 15px; width: 100%; font-size: 14px; }
-.modal-btns { display: flex; flex-direction: column; gap: 8px; }
-.modal-btn { padding: 14px; border-radius: 8px; border: none; font-size: 16px; font-weight: 900; cursor: pointer; color: #fff; }
-.modal-btn.green { background: linear-gradient(180deg,#2ecc71,#1a7d43); box-shadow: 0 4px 0 #0f3d22; }
-.modal-btn.red { background: linear-gradient(180deg,#e74c3c,#922b21); box-shadow: 0 4px 0 #4d0e07; }
-.modal-btn:active { transform: translateY(3px); box-shadow: none; }
+/* Языки */
+.lang-switch { position: absolute; top: 1.5%; left: 2%; display: flex; gap: 5px; z-index: 100; background: rgba(0, 0, 0, 0.4); padding: 3px 6px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); }
+.lang-btn { background: transparent; color: #ccc; border: none; font-size: 11px; font-weight: 900; padding: 4px 8px; border-radius: 4px; cursor: pointer; }
+.lang-btn.active { background: var(--gold); color: #000; box-shadow: 0 0 8px var(--gold); }
 
-.notif { position: fixed; top: -80px; left: 50%; transform: translateX(-50%); background: #2ecc71; color: #fff; padding: 10px 20px; border-radius: 20px; font-size: 13px; font-weight: 800; transition: top .3s; z-index: 2000; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,.5); }
-.notif.show { top: 15px; }
-.notif.error { background: #e74c3c; }
-.notif.gold { background: linear-gradient(180deg,#ffd966,#b8860b); color: #1a1200; }
+/* МОДАЛКИ */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.9);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity .2s;padding:15px}
+.modal.active{opacity:1;pointer-events:auto}
+.modal-box{background:linear-gradient(180deg,#1a2e1a,#0a1208);border:2px solid var(--gold);border-radius:14px;padding:20px;max-width:340px;width:100%;text-align:center;color:#fff;box-shadow:0 10px 30px rgba(0,0,0,0.8);}
+.modal-title{font-size:20px;font-weight:900;color:var(--gold);margin-bottom:15px;font-family:Georgia,serif;}
+.modal-text{font-size:14px;color:#ccc;margin-bottom:15px;line-height:1.4;}
+.modal-close{background:#576574;color:#fff;border:none;padding:12px;border-radius:8px;font-weight:800;margin-top:15px;width:100%;font-size:14px;}
+.modal-btns{display:flex;flex-direction:column;gap:8px;}
+.modal-btn{padding:14px;border-radius:8px;border:none;font-size:16px;font-weight:900;cursor:pointer;color:#fff;}
+.modal-btn.green{background:linear-gradient(180deg,#2ecc71,#1a7d43); box-shadow:0 4px 0 #0f3d22;}
+.modal-btn.red{background:linear-gradient(180deg,#e74c3c,#922b21); box-shadow:0 4px 0 #4d0e07;}
+.modal-btn:active{transform:translateY(3px); box-shadow:none;}
+
+.notif{position:fixed;top:-80px;left:50%;transform:translateX(-50%);background:#2ecc71;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:800;transition:top .3s;z-index:2000;text-align:center;box-shadow:0 5px 15px rgba(0,0,0,.5);}
+.notif.show{top:15px} .notif.error{background:#e74c3c} .notif.gold{background:linear-gradient(180deg,#ffd966,#b8860b);color:#1a1200}
 </style>
 </head>
 <body>
 
-<!-- ЭКРАН СТАРТА (ДЛЯ АКТИВАЦИИ ЗВУКА) -->
 <div style="position:fixed; inset:0; background:radial-gradient(circle at center, #0a1a05, #000); z-index:2000; display:flex; flex-direction:column; align-items:center; justify-content:center;" id="startOverlay">
     <div style="font-size:80px; margin-bottom:10px; filter:drop-shadow(0 0 20px #2ecc71);">🦔</div>
     <div style="font-size:32px; font-weight:900; color:#a8ff78; font-family:Georgia,serif; margin-bottom:10px; text-shadow:0 0 15px #2ecc71;">FOREST FORTUNE</div>
@@ -301,36 +108,28 @@ body {
     <button id="startBtn" style="background:linear-gradient(180deg,#2ecc71,#1a7d43); border:none; padding:15px 50px; border-radius:12px; color:#fff; font-size:18px; font-weight:900; cursor:pointer; box-shadow:0 5px 0 #0a1208, 0 0 20px rgba(46,204,113,0.5);">ИГРАТЬ 🔊</button>
 </div>
 
-<!-- ИГРОВОЙ ЭКРАН -->
 <div class="app" id="gameArea">
-    
-    <!-- Языки -->
     <div class="lang-switch">
         <button class="lang-btn active" onclick="setLang('ru', this)">RUS</button>
         <button class="lang-btn" onclick="setLang('uk', this)">UKR</button>
         <button class="lang-btn" onclick="setLang('en', this)">ENG</button>
     </div>
 
-    <div class="fire-glow fire-left"></div>
-    <div class="fire-glow fire-right"></div>
+    <div class="fire-glow fire-left"></div><div class="fire-glow fire-right"></div>
     <div class="firefly f1"></div><div class="firefly f2"></div><div class="firefly f3"></div>
     <div class="firefly f4"></div><div class="firefly f5"></div><div class="firefly f6"></div>
 
-    <!-- Тексты -->
     <div class="ui-text ui-balance" id="balanceVal">50 000</div>
     <div class="ui-text ui-win" id="winVal">0</div>
     <div class="ui-text ui-lines" id="linesVal">21</div>
     <div class="ui-text ui-bet" id="betVal">1</div>
     <div class="ui-text ui-total" id="totalBetVal">21</div>
+    
     <div class="ui-text ui-spin-text" id="spinText">КРУТИТЬ</div>
     <div class="ui-text ui-auto-text">AUTO<br><span style="font-size:1.1vh;">10x</span></div>
 
-    <!-- Сетка 5x5 -->
-    <div class="reels-frame" id="reelsFrame">
-        <div class="reels" id="reels"></div>
-    </div>
+    <div class="reels-frame" id="reelsFrame"><div class="reels" id="reels"></div></div>
 
-    <!-- Клики по кнопкам -->
     <div class="btn-overlay btn-spin" id="spinBtn"></div>
     <div class="btn-overlay btn-auto" id="autoBtn"></div>
     
@@ -356,11 +155,9 @@ body {
     <div class="btn-overlay btn-action btn-rules" onclick="openModal('paytableModal')"></div>
 </div>
 
-<!-- МОДАЛКИ -->
 <div class="modal" id="wheelModal"><div class="modal-box"><div class="modal-title">🎡 КОЛЕСО</div><div class="modal-text">Крути раз в 24 часа!</div><button class="modal-close" onclick="closeModal('wheelModal')">Закрыть</button></div></div>
 <div class="modal" id="shopModal"><div class="modal-box"><div class="modal-title">⭐ МАГАЗИН</div><div class="modal-text">Покупка звезд (в разработке)</div><button class="modal-close" onclick="closeModal('shopModal')">Закрыть</button></div></div>
 
-<!-- Игра Риск -->
 <div class="modal" id="riskModal">
     <div class="modal-box" style="border-color:#f1c40f;">
         <div class="modal-title">🃏 РИСК-ИГРА</div>
@@ -381,19 +178,12 @@ body {
 <div class="notif" id="notif"></div>
 
 <script>
-// --- НАСТРОЙКИ И СИМВОЛЫ ---
+// --- НАСТРОЙКИ ---
 const REELS = 5, ROWS = 5; 
-const IMG_VER = '?v=100';
+const IMG_VER = '?v=110';
 const SYMBOLS = ['gem.png', 'mushroom.png', 'hedgehog.png', 'acorn.png', 'leaf.png', 'coin.png'];
 const WEIGHTS = {'gem.png':5, 'mushroom.png':10, 'hedgehog.png':15, 'acorn.png':25, 'leaf.png':25, 'coin.png':30};
-const PAYTABLE = { 
-    'gem.png': [15, 60, 250], 
-    'mushroom.png': [10, 40, 150], 
-    'hedgehog.png': [8, 25, 80], 
-    'acorn.png': [5, 15, 50], 
-    'leaf.png': [5, 15, 50], 
-    'coin.png': [2, 5, 15] 
-};
+const PAYTABLE = { 'gem.png': [15, 60, 250], 'mushroom.png': [10, 40, 150], 'hedgehog.png': [8, 25, 80], 'acorn.png': [5, 15, 50], 'leaf.png': [5, 15, 50], 'coin.png': [2, 5, 15] };
 const PAYLINES = [
     [[0,0],[1,0],[2,0],[3,0],[4,0]], [[0,1],[1,1],[2,1],[3,1],[4,1]], [[0,2],[1,2],[2,2],[3,2],[4,2]], [[0,3],[1,3],[2,3],[3,3],[4,3]], [[0,4],[1,4],[2,4],[3,4],[4,4]],
     [[0,0],[1,1],[2,2],[3,1],[4,0]], [[0,4],[1,3],[2,2],[3,3],[4,4]], [[0,1],[1,2],[2,3],[3,2],[4,1]], [[0,3],[1,2],[2,1],[3,2],[4,3]],
@@ -401,16 +191,16 @@ const PAYLINES = [
     [[0,1],[1,0],[2,0],[3,0],[4,1]], [[0,3],[1,4],[2,4],[3,4],[4,3]], [[0,0],[1,1],[2,1],[3,1],[4,0]], [[0,4],[1,3],[2,3],[3,3],[4,4]],
     [[0,1],[1,1],[2,2],[3,3],[4,3]], [[0,3],[1,3],[2,2],[3,1],[4,1]], [[0,0],[1,2],[2,4],[3,2],[4,0]], [[0,4],[1,2],[2,0],[3,2],[4,4]]
 ];
-const POOL = [];
-Object.entries(WEIGHTS).forEach(([s,w]) => { for(let i=0; i<w; i++) POOL.push(s); });
+const POOL=[];Object.entries(WEIGHTS).forEach(([s,w])=>{for(let i=0;i<w;i++)POOL.push(s)});
 
-// --- СОСТОЯНИЕ ИГРЫ ---
+// --- СОСТОЯНИЕ ---
 let state = { balance: 50000, betPerLine: 1, lines: 21, lang: 'ru', lastDaily: 0 };
 let isSpinning = false, stopRequested = false, cellH = 0, audioReady = false;
 let freeSpins = 0, isFreeSpin = false, autoSpinsLeft = 0;
 let pendingRisk = 0;
 
 const reelsEl = document.getElementById('reels');
+const overlay = document.getElementById('linesOverlay');
 const tracks = [];
 
 // --- УТИЛИТЫ ---
@@ -422,10 +212,10 @@ const totalBet = () => state.lines * state.betPerLine;
 const openModal = (id) => $(id).classList.add('active');
 const closeModal = (id) => $(id).classList.remove('active');
 
-// --- ЛОКАЛИЗАЦИЯ (Базовый перевод) ---
+// --- ЯЗЫКИ ---
 const locales = {
-    ru: { spin: 'КРУТИТЬ', stop: 'СТОП', win: 'Выигрыш: +', noMoney: 'Мало монет! Пополните баланс.' },
-    uk: { spin: 'КРУТИТИ', stop: 'СТОП', win: 'Виграш: +', noMoney: 'Мало монет! Поповніть баланс.' },
+    ru: { spin: 'КРУТИТЬ', stop: 'СТОП', win: 'Выигрыш: +', noMoney: 'Мало монет!' },
+    uk: { spin: 'КРУТИТИ', stop: 'СТОП', win: 'Виграш: +', noMoney: 'Мало монет!' },
     en: { spin: 'SPIN', stop: 'STOP', win: 'Win: +', noMoney: 'Not enough coins!' }
 };
 function setLang(lang, btn) {
@@ -436,10 +226,7 @@ function setLang(lang, btn) {
     notif('Language: ' + lang.toUpperCase());
 }
 
-// --- ЗВУКОВОЙ ДВИЖОК ---
-function buildAudio() { if(audioReady) return; audioReady = true; }
-
-// --- ГЕНЕРАЦИЯ И АНИМАЦИЯ ---
+// --- СЕТКА ---
 function buildReels() {
     reelsEl.innerHTML = ''; tracks.length = 0;
     const frame = document.querySelector('.reels-frame');
@@ -457,6 +244,7 @@ function buildReels() {
     }, 300);
 }
 
+// --- ЛОГИКА АНИМАЦИИ (КАК В LUCKY ROGER) ---
 let reelAnimFrames = [null, null, null, null, null];
 let reelPositions = [0, 0, 0, 0, 0];
 
@@ -468,7 +256,7 @@ function startReelSpin(r) {
     const speed = 2000;
     
     function frame(now) {
-        if (stopRequested) return; // Сразу выходим, если пришел приказ стоп
+        if (!isSpinning) return; // Если спин отменен - прерываем
         const dt = (now - lastTime) / 1000; lastTime = now;
         reelPositions[r] -= speed * dt; 
         if (reelPositions[r] <= -(20 * cellH)) reelPositions[r] += 20 * cellH;
@@ -478,13 +266,11 @@ function startReelSpin(r) {
     reelAnimFrames[r] = requestAnimationFrame(frame);
 }
 
-// Критически важный фикс остановки: используем setTimeout с точным расчетом
 function stopReelAnim(r, final5) {
     return new Promise(resolve => {
         setTimeout(() => {
             cancelAnimationFrame(reelAnimFrames[r]); 
-            const track = tracks[r]; 
-            const currentY = reelPositions[r];
+            const track = tracks[r]; const currentY = reelPositions[r];
             let html = ''; 
             for (let i = 0; i < 15; i++) html += `<div class="cell" style="height:${cellH}px"><img src="${randSym()}${IMG_VER}"></div>`;
             final5.forEach(s => html += `<div class="cell" style="height:${cellH}px"><img src="${s}${IMG_VER}"></div>`);
@@ -496,7 +282,7 @@ function stopReelAnim(r, final5) {
             
             track.style.transition = 'none'; 
             track.style.transform = `translate3d(0, ${startY}px, 0)`; 
-            track.getBoundingClientRect(); // Force reflow
+            track.getBoundingClientRect(); // force reflow
             
             track.style.transition = `transform ${800 + r*200}ms cubic-bezier(0.1, 0.8, 0.2, 1)`; 
             track.style.transform = `translate3d(0, -${15 * cellH}px, 0)`;
@@ -511,7 +297,7 @@ function stopReelAnim(r, final5) {
     });
 }
 
-// --- ЛОГИКА ИГРЫ ---
+// --- СПИН ---
 function updateUI() {
     $('balanceVal').textContent = fmt(state.balance); 
     $('betVal').textContent = fmt(state.betPerLine); 
@@ -537,27 +323,24 @@ async function startSpin() {
     $('winVal').textContent = '0';
     updateUI(); 
     $('spinText').textContent = locales[state.lang].stop;
-    
     $('btnRiskUI').classList.remove('active-risk');
     
     const finalGrid = []; 
-    for (let r=0; r<REELS; r++) { 
-        const col=[]; 
-        for(let c=0; c<ROWS; c++) col.push(randSym()); 
-        finalGrid.push(col); 
-    }
+    for (let r=0; r<REELS; r++) { const col=[]; for(let c=0; c<ROWS; c++) col.push(randSym()); finalGrid.push(col); }
     
     reelPositions = [0, 0, 0, 0, 0]; 
     tracks.forEach((tr, i) => startReelSpin(i));
     
-    setTimeout(() => { if(!stopRequested) requestStop(finalGrid); }, 1500);
+    // Автостоп если игрок не нажал (через 5 сек)
+    setTimeout(() => { if(!stopRequested && isSpinning) requestStop(finalGrid); }, 5000);
 }
 
 async function requestStop(pregeneratedGrid) {
     if (!isSpinning || stopRequested) return; 
     stopRequested = true;
     
-    const finalGrid = pregeneratedGrid; 
+    const finalGrid = pregeneratedGrid || genGrid(); 
+    // Останавливаем по одному с задержкой
     await Promise.all(tracks.map((tr, i) => stopReelAnim(i, finalGrid[i])));
     
     let total = 0, scatterCount = 0;
@@ -607,7 +390,13 @@ async function requestStop(pregeneratedGrid) {
     }
 }
 
-// --- ИГРА В РИСК ---
+// --- ВСПОМОГАТЕЛЬНЫЕ ---
+function genGrid() {
+    const g = [];
+    for (let r = 0; r < REELS; r++) { const col = []; for (let row = 0; row < ROWS; row++) col.push(randSym()); g.push(col); }
+    return g;
+}
+
 function openRiskModal() {
     if (pendingRisk <= 0) { notif('Нет выигрыша для риска!', 'error'); return; }
     $('riskText').textContent = `Вы рискуете суммой ${fmt(pendingRisk)} 🪙. Угадайте карту (шанс 50/50), чтобы удвоить!`;
@@ -624,16 +413,12 @@ function playRisk(isHigher) {
     if (card1 === card2) won = false;
 
     if (won) {
-        state.balance += pendingRisk; 
-        notif(`🎉 Выпало ${card1} и ${card2}. Победа! +${fmt(pendingRisk)}`, 'gold');
-        pendingRisk = 0;
-        $('btnRiskUI').classList.remove('active-risk');
+        state.balance += pendingRisk; notif(`🎉 Победа! +${fmt(pendingRisk)}`, 'gold');
     } else {
-        state.balance -= pendingRisk;
-        notif(`❌ Выпало ${card1} и ${card2}. Вы проиграли ${fmt(pendingRisk)}`, 'error');
-        pendingRisk = 0;
-        $('btnRiskUI').classList.remove('active-risk');
+        state.balance -= pendingRisk; notif(`❌ Проигрыш: -${fmt(pendingRisk)}`, 'error');
     }
+    pendingRisk = 0;
+    $('btnRiskUI').classList.remove('active-risk');
     updateUI();
 }
 
@@ -644,29 +429,22 @@ function takeRiskMoney() {
     notif('Вы забрали выигрыш!', 'success');
 }
 
-// --- БОНУСЫ И АВТОСПИН ---
 function claimDaily() {
     if (Date.now() - state.lastDaily < 24*3600*1000) { notif('Бонус уже получен! Ждите 24ч', 'error'); return; }
-    state.lastDaily = Date.now(); 
-    state.balance += 1000; 
-    updateUI(); 
-    notif('🎁 Ежедневный бонус: +1000 🪙', 'gold');
+    state.lastDaily = Date.now(); state.balance += 1000; updateUI(); notif('🎁 Ежедневный бонус: +1000 🪙', 'gold');
 }
 
 function toggleAuto() {
     if (isSpinning) return;
     if (autoSpinsLeft > 0) {
-        autoSpinsLeft = 0;
-        notif('Автоспин остановлен', 'error');
+        autoSpinsLeft = 0; notif('Автоспин остановлен', 'error');
     } else {
-        autoSpinsLeft = 10;
-        notif('Автоспин 10x запущен', 'success');
-        startSpin();
+        autoSpinsLeft = 10; notif('Автоспин 10x запущен', 'success'); startSpin();
     }
 }
 
-// --- ПРИВЯЗКА СОБЫТИЙ ---
-$('startBtn').onclick = () => { buildAudio(); $('startOverlay').style.display = 'none'; buildReels(); };
+// --- СОБЫТИЯ ---
+$('startBtn').onclick = () => { $('startOverlay').style.display = 'none'; buildReels(); };
 $('spinBtn').onclick = () => { if (isSpinning) requestStop(); else startSpin(); };
 $('autoBtn').onclick = toggleAuto;
 
@@ -678,4 +456,4 @@ $('betInc').onclick = () => { if(!isSpinning){ state.betPerLine += 1; updateUI()
 window.addEventListener('resize', () => { if(!isSpinning) buildReels(); });
 </script>
 </body>
-</html>
+</html> 
