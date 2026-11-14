@@ -16,8 +16,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
     position: relative;
     width: 100vw;
     height: 100dvh;
-    /* Имя твоего файла */
-    background: url('bg.png.PNG?v=25') no-repeat center center;
+    /* ВАЖНО: Если картинка называется bg.png, напиши bg.png вместо bg.png.PNG */
+    background: url('bg.png.PNG?v=26') no-repeat center center;
     background-size: 100% 100%; 
     overflow: hidden;
 }
@@ -30,16 +30,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
     text-shadow: 1px 1px 2px #000, 0 0 5px #000;
 }
 
-/* Баланс (верхние пустые плашки) */
 .ui-balance { top: 18.5%; left: 15%; width: 25%; height: 3%; font-size: 2vh; }
 .ui-win { top: 18.5%; right: 15%; width: 25%; height: 3%; font-size: 2vh; }
 
-/* Линии, ставка, всего (средняя панель) */
 .ui-lines { bottom: 31.5%; left: 12%; width: 18%; height: 3%; font-size: 1.8vh; }
 .ui-bet { bottom: 31.5%; left: 41%; width: 18%; height: 3%; font-size: 1.8vh; }
 .ui-total { bottom: 31.5%; right: 12%; width: 18%; height: 3%; font-size: 1.8vh; }
 
-/* Текст на кнопке SPIN */
 .ui-spin-text { bottom: 25.5%; left: 35%; width: 30%; height: 4%; font-size: 2.5vh; color: #a8ff78; text-shadow: 0 0 10px #2ecc71; }
 
 /* ---------------- СЕТКА БАРАБАНОВ 5x5 ---------------- */
@@ -48,38 +45,34 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
     top: 24%;    
     left: 11%;   
     right: 11%;  
-    bottom: 34%; 
-    /* ВОТ ЭТА СТРОКА СКРОЕТ НАРИСОВАННЫХ ЗВЕРЕЙ */
+    height: 42%; /* Фиксированная высота вместо bottom, чтобы ровно легло */
     background: #0d2112; 
     border-radius: 4px;
     overflow: hidden;
     z-index: 4;
-    border: 2px solid #3a2311; /* Темная рамка */
+    border: 2px solid #3a2311; 
     box-shadow: inset 0 0 30px #000;
 }
 .reels { display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(5, 1fr); gap: 1px; height: 100%; width: 100%; background: #000; }
 .reel { background: transparent; overflow: hidden; position: relative; display: flex; flex-direction: column; background: #0d2112; }
-.track { position: absolute; left: 0; right: 0; top: 0; transition: transform 0.3s ease-out; }
-.cell { display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; } 
+.track { position: absolute; left: 0; right: 0; top: 0; display: flex; flex-direction: column; }
+.cell { display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; width: 100%; } 
 .cell img { width: 90%; height: 90%; object-fit: contain; filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.5)) drop-shadow(0 2px 2px rgba(0,0,0,0.8)); }
 .cell.win::before { content: ""; position: absolute; inset: 2px; border: 2px solid #a8ff78; border-radius: 50%; background: radial-gradient(circle, rgba(46,204,113,.6), transparent 70%); box-shadow: 0 0 15px #2ecc71; animation: winPulse .4s infinite alternate; }
 @keyframes winPulse { 0%{transform:scale(.9)} 100%{transform:scale(1.1)} }
 
-/* ---------------- НЕВИДИМЫЕ КНОПКИ (ПОВЕРХ НАРИСОВАННЫХ) ---------------- */
+/* ---------------- НЕВИДИМЫЕ КНОПКИ ---------------- */
 .btn-overlay { position: absolute; z-index: 10; cursor: pointer; border-radius: 10px; }
 .btn-overlay:active { background: rgba(255,255,255,0.2); box-shadow: 0 0 15px rgba(255, 255, 255, 0.4); }
 
-/* SPIN и AUTO */
 .btn-spin { bottom: 24%; left: 35%; width: 30%; height: 7%; border-radius: 20px; }
 .btn-auto { bottom: 25.5%; right: 8%; width: 15%; height: 5%; }
 
-/* Стрелки линий и ставки */
 .btn-lines-dec { bottom: 31.5%; left: 7%; width: 4%; height: 3%; }
 .btn-lines-inc { bottom: 31.5%; left: 26%; width: 4%; height: 3%; }
 .btn-bet-dec { bottom: 31.5%; left: 37%; width: 4%; height: 3%; }
 .btn-bet-inc { bottom: 31.5%; left: 56%; width: 4%; height: 3%; }
 
-/* Нижние кнопки (8 штук) - они уже нарисованы, мы просто накладываем клики */
 .btn-action { bottom: 12%; width: 11%; height: 5%; }
 .btn-wheel { left: 2%; }
 .btn-shop { left: 14.5%; }
@@ -90,7 +83,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
 .btn-bonus { right: 14.5%; }
 .btn-rules { right: 2%; }
 
-/* Кнопки быстрой ставки (1, 3, 5, 9, 15, 21) */
 .btn-l1 { bottom: 33.5%; left: 10%; width: 4%; height: 2.5%; }
 .btn-l3 { bottom: 33.5%; left: 15%; width: 4%; height: 2.5%; }
 .btn-l5 { bottom: 33.5%; left: 20%; width: 4%; height: 2.5%; }
@@ -98,7 +90,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
 .btn-l15 { bottom: 33.5%; left: 30%; width: 4%; height: 2.5%; }
 .btn-l21 { bottom: 33.5%; left: 35%; width: 4%; height: 2.5%; }
 
-/* ---------------- УВЕДОМЛЕНИЯ ---------------- */
 .notif{position:fixed;top:-80px;left:50%;transform:translateX(-50%);background:#2ecc71;color:#fff;padding:8px 18px;border-radius:20px;font-size:12px;font-weight:800;box-shadow:0 5px 15px rgba(0,0,0,.5);transition:top .3s;z-index:999;text-align:center}
 .notif.show{top:15px}
 .notif.error{background:#e74c3c}
@@ -108,8 +99,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
 <body>
 
 <div class="app" id="gameArea">
-    
-    <!-- Динамический текст -->
     <div class="ui-text ui-balance" id="balanceVal">50 000</div>
     <div class="ui-text ui-win" id="winVal">0</div>
     <div class="ui-text ui-lines" id="linesVal">21</div>
@@ -117,22 +106,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
     <div class="ui-text ui-total" id="totalBetVal">21</div>
     <div class="ui-text ui-spin-text">SPIN</div>
 
-    <!-- Сетка барабанов 5x5 (Перекрывает нарисованных зверей) -->
     <div class="reels-frame" id="reelsFrame">
         <div class="reels" id="reels"></div>
     </div>
 
-    <!-- НЕВИДИМЫЕ КНОПКИ -->
     <div class="btn-overlay btn-spin" id="spinBtn"></div>
     <div class="btn-overlay btn-auto" id="autoBtn"></div>
     
     <div class="btn-overlay btn-lines-dec" id="linesDec"></div>
     <div class="btn-overlay btn-lines-inc" id="linesInc"></div>
-    
     <div class="btn-overlay btn-bet-dec" id="betDec"></div>
     <div class="btn-overlay btn-bet-inc" id="betInc"></div>
 
-    <!-- Кнопки быстрой ставки -->
     <div class="btn-overlay btn-l1" onclick="setLines(1)"></div>
     <div class="btn-overlay btn-l3" onclick="setLines(3)"></div>
     <div class="btn-overlay btn-l5" onclick="setLines(5)"></div>
@@ -140,7 +125,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
     <div class="btn-overlay btn-l15" onclick="setLines(15)"></div>
     <div class="btn-overlay btn-l21" onclick="setLines(21)"></div>
 
-    <!-- Нижние кнопки меню -->
     <div class="btn-overlay btn-action btn-wheel" onclick="notif('Колесо')"></div>
     <div class="btn-overlay btn-action btn-shop" onclick="notif('Магазин')"></div>
     <div class="btn-overlay btn-action btn-risk" onclick="notif('Риск')"></div>
@@ -155,14 +139,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
 <div class="notif" id="notif"></div>
 
 <script>
-// --- ЛОГИКА КАСКАДОВ 5x5 (TUMBLE) ---
 const REELS = 5, ROWS = 5; 
-const IMG_VER = '?v=25';
-// ВНИМАНИЕ: Убедись, что эти файлы есть у тебя в папке с картинками!
+const IMG_VER = '?v=26';
 const SYMBOLS = ['gem.png', 'mushroom.png', 'hedgehog.png', 'acorn.png', 'leaf.png', 'coin.png'];
 const WEIGHTS = {'gem.png':3, 'mushroom.png':8, 'hedgehog.png':15, 'acorn.png':25, 'leaf.png':25, 'coin.png':30};
-
 const CLUSTER_MIN = 8; 
+
 const PAYTABLE = {
     'gem.png': {8: 5, 12: 20, 15: 100, 20: 500},
     'mushroom.png': {8: 2, 12: 10, 15: 50},
@@ -193,10 +175,11 @@ function setLines(num) {
     updateUI();
 }
 
-// Инициализация сетки
 function buildReels() {
     reelsEl.innerHTML = ''; tracks.length = 0;
-    const frameHeight = document.querySelector('.reels-frame').clientHeight;
+    const frame = document.querySelector('.reels-frame');
+    // Используем getBoundingClientRect().height, чтобы точно узнать высоту после загрузки
+    const frameHeight = frame.getBoundingClientRect().height;
     cellH = frameHeight / ROWS;
 
     for (let r = 0; r < REELS; r++) {
@@ -207,6 +190,7 @@ function buildReels() {
         
         let html = '';
         for (let row = 0; row < ROWS; row++) {
+            // Задаем жесткую высоту каждой ячейке
             html += `<div class="cell" style="height:${cellH}px"><img src="${randSym()}${IMG_VER}"></div>`;
         }
         track.innerHTML = html;
@@ -237,7 +221,6 @@ function renderGrid(grid) {
     }
 }
 
-// Поиск выигрышных кластеров (BFS)
 function findClusters(grid) {
     const visited = Array(REELS).fill(null).map(() => Array(ROWS).fill(false));
     const clusters = [];
@@ -255,7 +238,7 @@ function findClusters(grid) {
         for (let c = 0; c < ROWS; c++) {
             if (visited[r][c]) continue;
             const sym = grid[r][c];
-            if (sym === 'gem.png') continue; // Wild
+            if (sym === 'gem.png') continue; 
             
             const queue = [[r, c]];
             const cluster = [];
@@ -279,7 +262,6 @@ function findClusters(grid) {
     return clusters;
 }
 
-// Запуск спина
 async function startSpin() {
     if (isSpinning) return;
     if (state.balance < totalBet()) { notif('Мало монет!', 'error'); return; }
@@ -377,7 +359,6 @@ function updateUI() {
     $('totalBetVal').textContent = fmt(totalBet());
 }
 
-// Привязка кнопок
 $('spinBtn').onclick = startSpin;
 $('autoBtn').onclick = () => notif('Автоспин в разработке');
 $('linesDec').onclick = () => { if(!isSpinning && state.lines > 1) { state.lines--; updateUI(); } };
@@ -385,8 +366,11 @@ $('linesInc').onclick = () => { if(!isSpinning && state.lines < 21) { state.line
 $('betDec').onclick = () => { if(!isSpinning && state.betPerLine > 1) { state.betPerLine--; updateUI(); } };
 $('betInc').onclick = () => { if(!isSpinning) { state.betPerLine++; updateUI(); } };
 
+// Запускаем расчет сетки только после того, как страница полностью загрузится
+window.addEventListener('load', () => {
+    setTimeout(buildReels, 100);
+});
 window.addEventListener('resize', () => { if (!isSpinning) buildReels(); });
-setTimeout(buildReels, 200);
 </script>
 </body>
 </html>
