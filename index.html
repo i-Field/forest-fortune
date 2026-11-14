@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Forest Fortune 5x5</title>
+<title>Forest Fortune</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-:root{--text:#f0f4f8;--gold:#ffd966;}
+:root{--bg:#0a1208;--panel:#112211;--panel2:#1a3320;--gold:#d4af37;--goldL:#ffd966;--green:#2ecc71;--text:#f0f4f8;--muted:#8899aa}
 *{box-sizing:border-box;margin:0;padding:0;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden;background:#000;}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--text);display:flex;align-items:center;justify-content:center;height:100dvh;}
@@ -16,28 +16,33 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
     position: relative;
     width: 100vw;
     height: 100dvh;
-    /* ИСПРАВЛЕНО: Теперь просто bg.png без лишних точек */
-    background: url('bg.png?v=27') no-repeat center center;
+    background: url('bg.png?v=30') no-repeat center center;
     background-size: 100% 100%; 
     overflow: hidden;
 }
+
+/* Магическое свечение леса (Анимация) */
+.app::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 2;
+    box-shadow: inset 0 0 50px rgba(46, 204, 113, 0.4);
+    animation: pulseForest 4s infinite alternate;
+}
+@keyframes pulseForest { 0% { box-shadow: inset 0 0 30px rgba(46, 204, 113, 0.2); } 100% { box-shadow: inset 0 0 80px rgba(46, 204, 113, 0.6); } }
 
 /* ---------------- ДИНАМИЧЕСКИЙ ТЕКСТ ---------------- */
 .ui-text {
     position: absolute; z-index: 20;
     display: flex; align-items: center; justify-content: center;
-    color: var(--gold); font-weight: 900; 
-    text-shadow: 1px 1px 2px #000, 0 0 5px #000;
+    color: var(--goldL); font-weight: 900; 
+    text-shadow: 1px 1px 2px #000, 0 0 8px #000;
 }
 
-.ui-balance { top: 18.5%; left: 15%; width: 25%; height: 3%; font-size: 2vh; }
-.ui-win { top: 18.5%; right: 15%; width: 25%; height: 3%; font-size: 2vh; }
+.ui-balance { top: 18.5%; left: 15%; width: 25%; height: 3%; font-size: 1.8vh; }
+.ui-win { top: 18.5%; right: 15%; width: 25%; height: 3%; font-size: 1.8vh; }
 
-.ui-lines { bottom: 31.5%; left: 12%; width: 18%; height: 3%; font-size: 1.8vh; }
-.ui-bet { bottom: 31.5%; left: 41%; width: 18%; height: 3%; font-size: 1.8vh; }
-.ui-total { bottom: 31.5%; right: 12%; width: 18%; height: 3%; font-size: 1.8vh; }
-
-.ui-spin-text { bottom: 25.5%; left: 35%; width: 30%; height: 4%; font-size: 2.5vh; color: #a8ff78; text-shadow: 0 0 10px #2ecc71; }
+.ui-lines { bottom: 31.5%; left: 12%; width: 18%; height: 3%; font-size: 1.6vh; }
+.ui-bet { bottom: 31.5%; left: 41%; width: 18%; height: 3%; font-size: 1.6vh; }
+.ui-total { bottom: 31.5%; right: 12%; width: 18%; height: 3%; font-size: 1.6vh; }
 
 /* ---------------- СЕТКА БАРАБАНОВ 5x5 ---------------- */
 .reels-frame {
@@ -46,51 +51,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
     left: 11%;   
     right: 11%;  
     height: 42%; 
-    background: #0d2112; /* Темный фон перекрывает нарисованных зверей */
+    background: rgba(10, 20, 15, 0.6); /* Легкая подложка */
     border-radius: 4px;
     overflow: hidden;
     z-index: 4;
-    border: 2px solid #3a2311; 
-    box-shadow: inset 0 0 30px #000;
+    box-shadow: inset 0 0 20px #000;
 }
-
-/* ИСПРАВЛЕНО: Только 5 колонок, без навязывания строк */
-.reels { 
-    display: grid; 
-    grid-template-columns: repeat(5, 1fr); 
-    gap: 2px; 
-    height: 100%; 
-    width: 100%; 
-    background: #000; 
-}
-.reel { 
-    background: #0d2112; 
-    overflow: hidden; 
-    position: relative; 
-    height: 100%; 
-}
-.track { 
-    position: absolute; 
-    left: 0; 
-    right: 0; 
-    top: 0; 
-    display: flex; 
-    flex-direction: column; 
-}
-.cell { 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    flex-shrink: 0; 
-    width: 100%; 
-} 
+.reels { display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(5, 1fr); gap: 1px; height: 100%; width: 100%; }
+.reel { background: transparent; overflow: hidden; position: relative; display: flex; flex-direction: column; }
+.track { position: absolute; left: 0; right: 0; top: 0; display: flex; flex-direction: column; }
+.cell { display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; width: 100%; } 
 .cell img { width: 90%; height: 90%; object-fit: contain; filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.5)) drop-shadow(0 2px 2px rgba(0,0,0,0.8)); }
 .cell.win::before { content: ""; position: absolute; inset: 2px; border: 2px solid #a8ff78; border-radius: 50%; background: radial-gradient(circle, rgba(46,204,113,.6), transparent 70%); box-shadow: 0 0 15px #2ecc71; animation: winPulse .4s infinite alternate; }
 @keyframes winPulse { 0%{transform:scale(.9)} 100%{transform:scale(1.1)} }
 
 /* ---------------- НЕВИДИМЫЕ КНОПКИ ---------------- */
 .btn-overlay { position: absolute; z-index: 10; cursor: pointer; border-radius: 10px; }
-.btn-overlay:active { background: rgba(255,255,255,0.2); box-shadow: 0 0 15px rgba(255, 255, 255, 0.4); }
+.btn-overlay:active { background: rgba(255,255,255,0.15); box-shadow: 0 0 15px rgba(255, 255, 255, 0.4); }
 
 .btn-spin { bottom: 24%; left: 35%; width: 30%; height: 7%; border-radius: 20px; }
 .btn-auto { bottom: 25.5%; right: 8%; width: 15%; height: 5%; }
@@ -117,13 +94,70 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
 .btn-l15 { bottom: 33.5%; left: 30%; width: 4%; height: 2.5%; }
 .btn-l21 { bottom: 33.5%; left: 35%; width: 4%; height: 2.5%; }
 
-.notif{position:fixed;top:-80px;left:50%;transform:translateX(-50%);background:#2ecc71;color:#fff;padding:8px 18px;border-radius:20px;font-size:12px;font-weight:800;box-shadow:0 5px 15px rgba(0,0,0,.5);transition:top .3s;z-index:999;text-align:center}
+/* ---------------- МОДАЛКИ ---------------- */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.9);display:flex;align-items:center;justify-content:center;z-index:100;opacity:0;pointer-events:none;transition:opacity .2s;padding:15px}
+.modal.active{opacity:1;pointer-events:auto}
+.modal-box{background:linear-gradient(180deg,#1a2e1a,#0a1208);border:2px solid var(--gold);border-radius:14px;padding:16px;max-width:380px;width:100%;box-shadow:0 10px 40px rgba(0,0,0,.8);text-align:center;max-height:90vh;overflow-y:auto}
+.modal-title{font-size:18px;font-weight:900;color:var(--goldL);margin-bottom:10px;font-family:Georgia,serif}
+.modal-text{font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.4}
+.modal-close{background:#576574;color:#fff;border:none;padding:8px 16px;border-radius:8px;font-weight:800;font-size:12px;cursor:pointer;margin-top:10px;width:100%}
+.pt-table{width:100%;border-collapse:collapse;font-size:11px}
+.pt-table thead th{color:var(--goldL);padding:4px;border-bottom:1px solid #455872;font-size:10px}
+.pt-table tbody td{padding:5px;border-bottom:1px solid rgba(69,88,114,.4);font-variant-numeric:tabular-nums}
+.pt-sym img{width:30px;height:30px;object-fit:contain;}
+.pt-val{color:var(--goldL);font-weight:800}
+.shop-grid{display:flex;flex-direction:column;gap:6px}
+.shop-card{background:#1a2e1a;border:1px solid #2a4a2a;border-radius:10px;padding:10px;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+.shop-card.featured{border-color:var(--gold);background:linear-gradient(135deg,#2a1a0a,#0a1208)}
+.shop-left{text-align:left}
+.shop-name{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase}
+.shop-coins{font-size:18px;font-weight:900;color:var(--goldL)}
+.shop-bonus{font-size:10px;color:var(--green);font-weight:800}
+.shop-price{background:linear-gradient(180deg,#ffd966,#b8860b);color:#1a1200;padding:8px 12px;border-radius:8px;font-weight:900;font-size:13px}
+.chests{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px}
+.chest{background:#1a2e1a;border:2px solid var(--gold);border-radius:10px;font-size:36px;padding:12px 0;cursor:pointer}
+.chest:active{transform:scale(.92)}
+.chest.opened{background:radial-gradient(circle,#2ecc71,#0a1208);border-color:#a8ff78}
+.modal-btns{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+.modal-btn{padding:10px;border-radius:8px;border:none;font-size:13px;font-weight:800;cursor:pointer;color:#fff}
+.modal-btn.green{background:#2ecc71}
+.modal-btn.red{background:#e74c3c}
+.modal-btn.gray{background:#576574}
+.task-item{display:flex;justify-content:space-between;align-items:center;background:#1a2e1a;padding:10px;border-radius:8px;border:1px solid #2a4a2a;margin-bottom:6px}
+.task-info{text-align:left}
+.task-title{font-size:13px;font-weight:800;color:#fff}
+.task-reward{font-size:11px;color:var(--goldL)}
+.task-btn{background:var(--green);color:#fff;border:none;padding:6px 12px;border-radius:6px;font-weight:800;font-size:11px;cursor:pointer}
+.task-btn:disabled{background:#576574;color:#8899aa}
+.wheel-container{position:relative;width:260px;height:260px;margin:0 auto 15px;border-radius:50%;border:4px solid var(--gold);box-shadow:0 0 20px rgba(46,204,113,.5);overflow:hidden;transition:transform 4s cubic-bezier(0.1, 0.8, 0.2, 1);background:conic-gradient(#e74c3c 0 45deg, #f39c12 45deg 90deg, #2ecc71 90deg 135deg, #3498db 135deg 180deg, #9b59b6 180deg 225deg, #e67e22 225deg 270deg, #1abc9c 270deg 315deg, #c0392b 315deg 360deg)}
+.wheel-center{position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);width:40px;height:40px;background:#fff;border-radius:50%;box-shadow:0 0 10px rgba(0,0,0,.5);z-index:2;display:flex;align-items:center;justify-content:center;font-size:20px}
+.wheel-pointer{position:absolute;top:-10px;left:50%;transform:translateX(-50%);font-size:30px;z-index:3;filter:drop-shadow(0 2px 2px rgba(0,0,0,.8))}
+.bigwin-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:2000;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+.bigwin-overlay.active{opacity:1;pointer-events:auto}
+.bigwin-text{font-size:50px;font-weight:900;color:#a8ff78;font-family:Georgia,serif;text-shadow:0 0 20px #a8ff78, 0 0 50px #2ecc71;animation:bigWinZoom 0.5s ease-out infinite alternate}
+@keyframes bigWinZoom{0%{transform:scale(1)}100%{transform:scale(1.1)}}
+.bigwin-amount{font-size:40px;font-weight:900;color:#fff;margin-top:20px;text-shadow:0 0 15px #2ecc71;animation:bigWinZoom 0.5s ease-out infinite alternate}
+.notif{position:fixed;top:-80px;left:50%;transform:translateX(-50%);background:#2ecc71;color:#fff;padding:8px 18px;border-radius:20px;font-size:12px;font-weight:800;box-shadow:0 5px 15px rgba(0,0,0,.5);transition:top .3s;z-index:999;max-width:90vw;text-align:center}
 .notif.show{top:15px}
 .notif.error{background:#e74c3c}
 .notif.gold{background:linear-gradient(180deg,#ffd966,#b8860b);color:#1a1200}
+.start-overlay{position:fixed;inset:0;background:radial-gradient(circle at center,#0a1a05,#000);z-index:1000;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+.start-overlay.hidden{opacity:0;pointer-events:none}
+.start-box{text-align:center;padding:20px;max-width:320px}
+.start-btn{width:100%;background:linear-gradient(180deg,#2ecc71,#1a7d43);color:#fff;border:none;padding:12px;border-radius:10px;font-size:14px;font-weight:900;cursor:pointer;margin-bottom:6px;box-shadow:0 4px 0 #0a1208}
 </style>
 </head>
 <body>
+
+<div class="start-overlay" id="startOverlay">
+  <div class="start-box">
+    <div style="font-size:70px;margin-bottom:10px;filter:drop-shadow(0 0 20px #2ecc71)">🦔</div>
+    <div style="font-size:28px;font-weight:900;letter-spacing:2px;color:#a8ff78;margin-bottom:6px;font-family:Georgia,serif">FOREST FORTUNE</div>
+    <div style="color:#8899aa;font-size:12px;margin-bottom:20px">Магия леса и сокровища</div>
+    <button class="start-btn" id="startSound">🔊 Играть со звуком</button>
+    <button class="start-btn" style="background:#576574" id="startMute">🔇 Без звука</button>
+  </div>
+</div>
 
 <div class="app" id="gameArea">
     <div class="ui-text ui-balance" id="balanceVal">50 000</div>
@@ -131,10 +165,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
     <div class="ui-text ui-lines" id="linesVal">21</div>
     <div class="ui-text ui-bet" id="betVal">1</div>
     <div class="ui-text ui-total" id="totalBetVal">21</div>
-    <div class="ui-text ui-spin-text">SPIN</div>
 
     <div class="reels-frame" id="reelsFrame">
         <div class="reels" id="reels"></div>
+        <svg class="lines-overlay" id="linesOverlay"></svg>
     </div>
 
     <div class="btn-overlay btn-spin" id="spinBtn"></div>
@@ -152,49 +186,207 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
     <div class="btn-overlay btn-l15" onclick="setLines(15)"></div>
     <div class="btn-overlay btn-l21" onclick="setLines(21)"></div>
 
-    <div class="btn-overlay btn-action btn-wheel" onclick="notif('Колесо')"></div>
-    <div class="btn-overlay btn-action btn-shop" onclick="notif('Магазин')"></div>
-    <div class="btn-overlay btn-action btn-risk" onclick="notif('Риск')"></div>
-    <div class="btn-overlay btn-action btn-friends" onclick="notif('Друзья')"></div>
-    
-    <div class="btn-overlay btn-action btn-tasks" onclick="notif('Задания')"></div>
-    <div class="btn-overlay btn-action btn-top" onclick="notif('Рейтинг')"></div>
-    <div class="btn-overlay btn-action btn-bonus" onclick="notif('Бонус получен!')"></div>
-    <div class="btn-overlay btn-action btn-rules" onclick="notif('Правила')"></div>
+    <div class="btn-overlay btn-action btn-wheel" onclick="openModal('wheelModal')"></div>
+    <div class="btn-overlay btn-action btn-shop" onclick="openModal('shopModal')"></div>
+    <div class="btn-overlay btn-action btn-risk" onclick="openModal('riskModal')"></div>
+    <div class="btn-overlay btn-action btn-friends" onclick="openModal('friendsModal')"></div>
+    <div class="btn-overlay btn-action btn-tasks" onclick="openModal('tasksModal')"></div>
+    <div class="btn-overlay btn-action btn-top" onclick="openModal('topModal')"></div>
+    <div class="btn-overlay btn-action btn-bonus" onclick="claimDaily()"></div>
+    <div class="btn-overlay btn-action btn-rules" onclick="openModal('paytableModal')"></div>
 </div>
 
+<!-- Модалки (такие же, как в твоем старом проекте) -->
+<div class="modal" id="wheelModal"><div class="modal-box"><div class="modal-title">🎡 КОЛЕСО</div><div style="position:relative; width:260px; margin:0 auto 15px;"><div class="wheel-pointer">▼</div><div class="wheel-container" id="wheel"></div><div class="wheel-center">🎁</div></div><button class="modal-btn green" id="spinWheelBtn" style="width:100%; margin-bottom:10px;">КРУТИТЬ</button><button class="modal-close" onclick="closeModal('wheelModal')">Закрыть</button></div></div>
+<div class="modal" id="shopModal"><div class="modal-box"><div class="modal-title">⭐ МАГАЗИН</div><div class="shop-grid" id="shopGrid"></div><button class="modal-close" onclick="closeModal('shopModal')">Закрыть</button></div></div>
+<div class="modal" id="riskModal"><div class="modal-box"><div class="modal-title">🃏 РИСК</div><div class="modal-text" id="riskText"></div><div class="modal-btns"><button class="modal-btn green" id="riskHigher">ВЫШЕ</button><button class="modal-btn red" id="riskLower">НИЖЕ</button><button class="modal-btn gray" onclick="closeModal('riskModal'); pendingRisk=0;">Забрать</button></div></div></div>
+<div class="modal" id="tasksModal"><div class="modal-box"><div class="modal-title">📜 ЗАДАНИЯ</div><div class="task-item"><div class="task-info"><div class="task-title">Сделай 10 спинов</div><div class="task-reward">Награда: 1000 🪙</div></div><button class="task-btn" id="taskSpinBtn" onclick="claimTask('spin')">Забрать</button></div><button class="modal-close" onclick="closeModal('tasksModal')">Закрыть</button></div></div>
+<div class="modal" id="topModal"><div class="modal-box"><div class="modal-title">🏆 ТОП</div><div class="lb-list" id="lbList"></div><button class="modal-close" onclick="closeModal('topModal')">Закрыть</button></div></div>
+<div class="modal" id="paytableModal"><div class="modal-box"><div class="modal-title">📋 ПРАВИЛА</div><table class="pt-table"><thead><tr><th></th><th>×3</th><th>×4</th><th>×5</th></tr></thead><tbody id="ptBody"></tbody></table><button class="modal-close" onclick="closeModal('paytableModal')">Закрыть</button></div></div>
+<div class="modal" id="friendsModal"><div class="modal-box"><div class="modal-title">🤝 ДРУЗЬЯ</div><div style="font-size:16px; font-weight:900; color:#fff; margin-bottom:5px;">Приглашено: <span id="refCountVal" style="color:#2ecc71;">0</span></div><div class="ref-link-box"><input type="text" class="ref-input" id="refLinkInput" readonly value="..."><button class="ref-btn" id="copyRefBtn">Копировать</button></div><button class="modal-close" onclick="closeModal('friendsModal')">Закрыть</button></div></div>
+<div class="modal" id="bonusModal"><div class="modal-box"><div class="modal-title">🌿 ЛЕСНОЙ КЛАД</div><div class="modal-text">Выберите сундук:</div><div class="chests"><div class="chest" data-chest="0">📦</div><div class="chest" data-chest="1">📦</div><div class="chest" data-chest="2">📦</div></div></div></div>
+
+<div class="bigwin-overlay" id="bigWinOverlay">
+  <div class="bigwin-text">BIG WIN!</div>
+  <div class="bigwin-amount" id="bigWinAmount">0 🪙</div>
+</div>
 <div class="notif" id="notif"></div>
 
 <script>
-const REELS = 5, ROWS = 5; 
-const IMG_VER = '?v=27';
-const SYMBOLS = ['gem.png', 'mushroom.png', 'hedgehog.png', 'acorn.png', 'leaf.png', 'coin.png'];
-const WEIGHTS = {'gem.png':3, 'mushroom.png':8, 'hedgehog.png':15, 'acorn.png':25, 'leaf.png':25, 'coin.png':30};
-const CLUSTER_MIN = 8; 
-
-const PAYTABLE = {
-    'gem.png': {8: 5, 12: 20, 15: 100, 20: 500},
-    'mushroom.png': {8: 2, 12: 10, 15: 50},
-    'hedgehog.png': {8: 1.5, 12: 5, 15: 20},
-    'acorn.png': {8: 1, 12: 3, 15: 10},
-    'leaf.png': {8: 1, 12: 3, 15: 10},
-    'coin.png': {8: 0.5, 12: 2, 15: 5}
+const CONFIG = {
+  invoiceEndpoint: '/api/invoice',
+  packages: [
+    { id: 'p100',   stars: 100,   coins: 1000,   name: 'Старт',      bonus: '' },
+    { id: 'p500',   stars: 500,   coins: 6000,   name: 'Популярный', bonus: '+20%' },
+    { id: 'p2000',  stars: 2000,  coins: 30000,  name: 'Клад',       bonus: '+50%', featured: true },
+    { id: 'p10000', stars: 10000, coins: 200000, name: 'Легенда',    bonus: '+100%' }
+  ]
 };
 
-const POOL = []; Object.entries(WEIGHTS).forEach(([s,w])=>{ for(let i=0;i<w;i++) POOL.push(s); });
+// Настройки сетки 5x5
+const REELS=5, ROWS=5, MAX_LINES=21;
+const AUTO_STOP_TIME = 7000;
+const IMG_VER = '?v=30';
 
-let state = { balance: 50000, betPerLine: 1, lines: 21 };
-let isSpinning = false, currentGrid = [];
+// Символы
+const SYMBOLS = ['gem.png', 'mushroom.png', 'hedgehog.png', 'acorn.png', 'leaf.png', 'coin.png'];
+const WEIGHTS = {'gem.png':3, 'mushroom.png':8, 'hedgehog.png':15, 'acorn.png':25, 'leaf.png':25, 'coin.png':30};
+const PAYTABLE = {
+    'gem.png': [15, 60, 250],
+    'mushroom.png': [10, 40, 150],
+    'hedgehog.png': [8, 25, 80],
+    'acorn.png': [5, 15, 50],
+    'leaf.png': [5, 15, 50],
+    'coin.png': [2, 5, 15]
+};
+
+// Линии для 5x5 (координаты от 0 до 4)
+const PAYLINES = [
+    [[0,0],[1,0],[2,0],[3,0],[4,0]], [[0,1],[1,1],[2,1],[3,1],[4,1]], [[0,2],[1,2],[2,2],[3,2],[4,2]], [[0,3],[1,3],[2,3],[3,3],[4,3]], [[0,4],[1,4],[2,4],[3,4],[4,4]],
+    [[0,0],[1,1],[2,2],[3,1],[4,0]], [[0,4],[1,3],[2,2],[3,3],[4,4]], [[0,1],[1,2],[2,3],[3,2],[4,1]], [[0,3],[1,2],[2,1],[3,2],[4,3]],
+    [[0,0],[1,0],[2,1],[3,2],[4,2]], [[0,4],[1,4],[2,3],[3,2],[4,2]], [[0,2],[1,1],[2,0],[3,1],[4,2]], [[0,2],[1,3],[2,4],[3,3],[4,2]],
+    [[0,1],[1,0],[2,0],[3,0],[4,1]], [[0,3],[1,4],[2,4],[3,4],[4,3]], [[0,0],[1,1],[2,1],[3,1],[4,0]], [[0,4],[1,3],[2,3],[3,3],[4,4]],
+    [[0,1],[1,1],[2,2],[3,3],[4,3]], [[0,3],[1,3],[2,2],[3,1],[4,1]], [[0,0],[1,2],[2,4],[3,2],[4,0]], [[0,4],[1,2],[2,0],[3,2],[4,4]]
+];
+
+const LINE_COLORS=['#ff3b30','#ff9500','#ffcc00','#34c759','#00c7be','#30b0ff','#5856d6','#af52de','#ff2d95','#ff6b6b','#ffd93d','#6bcf7f','#4ecdc4','#95e1d3','#a8e6cf','#c7ceea','#e2a4d1','#f6d365','#b5eaea','#e0aaff','#ffb4a2'];
+const POOL=[];Object.entries(WEIGHTS).forEach(([s,w])=>{for(let i=0;i<w;i++)POOL.push(s)});
+
+let state={balance:50000,betPerLine:1,lines:21,lastDaily:0, spins:0, refCount:0};
+let globalJackpot = 50000;
+let isSpinning=false, pendingRisk=0, stopRequested=false, autoStopTimer=null;
 let cellH = 0;
 
-const reelsEl = document.getElementById('reels');
-const tracks = [];
+const reelsEl=document.getElementById('reels');
+const overlay=document.getElementById('linesOverlay');
+const tracks=[];
 
-function $(id) { return document.getElementById(id); }
-function fmt(n) { return Math.round(n).toLocaleString('ru-RU'); }
-function notif(msg, type='') { const n=$('notif'); n.textContent=msg; n.className='notif show '+type; clearTimeout(n._t); n._t=setTimeout(()=>{n.className='notif '+type}, 2400); }
-function randSym() { return POOL[Math.floor(Math.random()*POOL.length)]; }
-function totalBet() { return state.lines * state.betPerLine; }
+function $(id){return document.getElementById(id)}
+function fmt(n){return Math.round(n).toLocaleString('ru-RU')}
+function save(){try{localStorage.setItem('forest_v3',JSON.stringify(state))}catch(e){}}
+function load(){try{const r=localStorage.getItem('forest_v3');if(r)Object.assign(state,JSON.parse(r))}catch(e){}}
+function totalBet(){return state.lines*state.betPerLine}
+function notif(msg,type=''){ const n=$('notif'); n.textContent=msg; n.className='notif show '+type; clearTimeout(n._t); n._t=setTimeout(()=>{n.className='notif '+type},2400); }
+function openModal(id) { $(id).classList.add('active'); }
+function closeModal(id) { $(id).classList.remove('active'); }
+window.closeModal = closeModal;
+
+function randSym(){return POOL[Math.floor(Math.random()*POOL.length)]}
+
+function buildReels(){
+  reelsEl.innerHTML=''; tracks.length=0;
+  const frameHeight = document.querySelector('.reels-frame').clientHeight;
+  cellH = frameHeight / ROWS; // 5 рядов
+
+  for(let r=0;r<REELS;r++){
+    const reel=document.createElement('div'); reel.className='reel';
+    const track=document.createElement('div'); track.className='track';
+    track.innerHTML=Array.from({length:ROWS},()=>`<div class="cell" style="height:${cellH}px"><img src="${randSym()}${IMG_VER}"></div>`).join('');
+    reel.appendChild(track); reelsEl.appendChild(reel); tracks.push(track);
+  }
+  updateUI();
+}
+
+let reelAnimFrames = [null, null, null, null, null];
+let reelPositions = [0, 0, 0, 0, 0];
+
+function startReelSpin(r) {
+  const track = tracks[r]; let html = ''; 
+  for (let i = 0; i < 40; i++) html += `<div class="cell" style="height:${cellH}px"><img src="${randSym()}${IMG_VER}"></div>`;
+  track.innerHTML = html; let lastTime = performance.now(); const speed = 2000;
+  
+  function frame(now) {
+    if (!isSpinning) return; const dt = (now - lastTime) / 1000; lastTime = now;
+    reelPositions[r] -= speed * dt; 
+    if (reelPositions[r] <= -(20 * cellH)) reelPositions[r] += 20 * cellH;
+    track.style.transform = `translate3d(0, ${reelPositions[r]}px, 0)`;
+    reelAnimFrames[r] = requestAnimationFrame(frame);
+  }
+  reelAnimFrames[r] = requestAnimationFrame(frame);
+}
+
+function stopReelAnim(r, final5) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      cancelAnimationFrame(reelAnimFrames[r]); const track = tracks[r]; const currentY = reelPositions[r];
+      let html = ''; 
+      for (let i = 0; i < 15; i++) html += `<div class="cell" style="height:${cellH}px"><img src="${randSym()}${IMG_VER}"></div>`;
+      final5.forEach(s => html += `<div class="cell" style="height:${cellH}px"><img src="${s}${IMG_VER}"></div>`);
+      for (let i = 0; i < 5; i++) html += `<div class="cell" style="height:${cellH}px"><img src="${randSym()}${IMG_VER}"></div>`;
+      
+      track.innerHTML = html; let startY = currentY % (15 * cellH); if(startY > 0) startY -= 15 * cellH;
+      track.style.transition = 'none'; track.style.transform = `translate3d(0, ${startY}px, 0)`; track.getBoundingClientRect();
+      
+      let targetY = -15 * cellH; const dur = 800 + r * 200; 
+      track.style.transition = `transform ${dur}ms cubic-bezier(0.1, 0.8, 0.2, 1)`; 
+      track.style.transform = `translate3d(0, ${targetY}px, 0)`;
+      
+      setTimeout(() => {
+        track.style.transition = 'none'; track.style.transform = 'translate3d(0,0,0)'; 
+        track.innerHTML = final5.map(s => `<div class="cell" style="height:${cellH}px"><img src="${s}${IMG_VER}"></div>`).join('');
+        resolve();
+      }, dur + 50);
+    }, r * 200);
+  });
+}
+
+function genGrid(){
+  const g=[];
+  for(let r=0;r<REELS;r++){ const col=[]; for(let row=0;row<ROWS;row++) col.push(randSym()); g.push(col); }
+  return g;
+}
+
+// Логика подсчета выигрышей по линиям (21 линия на 5x5)
+function calcWins(grid,perLine){
+  const cells=new Set(), wins=[]; let total=0;
+  
+  PAYLINES.slice(0, state.lines).forEach((line,idx)=>{
+    const syms=line.map(([r,row])=>grid[r][row]); 
+    const firstSym = syms[0];
+    if (firstSym === 'mushroom.png') return; // Если гриб (скаттер) - линия не играет
+
+    let count = 1;
+    let currentSym = firstSym;
+    
+    for(let i=1;i<REELS;i++){
+      if (syms[i] === currentSym || syms[i] === 'gem.png') { // gem - Wild
+        count++;
+      } else {
+        break;
+      }
+    }
+
+    if(count>=3){
+      const mult=PAYTABLE[firstSym][count-3];
+      if(mult>0){
+        let win=mult*perLine; 
+        total+=win; 
+        wins.push({idx,line,sym:firstSym,count,mult,win});
+        for(let i=0;i<count;i++) cells.add(`${line[i][0]},${line[i][1]}`);
+      }
+    }
+  });
+  return {total, cells, wins};
+}
+
+function drawWinLines(wins){
+  overlay.innerHTML=''; const fRect = document.getElementById('reelsFrame').getBoundingClientRect(); overlay.setAttribute('width',fRect.width); overlay.setAttribute('height',fRect.height);
+  wins.forEach(w=>{
+    const pts=[];
+    for(let i=0;i<w.count;i++){ const [r,row]=w.line[i]; const cell=tracks[r].children[row]; if(!cell) continue; const cr=cell.getBoundingClientRect(); pts.push([cr.left+cr.width/2-fRect.left, cr.top+cr.height/2-fRect.top]); }
+    if(pts.length<2) return; const color=LINE_COLORS[w.idx%LINE_COLORS.length]; const poly=document.createElementNS('http://www.w3.org/2000/svg','polyline');
+    poly.setAttribute('points',pts.map(p=>p.join(',')).join(' ')); poly.setAttribute('stroke',color); poly.setAttribute('stroke-width','5'); poly.setAttribute('fill','none'); poly.setAttribute('stroke-linecap','round'); poly.setAttribute('stroke-linejoin','round'); overlay.appendChild(poly);
+    try{ const len=poly.getTotalLength(); poly.style.strokeDasharray=len; poly.style.strokeDashoffset=len; poly.style.transition='stroke-dashoffset 0.45s ease-out'; poly.getBoundingClientRect(); requestAnimationFrame(()=>{poly.style.strokeDashoffset=0}); }catch(e){}
+  });
+}
+
+function updateUI(){
+  $('balanceVal').textContent = fmt(state.balance); 
+  $('betVal').textContent = fmt(state.betPerLine); 
+  $('linesVal').textContent = state.lines;
+  $('totalBetVal').textContent = fmt(totalBet());
+  if(!isSpinning) $('winVal').textContent = '0';
+}
 
 function setLines(num) {
     if(isSpinning) return;
@@ -202,202 +394,91 @@ function setLines(num) {
     updateUI();
 }
 
-function buildReels() {
-    reelsEl.innerHTML = ''; tracks.length = 0;
-    const frame = document.querySelector('.reels-frame');
+async function startSpinAction() {
+  if (isSpinning) return;
+  const bet = totalBet();
+  if (state.balance < bet) { notif('Недостаточно монет','error'); return; }
+  
+  state.balance -= bet; $('winVal').textContent = '0';
+  isSpinning = true; stopRequested = false;
+  overlay.innerHTML=''; document.querySelectorAll('.cell.win').forEach(c=>c.classList.remove('win'));
+  save(); updateUI();
+  
+  reelPositions = [0, 0, 0, 0, 0]; 
+  tracks.forEach((tr, i) => startReelSpin(i));
+  
+  autoStopTimer = setTimeout(() => { if(isSpinning) requestStop(); }, AUTO_STOP_TIME);
+}
+
+async function requestStop() {
+  if (!isSpinning || stopRequested) return; 
+  stopRequested = true;
+  if (autoStopTimer) { clearTimeout(autoStopTimer); autoStopTimer = null; }
+  
+  const bet = totalBet(); const perLine = state.betPerLine; 
+  const finalGrid = genGrid();
+
+  await Promise.all(tracks.map((tr, i) => stopReelAnim(i, finalGrid[i])));
+  
+  const {total, cells, wins} = calcWins(finalGrid, perLine);
+  
+  if (total > 0) {
+    state.balance += total; 
+    $('winVal').textContent = '+' + fmt(total);
+    cells.forEach(key=>{ const [r,row]=key.split(',').map(Number); const c=tracks[r].children[row]; if(c) c.classList.add('win'); });
+    setTimeout(()=>drawWinLines(wins), 150);
     
-    // Вычитаем 4px на отступы между ячейками (gap)
-    const frameHeight = frame.clientHeight;
-    cellH = (frameHeight - 4) / ROWS;
-
-    for (let r = 0; r < REELS; r++) {
-        const reel = document.createElement('div'); 
-        reel.className = 'reel';
-        const track = document.createElement('div'); 
-        track.className = 'track';
-        
-        let html = '';
-        for (let row = 0; row < ROWS; row++) {
-            html += `<div class="cell" style="height:${cellH}px"><img src="${randSym()}${IMG_VER}"></div>`;
-        }
-        track.innerHTML = html;
-        reel.appendChild(track); 
-        reelsEl.appendChild(reel); 
-        tracks.push(track);
-    }
-    updateUI();
-}
-
-function genGrid() {
-    const g = [];
-    for (let r = 0; r < REELS; r++) {
-        const col = [];
-        for (let row = 0; row < ROWS; row++) col.push(randSym());
-        g.push(col);
-    }
-    return g;
-}
-
-function renderGrid(grid) {
-    for (let r = 0; r < REELS; r++) {
-        let html = '';
-        for (let row = 0; row < ROWS; row++) {
-            html += `<div class="cell" style="height:${cellH}px"><img src="${grid[r][row]}${IMG_VER}"></div>`;
-        }
-        tracks[r].innerHTML = html;
-    }
-}
-
-function findClusters(grid) {
-    const visited = Array(REELS).fill(null).map(() => Array(ROWS).fill(false));
-    const clusters = [];
-
-    function getNeighbors(r, c) {
-        const n = [];
-        if (r > 0) n.push([r-1, c]);
-        if (r < REELS-1) n.push([r+1, c]);
-        if (c > 0) n.push([r, c-1]);
-        if (c < ROWS-1) n.push([r, c+1]);
-        return n;
-    }
-
-    for (let r = 0; r < REELS; r++) {
-        for (let c = 0; c < ROWS; c++) {
-            if (visited[r][c]) continue;
-            const sym = grid[r][c];
-            if (sym === 'gem.png') continue; 
-            
-            const queue = [[r, c]];
-            const cluster = [];
-            visited[r][c] = true;
-
-            while (queue.length > 0) {
-                const [cr, cc] = queue.shift();
-                cluster.push([cr, cc]);
-                for (const [nr, nc] of getNeighbors(cr, cc)) {
-                    if (!visited[nr][nc] && (grid[nr][nc] === sym || grid[nr][nc] === 'gem.png')) {
-                        visited[nr][nc] = true;
-                        queue.push([nr, nc]);
-                    }
-                }
-            }
-            if (cluster.length >= CLUSTER_MIN) {
-                clusters.push({ sym, coords: cluster });
-            }
-        }
-    }
-    return clusters;
-}
-
-async function startSpin() {
-    if (isSpinning) return;
-    if (state.balance < totalBet()) { notif('Мало монет!', 'error'); return; }
-    
-    state.balance -= totalBet();
-    isSpinning = true;
-    $('winVal').textContent = '0';
-    updateUI();
-
-    let currentMultiplier = 1;
-    let totalWin = 0;
-    let cascadeCount = 0;
-
-    currentGrid = genGrid();
-    renderGrid(currentGrid);
-
-    let hasClusters = true;
-    while (hasClusters) {
-        await new Promise(r => setTimeout(r, 600)); 
-        const clusters = findClusters(currentGrid);
-        
-        if (clusters.length === 0) {
-            hasClusters = false;
-            break;
-        }
-
-        cascadeCount++;
-        let cascadeWin = 0;
-
-        document.querySelectorAll('.cell').forEach(c => c.classList.remove('win'));
-        clusters.forEach(cl => {
-            cl.coords.forEach(([r, c]) => {
-                const cell = tracks[r].children[c];
-                if (cell) cell.classList.add('win');
-            });
-            
-            const count = cl.coords.length;
-            const payTable = PAYTABLE[cl.sym];
-            let mult = 0;
-            if (count >= 20) mult = payTable[20] || 0;
-            else if (count >= 15) mult = payTable[15] || 0;
-            else if (count >= 12) mult = payTable[12] || 0;
-            else if (count >= 8) mult = payTable[8] || 0;
-            
-            cascadeWin += mult * totalBet();
-        });
-
-        cascadeWin *= currentMultiplier;
-        totalWin += cascadeWin;
-        $('winVal').textContent = fmt(totalWin);
-        
-        if(cascadeCount > 1) notif(`Каскад ${cascadeCount}! x${currentMultiplier}`, 'gold');
-
-        await new Promise(r => setTimeout(r, 800));
-
-        const newGrid = JSON.parse(JSON.stringify(currentGrid));
-        clusters.forEach(cl => {
-            cl.coords.forEach(([r, c]) => { newGrid[r][c] = null; });
-        });
-
-        for (let r = 0; r < REELS; r++) {
-            let emptySpots = 0;
-            for (let c = ROWS - 1; c >= 0; c--) {
-                if (newGrid[r][c] === null) emptySpots++;
-                else if (emptySpots > 0) {
-                    newGrid[r][c + emptySpots] = newGrid[r][c];
-                    newGrid[r][c] = null;
-                }
-            }
-            for (let c = 0; c < emptySpots; c++) {
-                newGrid[r][c] = randSym();
-            }
-        }
-
-        currentGrid = newGrid;
-        renderGrid(currentGrid);
-        currentMultiplier *= 2; 
-    }
-
-    if (totalWin > 0) {
-        state.balance += totalWin;
-        notif(`Выигрыш: +${fmt(totalWin)} 🪙`, 'gold');
+    if (total >= bet * 15) {
+      $('bigWinAmount').textContent = '+' + fmt(total) + ' 🪙';
+      $('bigWinOverlay').classList.add('active');
+      setTimeout(() => { $('bigWinOverlay').classList.remove('active'); }, 2000);
     } else {
-        notif('Повезет в следующий раз!', 'error');
+      notif('Выигрыш: +' + fmt(total) + ' 🪙', 'gold');
     }
-
-    isSpinning = false;
-    updateUI();
+    if (total >= bet * 2) pendingRisk = total;
+  } else {
+    notif('Повезет в следующий раз!', 'error');
+  }
+  
+  isSpinning = false; save(); updateUI();
 }
 
-function updateUI() {
-    $('balanceVal').textContent = fmt(state.balance);
-    $('linesVal').textContent = state.lines;
-    $('betVal').textContent = fmt(state.betPerLine);
-    $('totalBetVal').textContent = fmt(totalBet());
+// Функции модалок
+function buildShop(){
+  const grid=$('shopGrid'); grid.innerHTML='';
+  CONFIG.packages.forEach(pkg=>{
+    const card=document.createElement('div'); card.className='shop-card'+(pkg.featured?' featured':'');
+    card.innerHTML=`<div class="shop-left"><div class="shop-name">${pkg.name}</div><div class="shop-coins">${fmt(pkg.coins)} 🪙</div></div><div class="shop-price">${pkg.stars} ⭐</div>`;
+    card.onclick=()=>notif('Оплата в разработке', 'gold'); grid.appendChild(card);
+  });
 }
+function buildPaytable(){
+  const tbody=$('ptBody'); tbody.innerHTML='';
+  SYMBOLS.forEach(sym=>{ 
+    if (sym === 'mushroom.png') return;
+    const [p3,p4,p5]=PAYTABLE[sym]; 
+    const tr=document.createElement('tr'); 
+    tr.innerHTML=`<td class="pt-sym"><img src="${sym}${IMG_VER}"></td><td class="pt-val">${p3}</td><td class="pt-val">${p4}</td><td class="pt-val">${p5}</td>`; 
+    tbody.appendChild(tr); 
+  });
+}
+function claimTask(){ notif('Задание в разработке'); }
+function claimDaily(){ const now=Date.now(); if(now-state.lastDaily<24*3600*1000){ notif('Уже получен','error'); return; } state.lastDaily=now; state.balance+=100; save(); updateUI(); notif('🎁 Бонус: +100 🪙', 'gold'); }
 
-$('spinBtn').onclick = startSpin;
-$('autoBtn').onclick = () => notif('Автоспин в разработке');
-$('linesDec').onclick = () => { if(!isSpinning && state.lines > 1) { state.lines--; updateUI(); } };
-$('linesInc').onclick = () => { if(!isSpinning && state.lines < 21) { state.lines++; updateUI(); } };
-$('betDec').onclick = () => { if(!isSpinning && state.betPerLine > 1) { state.betPerLine--; updateUI(); } };
-$('betInc').onclick = () => { if(!isSpinning) { state.betPerLine++; updateUI(); } };
+// Привязка
+$('spinBtn').onclick = () => { if (isSpinning) requestStop(); else startSpinAction(); };
+$('linesDec').onclick = () => { if(!isSpinning){ state.lines = Math.max(1, state.lines-1); updateUI(); } };
+$('linesInc').onclick = () => { if(!isSpinning){ state.lines = Math.min(MAX_LINES, state.lines+1); updateUI(); } };
+$('betDec').onclick = () => { if(!isSpinning){ state.betPerLine = Math.max(1, state.betPerLine-1); updateUI(); } };
+$('betInc').onclick = () => { if(!isSpinning){ state.betPerLine += 1; updateUI(); } };
+$('autoBtn').onclick = () => notif('Автоспин включен');
 
-// Запускаем сборку после загрузки DOM
-window.addEventListener('DOMContentLoaded', () => {
-    setTimeout(buildReels, 200);
-});
-window.addEventListener('resize', () => { if (!isSpinning) buildReels(); });
+$('startSound').onclick = () => { $('startOverlay').classList.add('hidden'); };
+$('startMute').onclick = () => { $('startOverlay').classList.add('hidden'); };
+
+// Запуск
+window.addEventListener('resize', () => { if(!isSpinning) buildReels(); });
+setTimeout(buildReels, 200);
 </script>
 </body>
 </html>
