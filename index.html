@@ -11,13 +11,13 @@
 html,body{height:100%;overflow:hidden;background:#000;}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--text);display:flex;align-items:center;justify-content:center;height:100dvh;}
 
-/* Главный контейнер (вертикальный) */
+/* Главный контейнер */
 .app {
     position: relative;
     width: 100vw;
     height: 100dvh;
-    /* ВАЖНО: Если картинка называется bg.png, напиши bg.png вместо bg.png.PNG */
-    background: url('bg.png.PNG?v=26') no-repeat center center;
+    /* ИСПРАВЛЕНО: Теперь просто bg.png без лишних точек */
+    background: url('bg.png?v=27') no-repeat center center;
     background-size: 100% 100%; 
     overflow: hidden;
 }
@@ -45,18 +45,45 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
     top: 24%;    
     left: 11%;   
     right: 11%;  
-    height: 42%; /* Фиксированная высота вместо bottom, чтобы ровно легло */
-    background: #0d2112; 
+    height: 42%; 
+    background: #0d2112; /* Темный фон перекрывает нарисованных зверей */
     border-radius: 4px;
     overflow: hidden;
     z-index: 4;
     border: 2px solid #3a2311; 
     box-shadow: inset 0 0 30px #000;
 }
-.reels { display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(5, 1fr); gap: 1px; height: 100%; width: 100%; background: #000; }
-.reel { background: transparent; overflow: hidden; position: relative; display: flex; flex-direction: column; background: #0d2112; }
-.track { position: absolute; left: 0; right: 0; top: 0; display: flex; flex-direction: column; }
-.cell { display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; width: 100%; } 
+
+/* ИСПРАВЛЕНО: Только 5 колонок, без навязывания строк */
+.reels { 
+    display: grid; 
+    grid-template-columns: repeat(5, 1fr); 
+    gap: 2px; 
+    height: 100%; 
+    width: 100%; 
+    background: #000; 
+}
+.reel { 
+    background: #0d2112; 
+    overflow: hidden; 
+    position: relative; 
+    height: 100%; 
+}
+.track { 
+    position: absolute; 
+    left: 0; 
+    right: 0; 
+    top: 0; 
+    display: flex; 
+    flex-direction: column; 
+}
+.cell { 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    flex-shrink: 0; 
+    width: 100%; 
+} 
 .cell img { width: 90%; height: 90%; object-fit: contain; filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.5)) drop-shadow(0 2px 2px rgba(0,0,0,0.8)); }
 .cell.win::before { content: ""; position: absolute; inset: 2px; border: 2px solid #a8ff78; border-radius: 50%; background: radial-gradient(circle, rgba(46,204,113,.6), transparent 70%); box-shadow: 0 0 15px #2ecc71; animation: winPulse .4s infinite alternate; }
 @keyframes winPulse { 0%{transform:scale(.9)} 100%{transform:scale(1.1)} }
@@ -140,7 +167,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;c
 
 <script>
 const REELS = 5, ROWS = 5; 
-const IMG_VER = '?v=26';
+const IMG_VER = '?v=27';
 const SYMBOLS = ['gem.png', 'mushroom.png', 'hedgehog.png', 'acorn.png', 'leaf.png', 'coin.png'];
 const WEIGHTS = {'gem.png':3, 'mushroom.png':8, 'hedgehog.png':15, 'acorn.png':25, 'leaf.png':25, 'coin.png':30};
 const CLUSTER_MIN = 8; 
@@ -178,9 +205,10 @@ function setLines(num) {
 function buildReels() {
     reelsEl.innerHTML = ''; tracks.length = 0;
     const frame = document.querySelector('.reels-frame');
-    // Используем getBoundingClientRect().height, чтобы точно узнать высоту после загрузки
-    const frameHeight = frame.getBoundingClientRect().height;
-    cellH = frameHeight / ROWS;
+    
+    // Вычитаем 4px на отступы между ячейками (gap)
+    const frameHeight = frame.clientHeight;
+    cellH = (frameHeight - 4) / ROWS;
 
     for (let r = 0; r < REELS; r++) {
         const reel = document.createElement('div'); 
@@ -190,7 +218,6 @@ function buildReels() {
         
         let html = '';
         for (let row = 0; row < ROWS; row++) {
-            // Задаем жесткую высоту каждой ячейке
             html += `<div class="cell" style="height:${cellH}px"><img src="${randSym()}${IMG_VER}"></div>`;
         }
         track.innerHTML = html;
@@ -366,9 +393,9 @@ $('linesInc').onclick = () => { if(!isSpinning && state.lines < 21) { state.line
 $('betDec').onclick = () => { if(!isSpinning && state.betPerLine > 1) { state.betPerLine--; updateUI(); } };
 $('betInc').onclick = () => { if(!isSpinning) { state.betPerLine++; updateUI(); } };
 
-// Запускаем расчет сетки только после того, как страница полностью загрузится
-window.addEventListener('load', () => {
-    setTimeout(buildReels, 100);
+// Запускаем сборку после загрузки DOM
+window.addEventListener('DOMContentLoaded', () => {
+    setTimeout(buildReels, 200);
 });
 window.addEventListener('resize', () => { if (!isSpinning) buildReels(); });
 </script>
