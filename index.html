@@ -37,21 +37,21 @@ body {
 }
 
 /* ============================================================
-   ГЛАВНЫЙ КОНТЕЙНЕР (ЖЕСТКИЕ ПРОПОРЦИИ)
+   ГЛАВНЫЙ КОНТЕЙНЕР
    ============================================================ */
 .game-board {
     position: relative;
-    aspect-ratio: 768 / 1370; /* Точные пропорции картинки */
+    aspect-ratio: 768 / 1370; 
     width: 100vw;
     max-height: 100dvh;
-    background: url('bg.png?v=800') no-repeat center center;
+    background: url('bg.png?v=900') no-repeat center center;
     background-size: 100% 100%;
     overflow: hidden;
     container-type: inline-size;
 }
 
 /* ============================================================
-   ВЕРХНИЙ БАННЕР (ДЖЕКПОТ / ФРИСПИНЫ)
+   ВЕРХНИЙ БАННЕР
    ============================================================ */
 .top-banner {
     position: absolute;
@@ -74,40 +74,38 @@ body {
 }
 
 /* ============================================================
-   ДИНАМИЧЕСКИЕ ЦИФРЫ (ТОЧНО ПОВЕРХ СТАРЫХ, С ТЕМНЫМ ФОНОМ)
+   ДИНАМИЧЕСКИЕ ЦИФРЫ (ПОЛНОСТЬЮ ПЕРЕКРЫВАЮТ СТАРЫЕ)
    ============================================================ */
 .ui-val {
     position: absolute;
     display: flex; align-items: center; justify-content: center;
-    background: #1a0e06; /* Темное дерево, перекрывает старую цифру */
+    background: #1a0e06; /* Темное дерево */
     color: #ffd966;
     font-weight: 900;
     font-size: 2.8cqw;
     text-shadow: 1px 1px 2px #000;
     border-radius: 4px;
     z-index: 50;
-    /* Внутренняя тень для объема */
     box-shadow: inset 0 0 8px rgba(0,0,0,0.9);
-    border: 1px solid #2a1608;
 }
 
-/* Точные координаты (высчитаны по пикселям твоего скрина) */
-.ui-balance { top: 18.3%; left: 20.5%; width: 11.5%; height: 3.2%; }
-.ui-win { top: 18.3%; right: 26.2%; width: 7%; height: 3.2%; }
+/* Точные координаты (закрывают старые цифры) */
+.ui-balance { top: 17.8%; left: 21.2%; width: 11.5%; height: 3.2%; }
+.ui-win { top: 17.8%; right: 25.8%; width: 7%; height: 3.2%; }
 
-.ui-lines { top: 65.6%; left: 19.2%; width: 7.5%; height: 3.2%; }
-.ui-bet { top: 65.6%; left: 45.3%; width: 7.5%; height: 3.2%; }
-.ui-total { top: 65.6%; right: 17.6%; width: 7.5%; height: 3.2%; }
+.ui-lines { top: 65.8%; left: 19.5%; width: 7.5%; height: 3.2%; }
+.ui-bet { top: 65.8%; left: 45.5%; width: 7.5%; height: 3.2%; }
+.ui-total { top: 65.8%; right: 17.8%; width: 7.5%; height: 3.2%; }
 
 /* ============================================================
-   СЕТКА 5x5 (ЖЕСТКО В РАМКЕ, БЕЗ 6-ГО РЯДА)
+   СЕТКА 5x5 (ЖЕСТКО ОБРЕЗАНА)
    ============================================================ */
 .reels-frame {
     position: absolute;
-    top: 22.1%; left: 13.6%; right: 13.6%; height: 40.5%;
+    top: 22.2%; left: 13.6%; right: 13.6%; height: 40.5%;
     background: #0d2112;
     border-radius: 4px;
-    overflow: hidden; /* Обрезает всё лишнее */
+    overflow: hidden;
     z-index: 10;
     box-shadow: inset 0 0 30px #000;
 }
@@ -116,62 +114,59 @@ body {
 .track { position: absolute; left: 0; right: 0; top: 0; display: flex; flex-direction: column; will-change: transform; }
 .cell { display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; width: 100%; } 
 .cell img { width: 90%; height: 90%; object-fit: contain; filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.5)) drop-shadow(0 2px 2px rgba(0,0,0,0.8)); }
-.cell.win::before { content: ""; position: absolute; inset: 2px; border: 2px solid #a8ff78; border-radius: 50%; background: radial-gradient(circle, rgba(46,204,113,.6), transparent 70%); box-shadow: 0 0 15px #2ecc71; animation: winPulse .4s infinite alternate; }
-@keyframes winPulse { 0%{transform:scale(.9)} 100%{transform:scale(1.1)} }
+
+/* SVG для линий */
+.lines-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 20; }
 
 /* ============================================================
-   КНОПКИ (ПОДНЯТЫ, ЧТОБЫ IPHONE НЕ ПЕРЕХВАТЫВАЛ СВАЙП)
+   КНОПКИ (ПОДНЯТЫ, ЧТОБЫ РАБОТАЛИ НА IPHONE)
    ============================================================ */
 .btn-overlay { 
     position: absolute; 
-    z-index: 9999; /* Самый высокий приоритет */
+    z-index: 99999; /* Самый высокий приоритет */
     cursor: pointer; 
     border-radius: 8px; 
     pointer-events: auto;
     transition: background 0.1s;
 }
-.btn-overlay:active { background: rgba(255,255,255,0.3); box-shadow: 0 0 15px rgba(255, 255, 255, 0.6); }
+.btn-overlay:active { background: rgba(255,255,255,0.3); }
 
 /* Кнопка Spin */
-.btn-spin { top: 69.5%; left: 34%; width: 32%; height: 6.5%; border-radius: 20px; }
+.btn-spin { top: 69.8%; left: 34%; width: 32%; height: 6.2%; border-radius: 20px; }
 .ui-spin-text {
-    position: absolute; top: 69.5%; left: 34%; width: 32%; height: 6.5%;
+    position: absolute; top: 69.8%; left: 34%; width: 32%; height: 6.2%;
     display: flex; align-items: center; justify-content: center;
     color: #fff; font-size: 4cqw; font-weight: 900; text-shadow: 0 2px 4px #000;
     z-index: 50; pointer-events: none;
 }
 
 /* Кнопка Auto */
-.btn-auto { top: 70%; right: 10.5%; width: 14%; height: 5.5%; }
+.btn-auto { top: 70.3%; right: 10.5%; width: 14%; height: 5.5%; }
 
-/* Стрелки линий и ставки */
-.btn-lines-dec { top: 65.6%; left: 15%; width: 4%; height: 3.2%; }
-.btn-lines-inc { top: 65.6%; left: 29%; width: 4%; height: 3.2%; }
-.btn-bet-dec { top: 65.6%; left: 41.5%; width: 4%; height: 3.2%; }
-.btn-bet-inc { top: 65.6%; left: 56%; width: 4%; height: 3.2%; }
+/* Стрелки */
+.btn-lines-dec { top: 65.8%; left: 15%; width: 4%; height: 3.2%; }
+.btn-lines-inc { top: 65.8%; left: 29%; width: 4%; height: 3.2%; }
+.btn-bet-dec { top: 65.8%; left: 41.5%; width: 4%; height: 3.2%; }
+.btn-bet-inc { top: 65.8%; left: 56%; width: 4%; height: 3.2%; }
 
-/* Кнопки 1, 3, 5, 9, 15, 21 */
-.btn-l1 { top: 69.2%; left: 11%; width: 4.5%; height: 3.5%; }
-.btn-l3 { top: 69.2%; left: 16.5%; width: 4.5%; height: 3.5%; }
-.btn-l5 { top: 69.2%; left: 22%; width: 4.5%; height: 3.5%; }
-.btn-l9 { top: 69.2%; left: 27.5%; width: 4.5%; height: 3.5%; }
-.btn-l15 { top: 69.2%; left: 33%; width: 4.5%; height: 3.5%; }
-.btn-l21 { top: 69.2%; left: 38.5%; width: 4.5%; height: 3.5%; }
+/* Кнопки линий */
+.btn-l1 { top: 69.2%; left: 11.2%; width: 4.5%; height: 3.5%; }
+.btn-l3 { top: 69.2%; left: 16.7%; width: 4.5%; height: 3.5%; }
+.btn-l5 { top: 69.2%; left: 22.2%; width: 4.5%; height: 3.5%; }
+.btn-l9 { top: 69.2%; left: 27.7%; width: 4.5%; height: 3.5%; }
+.btn-l15 { top: 69.2%; left: 33.2%; width: 4.5%; height: 3.5%; }
+.btn-l21 { top: 69.2%; left: 38.7%; width: 4.5%; height: 3.5%; }
 
-/* НИЖНИЕ КНОПКИ (ПОДНЯТЫ ВЫШЕ СИСТЕМНОГО СВАЙПА) */
-.btn-action { bottom: 4.5%; width: 11%; height: 5.5%; z-index: 9999; }
-.btn-wheel { left: 2.5%; }
-.btn-shop { left: 14.5%; }
-.btn-risk { left: 26.5%; }
-.btn-friends { left: 39%; }
-.btn-tasks { right: 39%; }
-.btn-top { right: 26.5%; }
-.btn-bonus { right: 14.5%; }
-.btn-rules { right: 2.5%; }
-
-/* Подсветка Риска */
-@keyframes riskPulse { 0% { box-shadow: 0 0 10px #f1c40f; background: rgba(241, 196, 15, 0.2); } 100% { box-shadow: 0 0 20px #f1c40f; background: rgba(241, 196, 15, 0.6); } }
-.btn-risk.active-risk { animation: riskPulse 0.8s infinite alternate; border-radius: 12px; background: rgba(241, 196, 15, 0.4); }
+/* Нижние кнопки */
+.btn-action { bottom: 3.8%; width: 11%; height: 5.5%; z-index: 99999; }
+.btn-wheel { left: 2.8%; }
+.btn-shop { left: 14.8%; }
+.btn-risk { left: 26.8%; }
+.btn-friends { left: 39.2%; }
+.btn-tasks { right: 39.2%; }
+.btn-top { right: 26.8%; }
+.btn-bonus { right: 14.8%; }
+.btn-rules { right: 2.8%; }
 
 /* ============================================================
    МОДАЛКИ
@@ -220,6 +215,7 @@ body {
 
     <div class="reels-frame" id="reelsFrame">
         <div class="reels" id="reels"></div>
+        <svg class="lines-overlay" id="linesOverlay"></svg>
     </div>
 
     <div class="btn-overlay btn-spin" id="spinBtn"></div>
@@ -230,6 +226,7 @@ body {
     <div class="btn-overlay btn-bet-dec" id="betDec"></div>
     <div class="btn-overlay btn-bet-inc" id="betInc"></div>
 
+    <!-- Кнопки выбора линий -->
     <div class="btn-overlay btn-l1" onclick="setLines(1)"></div>
     <div class="btn-overlay btn-l3" onclick="setLines(3)"></div>
     <div class="btn-overlay btn-l5" onclick="setLines(5)"></div>
@@ -260,10 +257,12 @@ body {
 
 <script>
 const REELS = 5, ROWS = 5; 
-const IMG_VER = '?v=800';
+const IMG_VER = '?v=900';
 const SYMBOLS = ['gem.png', 'mushroom.png', 'hedgehog.png', 'acorn.png', 'leaf.png', 'coin.png'];
 const WEIGHTS = {'gem.png':5, 'mushroom.png':10, 'hedgehog.png':15, 'acorn.png':25, 'leaf.png':25, 'coin.png':30};
 const PAYTABLE = { 'gem.png': [15, 60, 250], 'mushroom.png': [10, 40, 150], 'hedgehog.png': [8, 25, 80], 'acorn.png': [5, 15, 50], 'leaf.png': [5, 15, 50], 'coin.png': [2, 5, 15] };
+
+// 21 линия для 5x5
 const PAYLINES = [
     [[0,0],[1,0],[2,0],[3,0],[4,0]], [[0,1],[1,1],[2,1],[3,1],[4,1]], [[0,2],[1,2],[2,2],[3,2],[4,2]], [[0,3],[1,3],[2,3],[3,3],[4,3]], [[0,4],[1,4],[2,4],[3,4],[4,4]],
     [[0,0],[1,1],[2,2],[3,1],[4,0]], [[0,4],[1,3],[2,2],[3,3],[4,4]], [[0,1],[1,2],[2,3],[3,2],[4,1]], [[0,3],[1,2],[2,1],[3,2],[4,3]],
@@ -271,15 +270,18 @@ const PAYLINES = [
     [[0,1],[1,0],[2,0],[3,0],[4,1]], [[0,3],[1,4],[2,4],[3,4],[4,3]], [[0,0],[1,1],[2,1],[3,1],[4,0]], [[0,4],[1,3],[2,3],[3,3],[4,4]],
     [[0,1],[1,1],[2,2],[3,3],[4,3]], [[0,3],[1,3],[2,2],[3,1],[4,1]], [[0,0],[1,2],[2,4],[3,2],[4,0]], [[0,4],[1,2],[2,0],[3,2],[4,4]]
 ];
+const LINE_COLORS = ['#ff3b30','#ff9500','#ffcc00','#34c759','#00c7be','#30b0ff','#5856d6','#af52de','#ff2d95','#ff6b6b','#ffd93d','#6bcf7f','#4ecdc4','#95e1d3','#a8e6cf','#c7ceea','#e2a4d1','#f6d365','#b5eaea','#e0aaff','#ffb4a2'];
+
 const POOL=[];Object.entries(WEIGHTS).forEach(([s,w])=>{for(let i=0;i<w;i++)POOL.push(s)});
 
-let state = { balance: 1120, betPerLine: 1, lines: 21, lang: 'ru', lastDaily: 0 };
+let state = { balance: 1120, betPerLine: 1, lines: 15, lang: 'ru', lastDaily: 0 }; // Поставил 15 по умолчанию
 let isSpinning = false, stopRequested = false, cellH = 0;
 let freeSpins = 0, isFreeSpin = false;
 let pendingRisk = 0;
 const JACKPOT_BASE = 500000;
 
 const reelsEl = document.getElementById('reels');
+const overlay = document.getElementById('linesOverlay');
 const tracks = [];
 
 const $ = (id) => document.getElementById(id);
@@ -289,6 +291,45 @@ const randSym = () => POOL[Math.floor(Math.random()*POOL.length)];
 const totalBet = () => state.lines * state.betPerLine;
 const openModal = (id) => { $(id).classList.add('active'); };
 const closeModal = (id) => $(id).classList.remove('active');
+
+// --- ОТРИСОВКА ЛИНИЙ ---
+function showActiveLines() {
+    overlay.innerHTML = '';
+    const fRect = $('reelsFrame').getBoundingClientRect();
+    overlay.setAttribute('width', fRect.width);
+    overlay.setAttribute('height', fRect.height);
+
+    PAYLINES.slice(0, state.lines).forEach((line, idx) => {
+        const pts = [];
+        for (const [r, row] of line) {
+            const cell = tracks[r].children[row];
+            if (!cell) continue;
+            const cr = cell.getBoundingClientRect();
+            pts.push([cr.left + cr.width/2 - fRect.left, cr.top + cr.height/2 - fRect.top]);
+        }
+        if (pts.length < 2) return;
+        const color = LINE_COLORS[idx % LINE_COLORS.length];
+        const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+        poly.setAttribute('points', pts.map(p => p.join(',')).join(' '));
+        poly.setAttribute('stroke', color);
+        poly.setAttribute('stroke-width', '5');
+        poly.setAttribute('fill', 'none');
+        poly.setAttribute('stroke-linecap', 'round');
+        poly.setAttribute('stroke-linejoin', 'round');
+        overlay.appendChild(poly);
+    });
+
+    // Скрываем линии через 2 секунды
+    setTimeout(() => { overlay.innerHTML = ''; }, 2000);
+}
+
+function setLines(num) {
+    if(isSpinning) return; 
+    state.lines = num; 
+    updateUI(); 
+    notif('Линий: ' + num);
+    showActiveLines(); // Показываем линии
+}
 
 const langs = ['ru', 'uk', 'en'];
 const locales = {
@@ -328,7 +369,6 @@ function buildReels() {
     
     setTimeout(() => {
         const frameHeight = frame.getBoundingClientRect().height;
-        // Строгий Math.floor, чтобы не было 6-го ряда
         cellH = Math.floor(frameHeight / ROWS); 
 
         for (let r = 0; r < REELS; r++) {
@@ -403,13 +443,6 @@ function updateUI() {
     updateTopBanner();
 }
 
-function setLines(num) {
-    if(isSpinning) return; 
-    state.lines = num; 
-    updateUI(); 
-    notif('Линий: ' + num);
-}
-
 async function startSpin() {
     if (isSpinning) return;
     if (state.balance < totalBet()) { notif(locales[state.lang].noMoney, 'error'); return; }
@@ -421,6 +454,7 @@ async function startSpin() {
     updateUI(); 
     $('spinText').textContent = locales[state.lang].stop;
     $('btnRiskUI').classList.remove('active-risk');
+    overlay.innerHTML = ''; // Убираем линии перед спином
     
     const finalGrid = []; 
     for (let r=0; r<REELS; r++) { const col=[]; for(let c=0; c<ROWS; c++) col.push(randSym()); finalGrid.push(col); }
@@ -534,15 +568,15 @@ function claimDaily() {
     state.lastDaily = Date.now(); state.balance += 1000; updateUI(); notif('🎁 Ежедневный бонус: +1000 🪙', 'gold');
 }
 
+// Инициализация
 $('startBtn').onclick = () => { $('startOverlay').style.display = 'none'; buildReels(); };
 $('spinBtn').onclick = () => { if (isSpinning) requestStop(); else startSpin(); };
 
-$('linesDec').onclick = () => { if(!isSpinning){ state.lines = Math.max(1, state.lines-1); updateUI(); } };
-$('linesInc').onclick = () => { if(!isSpinning){ state.lines = Math.min(21, state.lines+1); updateUI(); } };
+$('linesDec').onclick = () => { if(!isSpinning){ setLines(Math.max(1, state.lines-1)); } };
+$('linesInc').onclick = () => { if(!isSpinning){ setLines(Math.min(21, state.lines+1)); } };
 $('betDec').onclick = () => { if(!isSpinning){ state.betPerLine = Math.max(1, state.betPerLine-1); updateUI(); } };
 $('betInc').onclick = () => { if(!isSpinning){ state.betPerLine += 1; updateUI(); } };
 
-// Привязка нижних кнопок через JS
 document.querySelector('.btn-wheel').onclick = () => openModal('wheelModal');
 document.querySelector('.btn-shop').onclick = () => openModal('shopModal');
 document.querySelector('.btn-friends').onclick = () => openModal('friendsModal');
