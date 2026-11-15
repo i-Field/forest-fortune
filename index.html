@@ -37,24 +37,24 @@ body {
 }
 
 /* ============================================================
-   ГЛАВНЫЙ КОНТЕЙНЕР
+   ГЛАВНЫЙ КОНТЕЙНЕР (БЕЗ СТРОКИ БРАУЗЕРА)
    ============================================================ */
 .game-board {
     position: relative;
     width: 100vw;
-    height: 100dvh;
-    background: url('bg.png?v=2300') no-repeat center center;
+    height: 100dvh; /* Занимает ровно весь экран устройства */
+    background: url('bg.png?v=4000') no-repeat center center;
     background-size: 100% 100%; 
     overflow: hidden;
 }
 
 /* ============================================================
-   ДИНАМИЧЕСКИЕ ЦИФРЫ (ПОВЕРХ СТАРЫХ)
+   ДИНАМИЧЕСКИЕ ЦИФРЫ (ТОЧНО ПОВЕРХ СТАРЫХ)
    ============================================================ */
 .ui-val {
     position: absolute;
     display: flex; align-items: center; justify-content: center;
-    background: #2b1505; /* Темное дерево */
+    background: #1a0a02; /* Темное дерево */
     color: #ffd966;
     font-weight: 900;
     font-size: 2.8vw;
@@ -65,37 +65,69 @@ body {
 }
 
 /* Верхние цифры */
-.ui-balance { top: 18.6%; left: 23.5%; width: 11%; height: 3.2%; }
+.ui-balance { top: 18.6%; left: 23.2%; width: 11%; height: 3.2%; }
 .ui-win { top: 18.6%; right: 26%; width: 6.5%; height: 3.2%; }
 
-/* Нижние цифры */
+/* Нижние цифры (Линии, Ставка, Всего) */
 .ui-lines { top: 65.8%; left: 19.5%; width: 7.5%; height: 3.2%; }
 .ui-bet { top: 65.8%; left: 45.5%; width: 7.5%; height: 3.2%; }
 .ui-total { top: 65.8%; right: 17.8%; width: 7.5%; height: 3.2%; }
 
 /* ============================================================
-   СЕТКА 5x5 (ОПУЩЕНА, ЧТОБЫ НЕ ЗАДЕВАТЬ КНОПКИ)
+   СЕТКА 5x5 (ЖЕСТКО ПО ЦЕНТРУ, БЕЗ 6-ГО РЯДА)
    ============================================================ */
 .reels-frame {
     position: absolute;
-    top: 24.5%; left: 13.8%; right: 13.8%; height: 37%; /* Высота уменьшена, чтобы не было 6-го ряда */
+    /* Опускаем сетку ровно в рамку */
+    top: 24.8%; left: 13.8%; right: 13.8%; 
+    height: 36.8%; /* Строго 5 рядов */
     background: #0d2112;
     border-radius: 4px;
-    overflow: hidden;
+    overflow: hidden; /* Обрезает всё лишнее */
     z-index: 10;
     box-shadow: inset 0 0 20px #000;
 }
-.reels { display: grid; grid-template-columns: repeat(5, 1fr); height: 100%; width: 100%; background: #000; gap: 1px; }
-.reel { background: #0d2112; overflow: hidden; position: relative; height: 100%; }
-.track { position: absolute; left: 0; right: 0; top: 0; display: flex; flex-direction: column; will-change: transform; }
-.cell { display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; width: 100%; } 
+
+/* Сетка */
+.reels { 
+    display: grid; 
+    grid-template-columns: repeat(5, 1fr); 
+    height: 100%; 
+    width: 100%; 
+    background: #000; 
+    gap: 1px; 
+}
+.reel { 
+    background: #0d2112; 
+    overflow: hidden; 
+    position: relative; 
+    height: 100%; 
+}
+.track { 
+    position: absolute; 
+    left: 0; 
+    right: 0; 
+    top: 0; 
+    display: flex; 
+    flex-direction: column; 
+    will-change: transform; 
+}
+.cell { 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    position: relative; 
+    flex-shrink: 0; 
+    width: 100%; 
+    height: 20%; /* ЖЕСТКО 20% = 5 рядов */
+} 
 .cell img { width: 90%; height: 90%; object-fit: contain; filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.5)) drop-shadow(0 2px 2px rgba(0,0,0,0.8)); }
 
 /* Слой для линий */
 .lines-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 20; }
 
 /* ============================================================
-   НЕВИДИМЫЕ КНОПКИ
+   НЕВИДИМЫЕ КНОПКИ (РАБОТАЮТ НА IPHONE)
    ============================================================ */
 .btn-overlay { 
     position: absolute; 
@@ -110,13 +142,13 @@ body {
 .btn-lang { top: 1.5%; left: 2.5%; width: 9%; height: 4.5%; border-radius: 50%; }
 .btn-sound { top: 1.5%; right: 2.5%; width: 9%; height: 4.5%; border-radius: 50%; }
 
-/* Кнопка Spin (Только зона клика) */
+/* Кнопка Spin (только зона клика) */
 .btn-spin { top: 69.5%; left: 34%; width: 32%; height: 6.5%; border-radius: 20px; }
 
 /* Кнопка Auto */
 .btn-auto { top: 70%; right: 10.5%; width: 14%; height: 5.5%; }
 
-/* Стрелки линий и ставки */
+/* Стрелки линий и ставки (опущены ниже сетки) */
 .btn-lines-dec { top: 66%; left: 15%; width: 4%; height: 3.2%; }
 .btn-lines-inc { top: 66%; left: 29%; width: 4%; height: 3.2%; }
 .btn-bet-dec { top: 66%; left: 41.5%; width: 4%; height: 3.2%; }
@@ -130,7 +162,7 @@ body {
 .btn-l15 { top: 69.5%; left: 32.5%; width: 4.5%; height: 3.5%; }
 .btn-l21 { top: 69.5%; left: 38%; width: 4.5%; height: 3.5%; }
 
-/* НИЖНИЕ КНОПКИ (Привязаны к верху, работают) */
+/* НИЖНИЕ КНОПКИ (Подняты над свайпом iOS) */
 .btn-action { top: 79.5%; width: 11%; height: 5.5%; z-index: 99999; }
 .btn-wheel { left: 2.5%; }
 .btn-shop { left: 14.5%; }
@@ -168,7 +200,7 @@ body {
 
 <div class="game-board" id="gameBoard">
     
-    <!-- ТОЛЬКО ДИНАМИЧЕСКИЕ ЦИФРЫ (БЕЗ ТЕКСТА КРУТИТЬ) -->
+    <!-- Динамические цифры -->
     <div class="ui-val ui-balance" id="balanceVal">1 120</div>
     <div class="ui-val ui-win" id="winVal">0</div>
     <div class="ui-val ui-lines" id="linesVal">15/21</div>
@@ -181,7 +213,7 @@ body {
         <svg class="lines-overlay" id="linesOverlay"></svg>
     </div>
 
-    <!-- Кнопки -->
+    <!-- Невидимые кнопки -->
     <div class="btn-overlay btn-lang" onclick="cycleLang()"></div>
     <div class="btn-overlay btn-sound" onclick="toggleSound()"></div>
 
@@ -224,7 +256,7 @@ body {
 
 <script>
 const REELS = 5, ROWS = 5; 
-const IMG_VER = '?v=2300';
+const IMG_VER = '?v=4000';
 const SYMBOLS = ['gem.png', 'mushroom.png', 'hedgehog.png', 'acorn.png', 'leaf.png', 'coin.png'];
 const WEIGHTS = {'gem.png':5, 'mushroom.png':10, 'hedgehog.png':15, 'acorn.png':25, 'leaf.png':25, 'coin.png':30};
 const PAYTABLE = { 'gem.png': [15, 60, 250], 'mushroom.png': [10, 40, 150], 'hedgehog.png': [8, 25, 80], 'acorn.png': [5, 15, 50], 'leaf.png': [5, 15, 50], 'coin.png': [2, 5, 15] };
@@ -317,21 +349,17 @@ function updateUI() {
 
 function buildReels() {
     reelsEl.innerHTML = ''; tracks.length = 0;
-    const frame = document.querySelector('.reels-frame');
     
-    setTimeout(() => {
-        const frameHeight = frame.getBoundingClientRect().height;
-        cellH = frameHeight / ROWS; 
-
-        for (let r = 0; r < REELS; r++) {
-            const reel = document.createElement('div'); reel.className = 'reel';
-            const track = document.createElement('div'); track.className = 'track';
-            let html = '';
-            for (let row = 0; row < ROWS; row++) html += `<div class="cell" style="height:${cellH}px"><img src="${randSym()}${IMG_VER}"></div>`;
-            track.innerHTML = html; reel.appendChild(track); reelsEl.appendChild(reel); tracks.push(track);
-        }
-        updateUI();
-    }, 300);
+    // Высоту задаем через CSS (20%), поэтому JS просто создает элементы
+    for (let r = 0; r < REELS; r++) {
+        const reel = document.createElement('div'); reel.className = 'reel';
+        const track = document.createElement('div'); track.className = 'track';
+        track.style.height = '100%'; // Важно для корректного отображения
+        let html = '';
+        for (let row = 0; row < ROWS; row++) html += `<div class="cell"><img src="${randSym()}${IMG_VER}"></div>`;
+        track.innerHTML = html; reel.appendChild(track); reelsEl.appendChild(reel); tracks.push(track);
+    }
+    updateUI();
 }
 
 let reelAnimFrames = [null, null, null, null, null];
@@ -339,16 +367,17 @@ let reelPositions = [0, 0, 0, 0, 0];
 
 function startReelSpin(r) {
     const track = tracks[r]; let html = ''; 
-    for (let i = 0; i < 40; i++) html += `<div class="cell" style="height:${cellH}px"><img src="${randSym()}${IMG_VER}"></div>`;
+    for (let i = 0; i < 40; i++) html += `<div class="cell"><img src="${randSym()}${IMG_VER}"></div>`;
     track.innerHTML = html; 
     let lastTime = performance.now(); 
     const speed = 2000;
+    const frameHeight = track.clientHeight / 5; // Высота одной ячейки
     
     function frame(now) {
         if (!isSpinning) return; 
         const dt = (now - lastTime) / 1000; lastTime = now;
         reelPositions[r] -= speed * dt; 
-        if (reelPositions[r] <= -(20 * cellH)) reelPositions[r] += 20 * cellH;
+        if (reelPositions[r] <= -(20 * frameHeight)) reelPositions[r] += 20 * frameHeight;
         track.style.transform = `translate3d(0, ${reelPositions[r]}px, 0)`;
         reelAnimFrames[r] = requestAnimationFrame(frame);
     }
@@ -360,26 +389,28 @@ function stopReelAnim(r, final5) {
         setTimeout(() => {
             cancelAnimationFrame(reelAnimFrames[r]); 
             const track = tracks[r]; const currentY = reelPositions[r];
+            const frameHeight = track.clientHeight / 5; // Высота ячейки
+            
             let html = ''; 
-            for (let i = 0; i < 15; i++) html += `<div class="cell" style="height:${cellH}px"><img src="${randSym()}${IMG_VER}"></div>`;
-            final5.forEach(s => html += `<div class="cell" style="height:${cellH}px"><img src="${s}${IMG_VER}"></div>`);
-            for (let i = 0; i < 5; i++) html += `<div class="cell" style="height:${cellH}px"><img src="${randSym()}${IMG_VER}"></div>`;
+            for (let i = 0; i < 15; i++) html += `<div class="cell"><img src="${randSym()}${IMG_VER}"></div>`;
+            final5.forEach(s => html += `<div class="cell"><img src="${s}${IMG_VER}"></div>`);
+            for (let i = 0; i < 5; i++) html += `<div class="cell"><img src="${randSym()}${IMG_VER}"></div>`;
             
             track.innerHTML = html; 
-            let startY = currentY % (15 * cellH); 
-            if(startY > 0) startY -= 15 * cellH;
+            let startY = currentY % (15 * frameHeight); 
+            if(startY > 0) startY -= 15 * frameHeight;
             
             track.style.transition = 'none'; 
             track.style.transform = `translate3d(0, ${startY}px, 0)`; 
             track.getBoundingClientRect(); 
             
             track.style.transition = `transform ${800 + r*200}ms cubic-bezier(0.1, 0.8, 0.2, 1)`; 
-            track.style.transform = `translate3d(0, -${15 * cellH}px, 0)`;
+            track.style.transform = `translate3d(0, -${15 * frameHeight}px, 0)`;
             
             setTimeout(() => { 
                 track.style.transition = 'none'; 
                 track.style.transform = 'translate3d(0,0,0)'; 
-                track.innerHTML = final5.map(s => `<div class="cell" style="height:${cellH}px"><img src="${s}${IMG_VER}"></div>`).join(''); 
+                track.innerHTML = final5.map(s => `<div class="cell"><img src="${s}${IMG_VER}"></div>`).join(''); 
                 resolve(); 
             }, 800 + r*200 + 50);
         }, r * 200);
