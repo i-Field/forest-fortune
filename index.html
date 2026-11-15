@@ -61,7 +61,7 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 /* Линии, Ставка, Всего */
 .ui-lines { top: calc(68.95% - 1px); left: 20.5%; width: 9.5%; font-size: 4.2vw; }
 .ui-bet { top: calc(68.95% - 1px); left: 45%; width: 9%; font-size: 4.2vw; }
-/* «Всего» вернули чуть влево */
+/* «Всего» на нужном месте */
 .ui-total { top: calc(68.8% - 1px); right: 20.5%; width: 9%; font-size: 4.2vw; } 
 
 /* СЕТКА 5x5 */
@@ -88,23 +88,50 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 
 .btn-auto { top: 73.8%; right: 9%; width: 13%; height: 5.5%; }
 
-/* Кнопка МАКС БЕТ (Стиль Apple, опущена ниже ряда иконок) */
+/* Кнопка МАКС БЕТ (Опущена, уменьшена на 30%, добавлена волна) */
 .btn-maxbet { 
-    top: 88.5%; left: 50%; transform: translateX(-50%); width: 42%; height: 4.8%; 
-    background: linear-gradient(180deg, #2ecc71, #1a7d43); 
-    border: 1px solid rgba(255,255,255,0.3); 
-    border-radius: 25px; 
+    top: 92.5%; left: 50%; transform: translateX(-50%); width: 30%; height: 3.8%; 
+    background: linear-gradient(270deg, #2ecc71, #00ffff, #2ecc71, #00ffff);
+    background-size: 300% 300%;
+    animation: holoGradient 3s ease infinite;
+    border: 1px solid rgba(255,255,255,0.6); 
+    border-radius: 20px; 
     color: #fff; 
-    font-size: 14px; font-weight: 900; font-family: 'Arial', sans-serif;
+    font-size: 10px; 
+    font-weight: 900; 
+    font-family: 'Arial', sans-serif;
     display: flex; align-items: center; justify-content: center; text-align: center;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5); 
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3), inset 0 2px 0 rgba(255,255,255,0.2); 
+    text-shadow: 0 0 5px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.9); 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4), 0 0 15px rgba(0, 255, 255, 0.6), inset 0 2px 0 rgba(255,255,255,0.3); 
     position: absolute; z-index: 999999; cursor: pointer;
-    letter-spacing: 1.5px;
+    letter-spacing: 1px;
+    overflow: hidden;
 }
+
+.btn-maxbet::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -100%;
+    width: 40%; height: 200%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+    transform: rotate(45deg);
+    animation: waveShine 2.5s infinite;
+}
+
+@keyframes holoGradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes waveShine {
+    0% { left: -100%; }
+    100% { left: 200%; }
+}
+
 .btn-maxbet:active { 
-    transform: translateX(-50%) translateY(2px) scale(0.98); 
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1); 
+    transform: translateX(-50%) translateY(2px) scale(0.95); 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.4), 0 0 20px rgba(0, 255, 255, 0.8); 
 }
 
 /* УВЕЛИЧЕННЫЕ ПЛЮС И МИНУС */
