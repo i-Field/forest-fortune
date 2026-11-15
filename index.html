@@ -9,7 +9,8 @@
 :root {
     --text: #f0f4f8;
     --gold: #ffd966;
-    --mask: #1a0d05; /* Темное дерево для плашек */
+    --mask: #1a0d05;
+    --holo: #00ffcc;
 }
 
 * {
@@ -32,6 +33,22 @@ html, body {
 }
 
 /* ============================================================
+   СТАРТОВЫЙ ЭКРАН (ДЛЯ АКТИВАЦИИ ЗВУКА)
+   ============================================================ */
+#startScreen {
+    position: fixed; inset: 0; background: radial-gradient(circle, #112211, #000);
+    z-index: 999999; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    transition: opacity 0.5s;
+}
+#startScreen.hidden { opacity: 0; pointer-events: none; }
+.start-title { font-size: 32px; color: #a8ff78; font-family: Georgia, serif; font-weight: 900; text-shadow: 0 0 20px #2ecc71; margin-bottom: 20px; }
+.start-btn { 
+    background: linear-gradient(180deg, #2ecc71, #1a7d43); border: 2px solid #a8ff78;
+    color: #fff; padding: 15px 40px; border-radius: 12px; font-size: 20px; font-weight: 900;
+    box-shadow: 0 5px 15px rgba(46, 204, 113, 0.5); cursor: pointer;
+}
+
+/* ============================================================
    АРХИТЕКТУРА (КАРТИНКА КАК ФОН)
    ============================================================ */
 .game-board {
@@ -39,92 +56,81 @@ html, body {
     aspect-ratio: 768 / 1370; 
     width: 100vw;
     max-height: 100dvh; 
-    background: url('bg.png?v=1111') no-repeat center center;
+    background: url('bg.png?v=3333') no-repeat center center;
     background-size: 100% 100%; 
     overflow: hidden;
 }
 
 /* ============================================================
-   ДИНАМИЧЕСКИЕ ЦИФРЫ (СДВИНУТЫ ПО ТВОИМ ММ)
+   МАГИЯ (СВЕТЛЯЧКИ И ОГОНЬ)
+   ============================================================ */
+.fire-glow {
+    position: absolute; top: 14.5%; width: 12%; height: 4%;
+    background: radial-gradient(circle, rgba(255, 140, 0, 0.8) 0%, transparent 70%);
+    mix-blend-mode: screen; pointer-events: none; z-index: 5;
+    animation: fireFlicker 1.5s infinite alternate;
+}
+.fire-left { left: 12%; }
+.fire-right { right: 12%; }
+@keyframes fireFlicker {
+    0% { opacity: 0.4; transform: scale(0.9); }
+    100% { opacity: 1; transform: scale(1.1); }
+}
+
+.firefly {
+    position: absolute; width: 6px; height: 6px; border-radius: 50%;
+    background: #a8ff78; box-shadow: 0 0 12px 3px #2ecc71, 0 0 4px #fff;
+    pointer-events: none; z-index: 6; opacity: 0;
+    animation: floatFly 4s infinite ease-in-out;
+}
+.f1 { bottom: 18%; left: 8%; animation-delay: 0s; }
+.f2 { bottom: 25%; left: 12%; animation-delay: 1s; }
+.f3 { bottom: 20%; right: 10%; animation-delay: 0.5s; }
+.f4 { bottom: 30%; right: 15%; animation-delay: 1.5s; }
+.f5 { bottom: 35%; left: 5%; animation-delay: 2s; }
+.f6 { bottom: 15%; right: 6%; animation-delay: 0.8s; }
+@keyframes floatFly {
+    0%, 100% { transform: translateY(0) scale(0.5); opacity: 0; }
+    50% { transform: translateY(-40px) scale(1.5); opacity: 1; }
+}
+
+/* ============================================================
+   ДИНАМИЧЕСКИЕ ЦИФРЫ
    ============================================================ */
 .ui-val {
     position: absolute;
-    display: flex; 
-    align-items: center; 
-    justify-content: center;
-    background: var(--mask); 
-    color: var(--gold);
-    font-weight: 900;
-    font-size: 3vw;
-    text-shadow: 1px 1px 2px #000;
-    border-radius: 4px;
-    z-index: 60;
-    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--mask); color: var(--gold);
+    font-weight: 900; font-size: 3vw; text-shadow: 1px 1px 2px #000;
+    border-radius: 4px; z-index: 60; overflow: hidden;
 }
 
-/* Верхние цифры (Баланс вправо на 10мм, Ноль вправо 10мм и вниз 1мм) */
-.ui-balance { top: 18.2%; left: 27.5%; width: 11%; height: 3.2%; }
-.ui-win { top: 18.3%; right: 19%; width: 7%; height: 3.2%; }
-
-/* Нижние цифры (Линии вниз 2мм, вправо 2мм. Всего вниз 2мм, влево) */
-.ui-lines { top: 68.3%; left: 21.5%; width: 8%; height: 3.2%; }
-.ui-bet { top: 68.3%; left: 45.5%; width: 8%; height: 3.2%; }
-.ui-total { top: 68.1%; right: 20%; width: 8%; height: 3.2%; }
+.ui-balance { top: 18.2%; left: 29.5%; width: 10%; height: 3.2%; }
+.ui-win { top: 17.8%; right: 18%; width: 7%; height: 3.2%; }
+.ui-lines { top: 69%; left: 21.5%; width: 8%; height: 3.2%; }
+.ui-bet { top: 69%; left: 45.5%; width: 8%; height: 3.2%; }
+.ui-total { top: 68.8%; right: 19.5%; width: 8%; height: 3.2%; }
 
 /* ============================================================
-   СЕТКА 5x5 (ОПУЩЕНА НА 5 ММ И С ЖЕСТКОЙ ЗАГЛУШКОЙ)
+   СЕТКА 5x5
    ============================================================ */
 .reels-frame {
     position: absolute;
-    top: 26.5%; left: 13.6%; right: 13.6%; /* Опустили сетку вниз */
-    height: 40.5%; 
-    background: #0d2112;
-    border-radius: 4px;
-    overflow: hidden; 
-    z-index: 10;
-    /* ЖЕСТКАЯ ЗАГЛУШКА СНИЗУ */
-    border-bottom: 15px solid #0d2112; 
+    top: 25.5%; left: 13.6%; right: 13.6%; height: 42.5%;
+    background: #0d2112; border-radius: 4px;
+    overflow: hidden; z-index: 10;
+    border-bottom: 2px solid #0d2112; 
 }
-
-.reels { 
-    display: grid; 
-    grid-template-columns: repeat(5, 1fr); 
-    height: 100%; 
-    width: 100%; 
-    background: #000; 
-    gap: 1px; 
-}
-.reel { 
-    background: #0d2112; 
-    overflow: hidden; 
-    position: relative; 
-    height: 100%; 
-}
-.track { 
-    position: absolute; 
-    left: 0; 
-    right: 0; 
-    top: 0; 
-    display: flex; 
-    flex-direction: column; 
-    will-change: transform; 
-}
-.cell { 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    position: relative; 
-    flex-shrink: 0; 
-    width: 100%; 
-    height: 20%; 
-} 
+.reels { display: grid; grid-template-columns: repeat(5, 1fr); height: 100%; width: 100%; background: #000; gap: 1px; }
+.reel { background: #0d2112; overflow: hidden; position: relative; height: 100%; }
+.track { position: absolute; left: 0; right: 0; top: 0; display: flex; flex-direction: column; will-change: transform; }
+.cell { display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; width: 100%; height: 20%; } 
 .cell img { width: 90%; height: 90%; object-fit: contain; filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.5)) drop-shadow(0 2px 2px rgba(0,0,0,0.8)); }
 
-/* Слой для линий */
 .lines-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 20; }
 
 /* ============================================================
-   НЕВИДИМЫЕ КНОПКИ
+   ГОЛОГРАФИЧЕСКИЕ КНОПКИ
    ============================================================ */
 .btn-overlay { 
     position: absolute; 
@@ -132,34 +138,30 @@ html, body {
     cursor: pointer; 
     border-radius: 8px; 
     pointer-events: auto;
+    transition: all 0.2s;
 }
-.btn-overlay:active { background: rgba(255,255,255,0.2); }
+/* Эффект свечения при нажатии */
+.btn-overlay:active { 
+    background: rgba(0, 255, 204, 0.15); 
+    box-shadow: 0 0 15px var(--holo), inset 0 0 10px var(--holo);
+    border: 1px solid var(--holo);
+}
 
-/* Глобус и Звук */
+/* Позиции кнопок */
 .btn-lang { top: 1.5%; left: 2.5%; width: 9%; height: 4.5%; border-radius: 50%; }
 .btn-sound { top: 1.5%; right: 2.5%; width: 9%; height: 4.5%; border-radius: 50%; }
-
-/* Кнопка Spin */
 .btn-spin { top: 70%; left: 34%; width: 32%; height: 6.5%; border-radius: 20px; }
-
-/* Кнопка Auto */
 .btn-auto { top: 70.5%; right: 10.5%; width: 14%; height: 5.5%; }
-
-/* Стрелки линий и ставки */
-.btn-lines-dec { top: 68.3%; left: 16%; width: 4%; height: 3.3%; }
-.btn-lines-inc { top: 68.3%; left: 31%; width: 4%; height: 3.3%; }
-.btn-bet-dec { top: 68.3%; left: 41.5%; width: 4%; height: 3.3%; }
-.btn-bet-inc { top: 68.3%; left: 56%; width: 4%; height: 3.3%; }
-
-/* Кнопки 1, 3, 5, 9, 15, 21 */
+.btn-lines-dec { top: 69%; left: 16%; width: 4%; height: 3.3%; }
+.btn-lines-inc { top: 69%; left: 31%; width: 4%; height: 3.3%; }
+.btn-bet-dec { top: 69%; left: 41.5%; width: 4%; height: 3.3%; }
+.btn-bet-inc { top: 69%; left: 56%; width: 4%; height: 3.3%; }
 .btn-l1 { top: 70%; left: 10.5%; width: 4.5%; height: 3.5%; }
 .btn-l3 { top: 70%; left: 16%; width: 4.5%; height: 3.5%; }
 .btn-l5 { top: 70%; left: 21.5%; width: 4.5%; height: 3.5%; }
 .btn-l9 { top: 70%; left: 27%; width: 4.5%; height: 3.5%; }
 .btn-l15 { top: 70%; left: 32.5%; width: 4.5%; height: 3.5%; }
 .btn-l21 { top: 70%; left: 38%; width: 4.5%; height: 3.5%; }
-
-/* НИЖНИЕ КНОПКИ */
 .btn-action { top: 80%; width: 11%; height: 5.5%; z-index: 99999; }
 .btn-wheel { left: 2.5%; }
 .btn-shop { left: 14.5%; }
@@ -170,13 +172,7 @@ html, body {
 .btn-bonus { right: 14.5%; }
 .btn-rules { right: 2.5%; }
 
-/* Подсветка Риска */
-@keyframes riskPulse { 0% { box-shadow: 0 0 10px #f1c40f; background: rgba(241, 196, 15, 0.2); } 100% { box-shadow: 0 0 20px #f1c40f; background: rgba(241, 196, 15, 0.6); } }
-.btn-risk.active-risk { animation: riskPulse 0.8s infinite alternate; border-radius: 12px; background: rgba(241, 196, 15, 0.4); }
-
-/* ============================================================
-   МОДАЛКИ
-   ============================================================ */
+/* Модалки и Уведомления */
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.9);display:flex;align-items:center;justify-content:center;z-index:100000;opacity:0;pointer-events:none;transition:opacity .2s;padding:15px}
 .modal.active{opacity:1;pointer-events:auto}
 .modal-box{background:linear-gradient(180deg,#1a2e1a,#0a1208);border:2px solid var(--gold);border-radius:14px;padding:20px;max-width:340px;width:100%;text-align:center;color:#fff;box-shadow:0 10px 30px rgba(0,0,0,0.8);}
@@ -195,8 +191,19 @@ html, body {
 </head>
 <body>
 
+<div id="startScreen">
+    <div class="start-title">FOREST FORTUNE</div>
+    <button class="start-btn" id="startBtn">ИГРАТЬ 🔊</button>
+</div>
+
 <div class="game-board" id="gameBoard">
     
+    <!-- Магия леса -->
+    <div class="fire-glow fire-left"></div>
+    <div class="fire-glow fire-right"></div>
+    <div class="firefly f1"></div><div class="firefly f2"></div><div class="firefly f3"></div>
+    <div class="firefly f4"></div><div class="firefly f5"></div><div class="firefly f6"></div>
+
     <!-- Динамические цифры -->
     <div class="ui-val ui-balance" id="balanceVal">1 120</div>
     <div class="ui-val ui-win" id="winVal">0</div>
@@ -210,26 +217,21 @@ html, body {
         <svg class="lines-overlay" id="linesOverlay"></svg>
     </div>
 
-    <!-- Невидимые кнопки -->
+    <!-- Кнопки -->
     <div class="btn-overlay btn-lang" onclick="cycleLang()"></div>
     <div class="btn-overlay btn-sound" onclick="toggleSound()"></div>
-
     <div class="btn-overlay btn-spin" id="spinBtn"></div>
     <div class="btn-overlay btn-auto" onclick="toggleAuto()"></div>
-    
     <div class="btn-overlay btn-lines-dec" id="linesDec"></div>
     <div class="btn-overlay btn-lines-inc" id="linesInc"></div>
     <div class="btn-overlay btn-bet-dec" id="betDec"></div>
     <div class="btn-overlay btn-bet-inc" id="betInc"></div>
-
     <div class="btn-overlay btn-l1" onclick="setLines(1)"></div>
     <div class="btn-overlay btn-l3" onclick="setLines(3)"></div>
     <div class="btn-overlay btn-l5" onclick="setLines(5)"></div>
     <div class="btn-overlay btn-l9" onclick="setLines(9)"></div>
     <div class="btn-overlay btn-l15" onclick="setLines(15)"></div>
     <div class="btn-overlay btn-l21" onclick="setLines(21)"></div>
-
-    <!-- Нижние кнопки -->
     <div class="btn-overlay btn-action btn-wheel" onclick="openModal('wheelModal')"></div>
     <div class="btn-overlay btn-action btn-shop" onclick="openModal('shopModal')"></div>
     <div class="btn-overlay btn-action btn-risk" id="btnRiskUI" onclick="openRiskModal()"></div>
@@ -248,12 +250,11 @@ html, body {
 <div class="modal" id="tasksModal"><div class="modal-box"><div class="modal-title">📜 ЗАДАНИЯ</div><div class="modal-text">Скоро тут будут задания</div><button class="modal-close" onclick="closeModal('tasksModal')">Закрыть</button></div></div>
 <div class="modal" id="topModal"><div class="modal-box"><div class="modal-title">🏆 ТОП</div><div class="modal-text">Загрузка...</div><button class="modal-close" onclick="closeModal('topModal')">Закрыть</button></div></div>
 <div class="modal" id="paytableModal"><div class="modal-box"><div class="modal-title">📋 ПРАВИЛА</div><div class="modal-text">Собери 3+ одинаковых символа слева направо. Грибы дают фриспины.</div><button class="modal-close" onclick="closeModal('paytableModal')">Закрыть</button></div></div>
-
 <div class="notif" id="notif"></div>
 
 <script>
 const REELS = 5, ROWS = 5; 
-const IMG_VER = '?v=1111';
+const IMG_VER = '?v=3333';
 const SYMBOLS = ['gem.png', 'mushroom.png', 'hedgehog.png', 'acorn.png', 'leaf.png', 'coin.png'];
 const WEIGHTS = {'gem.png':5, 'mushroom.png':10, 'hedgehog.png':15, 'acorn.png':25, 'leaf.png':25, 'coin.png':30};
 const PAYTABLE = { 'gem.png': [15, 60, 250], 'mushroom.png': [10, 40, 150], 'hedgehog.png': [8, 25, 80], 'acorn.png': [5, 15, 50], 'leaf.png': [5, 15, 50], 'coin.png': [2, 5, 15] };
@@ -266,16 +267,115 @@ const PAYLINES = [
     [[0,1],[1,1],[2,2],[3,3],[4,3]], [[0,3],[1,3],[2,2],[3,1],[4,1]], [[0,0],[1,2],[2,4],[3,2],[4,0]], [[0,4],[1,2],[2,0],[3,2],[4,4]]
 ];
 const LINE_COLORS = ['#ff3b30','#ff9500','#ffcc00','#34c759','#00c7be','#30b0ff','#5856d6','#af52de','#ff2d95','#ff6b6b','#ffd93d','#6bcf7f','#4ecdc4','#95e1d3','#a8e6cf','#c7ceea','#e2a4d1','#f6d365','#b5eaea','#e0aaff','#ffb4a2'];
-
 const POOL=[];Object.entries(WEIGHTS).forEach(([s,w])=>{for(let i=0;i<w;i++)POOL.push(s)});
 
-// Полностью убрал localStorage, чтобы игра никогда не запускалась сама
 let state = { balance: 1120, betPerLine: 1, lines: 15, lastDaily: 0, sound: true, lang: 'ru' };
 let isSpinning = false, stopRequested = false;
 let freeSpins = 0, isFreeSpin = false;
 let pendingRisk = 0;
 let spinTimeout = null; 
 
+/* ============================================================
+   🔊 АУДИО И ТАКТИЛЬНАЯ ОТДАЧА (HAPTICS)
+   ============================================================ */
+let audioCtx = null;
+let bgmOsc = null, bgmGain = null;
+let isAudioInit = false;
+
+// Вибро-отклик
+function haptic(type) {
+    const tg = window.Telegram?.WebApp;
+    if (tg?.HapticFeedback) {
+        try {
+            if(type==='light') tg.HapticFeedback.impactOccurred('light');
+            else if(type==='medium') tg.HapticFeedback.impactOccurred('medium');
+            else if(type==='heavy') tg.HapticFeedback.impactOccurred('heavy');
+            else if(type==='success') tg.HapticFeedback.notificationOccurred('success');
+            else if(type==='error') tg.HapticFeedback.notificationOccurred('error');
+            else if(type==='select') tg.HapticFeedback.selectionChanged();
+        } catch(e) {}
+    }
+    // Fallback для браузера
+    if (navigator.vibrate) {
+        try { navigator.vibrate(type === 'heavy' ? [30, 50, 30] : 15); } catch(e) {}
+    }
+}
+
+// Инициализация звука
+function initAudio() {
+    if (isAudioInit) return;
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (AudioContext) {
+        audioCtx = new AudioContext();
+        isAudioInit = true;
+        startBGM();
+    }
+}
+
+// Синтезатор звуков
+function playSound(freq, type, duration, vol=0.1) {
+    if (!audioCtx || !state.sound) return;
+    try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        
+        gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+    } catch(e) {}
+}
+
+// Звуки интерфейса
+const sfx = {
+    click: () => playSound(800, 'sine', 0.1, 0.1),
+    spinStart: () => playSound(200, 'sawtooth', 0.5, 0.1),
+    reelStop: () => playSound(400, 'triangle', 0.15, 0.2),
+    win: () => { playSound(523.25, 'sine', 0.3); setTimeout(()=>playSound(659.25, 'sine', 0.3), 100); setTimeout(()=>playSound(783.99, 'sine', 0.4), 200); },
+    lose: () => playSound(150, 'sawtooth', 0.4, 0.1)
+};
+
+// Фоновая музыка (Лесной эмбиент)
+function startBGM() {
+    if (!audioCtx) return;
+    try {
+        bgmOsc = audioCtx.createOscillator();
+        bgmGain = audioCtx.createGain();
+        const lfo = audioCtx.createOscillator();
+        const lfoGain = audioCtx.createGain();
+
+        bgmOsc.type = 'sine';
+        bgmOsc.frequency.value = 110; // Нота A2
+
+        lfo.frequency.value = 0.1;
+        lfoGain.gain.value = 5;
+
+        lfo.connect(lfoGain);
+        lfoGain.connect(bgmOsc.frequency);
+
+        bgmOsc.connect(bgmGain);
+        bgmGain.connect(audioCtx.destination);
+
+        bgmGain.gain.value = 0.02; // Очень тихо на фоне
+        bgmOsc.start();
+        lfo.start();
+    } catch(e) {}
+}
+
+function toggleBGM() {
+    if (bgmGain) {
+        bgmGain.gain.setTargetAtTime(state.sound ? 0.02 : 0, audioCtx.currentTime, 0.1);
+    }
+}
+
+/* ============================================================
+   ЛОГИКА ИГРЫ
+   ============================================================ */
 const reelsEl = document.getElementById('reels');
 const overlay = document.getElementById('linesOverlay');
 const tracks = [];
@@ -285,20 +385,16 @@ const fmt = (n) => Math.round(n).toLocaleString('ru-RU');
 function notif(msg, type='') { const n=$('notif'); n.textContent=msg; n.className='notif show '+type; clearTimeout(n._t); n._t=setTimeout(()=>{n.className='notif '+type}, 3000); }
 const randSym = () => POOL[Math.floor(Math.random()*POOL.length)];
 const totalBet = () => state.lines * state.betPerLine;
-const openModal = (id) => { $(id).classList.add('active'); };
-const closeModal = (id) => $(id).classList.remove('active');
+const openModal = (id) => { $(id).classList.add('active'); haptic('light'); sfx.click(); };
+const closeModal = (id) => { $(id).classList.remove('active'); };
 
-function cycleLang() {
-    const langs = ['ru', 'uk', 'en'];
-    let idx = langs.indexOf(state.lang);
-    idx = (idx + 1) % langs.length;
-    state.lang = langs[idx];
-    notif('Language: ' + state.lang.toUpperCase());
-}
-
-function toggleSound() {
-    state.sound = !state.sound;
-    notif(state.sound ? '🔊 Звук ВКЛ' : '🔇 Звук ВЫКЛ');
+function cycleLang() { haptic('light'); sfx.click(); notif('Language: RU'); }
+function toggleSound() { 
+    state.sound = !state.sound; 
+    toggleBGM();
+    haptic('light'); 
+    if(state.sound) sfx.click();
+    notif(state.sound ? '🔊 Звук ВКЛ' : '🔇 Звук ВЫКЛ'); 
 }
 
 function showActiveLines() {
@@ -334,6 +430,8 @@ function setLines(num) {
     if(isSpinning) return; 
     state.lines = num; 
     updateUI(); 
+    haptic('select');
+    sfx.click();
     notif('Линий: ' + num);
     showActiveLines();
 }
@@ -348,7 +446,6 @@ function updateUI() {
 
 function buildReels() {
     reelsEl.innerHTML = ''; tracks.length = 0;
-    
     for (let r = 0; r < REELS; r++) {
         const reel = document.createElement('div'); reel.className = 'reel';
         const track = document.createElement('div'); track.className = 'track';
@@ -409,6 +506,8 @@ function stopReelAnim(r, final5) {
                 track.style.transition = 'none'; 
                 track.style.transform = 'translate3d(0,0,0)'; 
                 track.innerHTML = final5.map(s => `<div class="cell"><img src="${s}${IMG_VER}"></div>`).join(''); 
+                haptic('light');
+                sfx.reelStop();
                 resolve(); 
             }, 800 + r*200 + 50);
         }, r * 200);
@@ -417,7 +516,12 @@ function stopReelAnim(r, final5) {
 
 async function startSpin() {
     if (isSpinning) return;
-    if (state.balance < totalBet()) { notif('Мало монет!', 'error'); return; }
+    if (state.balance < totalBet()) { 
+        notif('Мало монет!', 'error'); 
+        haptic('error');
+        sfx.lose();
+        return; 
+    }
     
     state.balance -= totalBet(); 
     isSpinning = true; 
@@ -426,6 +530,9 @@ async function startSpin() {
     updateUI(); 
     $('btnRiskUI').classList.remove('active-risk');
     overlay.innerHTML = '';
+    
+    haptic('medium');
+    sfx.spinStart();
     
     const finalGrid = []; 
     for (let r=0; r<REELS; r++) { const col=[]; for(let c=0; c<ROWS; c++) col.push(randSym()); finalGrid.push(col); }
@@ -462,17 +569,22 @@ async function requestStop(pregeneratedGrid) {
         $('winVal').textContent = fmt(total); 
         notif('Выигрыш: +' + fmt(total), 'gold');
         
+        haptic('success');
+        sfx.win();
+        
         if (total >= totalBet() * 2 && !isFreeSpin) {
             pendingRisk = total;
             $('btnRiskUI').classList.add('active-risk');
         }
     } else { 
         notif('Повезет в следующий раз!', 'error'); 
+        sfx.lose();
     }
 
     if (scatterCount >= 3 && !isFreeSpin) { 
         freeSpins = 10; 
         notif('🎉 3 ГРИБА! 10 ФРИСПИНОВ x2!', 'gold'); 
+        haptic('heavy');
     }
     
     isSpinning = false; 
@@ -489,6 +601,8 @@ async function requestStop(pregeneratedGrid) {
 
 function toggleAuto() {
     if(isSpinning) return;
+    haptic('medium');
+    sfx.click();
     notif('Автоспин запущен');
     startSpin();
 }
@@ -500,6 +614,7 @@ function genGrid() {
 }
 
 function openRiskModal() {
+    haptic('light'); sfx.click();
     if (pendingRisk <= 0) { notif('Нет выигрыша для риска!', 'error'); return; }
     $('riskText').textContent = `Вы рискуете суммой ${fmt(pendingRisk)} 🪙. Угадайте карту (шанс 50/50), чтобы удвоить!`;
     openModal('riskModal');
@@ -516,8 +631,10 @@ function playRisk(isHigher) {
 
     if (won) {
         state.balance += pendingRisk; notif(`🎉 Победа! +${fmt(pendingRisk)}`, 'gold');
+        haptic('success'); sfx.win();
     } else {
         state.balance -= pendingRisk; notif(`❌ Проигрыш: -${fmt(pendingRisk)}`, 'error');
+        haptic('error'); sfx.lose();
     }
     pendingRisk = 0;
     $('btnRiskUI').classList.remove('active-risk');
@@ -529,12 +646,22 @@ function takeRiskMoney() {
     pendingRisk = 0;
     $('btnRiskUI').classList.remove('active-risk');
     notif('Вы забрали выигрыш!', 'success');
+    haptic('success'); sfx.click();
 }
 
 function claimDaily() {
     if (Date.now() - state.lastDaily < 24*3600*1000) { notif('Бонус уже получен! Ждите 24ч', 'error'); return; }
     state.lastDaily = Date.now(); state.balance += 1000; updateUI(); notif('🎁 Ежедневный бонус: +1000 🪙', 'gold');
+    haptic('heavy'); sfx.win();
 }
+
+// Инициализация кнопок
+$('startBtn').onclick = () => {
+    initAudio();
+    $('startScreen').classList.add('hidden');
+    buildReels();
+    haptic('success');
+};
 
 $('spinBtn').onclick = (e) => { 
     e.preventDefault(); e.stopPropagation();
@@ -543,19 +670,10 @@ $('spinBtn').onclick = (e) => {
 
 $('linesDec').onclick = () => { if(!isSpinning){ setLines(Math.max(1, state.lines-1)); } };
 $('linesInc').onclick = () => { if(!isSpinning){ setLines(Math.min(21, state.lines+1)); } };
-$('betDec').onclick = () => { if(!isSpinning){ state.betPerLine = Math.max(1, state.betPerLine-1); updateUI(); } };
-$('betInc').onclick = () => { if(!isSpinning){ state.betPerLine += 1; updateUI(); } };
-
-document.querySelector('.btn-wheel').onclick = () => openModal('wheelModal');
-document.querySelector('.btn-shop').onclick = () => openModal('shopModal');
-document.querySelector('.btn-friends').onclick = () => openModal('friendsModal');
-document.querySelector('.btn-tasks').onclick = () => openModal('tasksModal');
-document.querySelector('.btn-top').onclick = () => openModal('topModal');
-document.querySelector('.btn-rules').onclick = () => openModal('paytableModal');
-document.querySelector('.btn-bonus').onclick = () => claimDaily();
+$('betDec').onclick = () => { if(!isSpinning){ state.betPerLine = Math.max(1, state.betPerLine-1); updateUI(); haptic('select'); sfx.click(); } };
+$('betInc').onclick = () => { if(!isSpinning){ state.betPerLine += 1; updateUI(); haptic('select'); sfx.click(); } };
 
 window.addEventListener('resize', () => { if(!isSpinning) buildReels(); });
-buildReels();
 </script>
 </body>
 </html>
