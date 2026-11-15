@@ -9,7 +9,8 @@
 :root {
     --text: #f0f4f8;
     --gold: #ffd966;
-    --mask: #1a0d05; /* Темное дерево для масок */
+    --mask: #1a0d05;
+    --holo: #00ffcc;
 }
 
 * {
@@ -56,7 +57,7 @@ html, body {
     aspect-ratio: 768 / 1370; 
     width: 100vw;
     max-height: 100dvh; 
-    background: url('bg.png?v=9999') no-repeat center center;
+    background: url('bg.png?v=99999') no-repeat center center;
     background-size: 100% 100%; 
     overflow: hidden;
 }
@@ -95,23 +96,23 @@ html, body {
 }
 
 /* ============================================================
-   ДИНАМИЧЕСКИЕ ЦИФРЫ (ШИРОКИЕ МАСКИ, ЖИРНЫЙ ШРИФТ)
+   ДИНАМИЧЕСКИЕ ЦИФРЫ (КРУПНЫЕ, ЖИРНЫЕ, КАК В КАЗИНО)
    ============================================================ */
 .ui-val {
     position: absolute;
     display: flex; align-items: center; justify-content: center;
     background: var(--mask); 
     color: var(--gold);
-    font-family: Georgia, serif;
+    font-family: 'Arial', sans-serif;
     font-weight: 900; 
-    font-size: 3vw; 
-    -webkit-text-stroke: 1px #000;
+    font-size: 3.5vw; 
+    -webkit-text-stroke: 1.5px #000; /* Жирная обводка */
     text-shadow: 2px 2px 4px #000;
     border-radius: 4px; z-index: 60; overflow: hidden;
-    height: 3.2%; /* Увеличены маски */
+    height: 3.2%; 
 }
 
-/* Позиции под широкие маски */
+/* Позиции цифр */
 .ui-balance { top: 18.2%; left: 31.5%; width: 10.5%; }
 .ui-win { top: 18.2%; right: 18%; width: 7%; }
 .ui-lines { top: 69.2%; left: 20.5%; width: 9%; }
@@ -167,6 +168,20 @@ html, body {
 } 
 .cell img { width: 90%; height: 90%; object-fit: contain; filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.5)) drop-shadow(0 2px 2px rgba(0,0,0,0.8)); }
 
+/* Подсветка выигрышных ячеек */
+.cell.win::before { 
+    content: ""; position: absolute; inset: 2px; 
+    border: 3px solid #ffd966; border-radius: 8px; 
+    background: rgba(255, 217, 102, 0.3); 
+    box-shadow: 0 0 20px #ffd966, inset 0 0 15px #ffd966; 
+    animation: winPulse .4s infinite alternate; 
+    z-index: 30;
+}
+@keyframes winPulse { 
+    0% { transform: scale(0.95); opacity: 0.8; } 
+    100% { transform: scale(1.05); opacity: 1; } 
+}
+
 .lines-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 20; }
 
 /* ============================================================
@@ -174,7 +189,7 @@ html, body {
    ============================================================ */
 .btn-overlay { 
     position: absolute; 
-    z-index: 99999; 
+    z-index: 999999; /* Максимальный приоритет */
     cursor: pointer; 
     border-radius: 8px; 
     pointer-events: auto;
@@ -197,14 +212,14 @@ html, body {
 .btn-bet-inc { top: 69.2%; left: 57.5%; width: 4%; height: 3.3%; }
 
 /* УВЕЛИЧЕННЫЕ ЗОНЫ КЛИКА ДЛЯ ЛИНИЙ */
-.btn-l1 { top: 69.2%; left: 9.5%; width: 5.5%; height: 4%; }
-.btn-l3 { top: 69.2%; left: 15.5%; width: 5.5%; height: 4%; }
-.btn-l5 { top: 69.2%; left: 21.5%; width: 5.5%; height: 4%; }
-.btn-l9 { top: 69.2%; left: 27.5%; width: 5.5%; height: 4%; }
-.btn-l15 { top: 69.2%; left: 33.5%; width: 5.5%; height: 4%; }
-.btn-l21 { top: 69.2%; left: 39.5%; width: 5.5%; height: 4%; }
+.btn-l1 { top: 69.5%; left: 9.5%; width: 6%; height: 4%; }
+.btn-l3 { top: 69.5%; left: 15.5%; width: 6%; height: 4%; }
+.btn-l5 { top: 69.5%; left: 21.5%; width: 6%; height: 4%; }
+.btn-l9 { top: 69.5%; left: 27.5%; width: 6%; height: 4%; }
+.btn-l15 { top: 69.5%; left: 33.5%; width: 6%; height: 4%; }
+.btn-l21 { top: 69.5%; left: 39.5%; width: 6%; height: 4%; }
 
-.btn-action { top: 80%; width: 11%; height: 5.5%; z-index: 99999; }
+.btn-action { top: 80%; width: 11%; height: 5.5%; z-index: 999999; }
 .btn-wheel { left: 2.5%; }
 .btn-shop { left: 14.5%; }
 .btn-risk { left: 26.5%; }
@@ -215,7 +230,7 @@ html, body {
 .btn-rules { right: 2.5%; }
 
 /* Модалки и Уведомления */
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.9);display:flex;align-items:center;justify-content:center;z-index:100000;opacity:0;pointer-events:none;transition:opacity .2s;padding:15px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.9);display:flex;align-items:center;justify-content:center;z-index:1000000;opacity:0;pointer-events:none;transition:opacity .2s;padding:15px}
 .modal.active{opacity:1;pointer-events:auto}
 .modal-box{background:linear-gradient(180deg,#1a2e1a,#0a1208);border:2px solid var(--gold);border-radius:14px;padding:20px;max-width:340px;width:100%;text-align:center;color:#fff;box-shadow:0 10px 30px rgba(0,0,0,0.8);}
 .modal-title{font-size:20px;font-weight:900;color:var(--gold);margin-bottom:15px;font-family:Georgia,serif;}
@@ -227,7 +242,7 @@ html, body {
 .modal-btn.red{background:linear-gradient(180deg,#e74c3c,#922b21); box-shadow:0 4px 0 #4d0e07;}
 .modal-btn:active{transform:translateY(3px); box-shadow:none;}
 
-.notif{position:fixed;top:-80px;left:50%;transform:translateX(-50%);background:#2ecc71;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:800;transition:top .3s;z-index:999999;text-align:center;box-shadow:0 5px 15px rgba(0,0,0,.5);}
+.notif{position:fixed;top:-80px;left:50%;transform:translateX(-50%);background:#2ecc71;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:800;transition:top .3s;z-index:9999999;text-align:center;box-shadow:0 5px 15px rgba(0,0,0,.5);}
 .notif.show{top:15px} .notif.error{background:#e74c3c} .notif.gold{background:linear-gradient(180deg,#ffd966,#b8860b);color:#1a1200}
 </style>
 </head>
@@ -245,17 +260,20 @@ html, body {
     <div class="firefly f1"></div><div class="firefly f2"></div><div class="firefly f3"></div>
     <div class="firefly f4"></div><div class="firefly f5"></div><div class="firefly f6"></div>
 
+    <!-- Динамические цифры -->
     <div class="ui-val ui-balance" id="balanceVal">1 120</div>
     <div class="ui-val ui-win" id="winVal">0</div>
     <div class="ui-val ui-lines" id="linesVal">15/21</div>
     <div class="ui-val ui-bet" id="betVal">1</div>
     <div class="ui-val ui-total" id="totalBetVal">15</div>
 
+    <!-- Сетка -->
     <div class="reels-frame" id="reelsFrame">
         <div class="reels" id="reels"></div>
         <svg class="lines-overlay" id="linesOverlay"></svg>
     </div>
 
+    <!-- Кнопки -->
     <div class="btn-overlay btn-lang" onclick="cycleLang()"></div>
     <div class="btn-overlay btn-sound" onclick="toggleSound()"></div>
     <div class="btn-overlay btn-spin" id="spinBtn"></div>
@@ -266,6 +284,7 @@ html, body {
     <div class="btn-overlay btn-bet-dec" id="betDec"></div>
     <div class="btn-overlay btn-bet-inc" id="betInc"></div>
 
+    <!-- Кнопки линий -->
     <div class="btn-overlay btn-l1" onclick="setLines(1)"></div>
     <div class="btn-overlay btn-l3" onclick="setLines(3)"></div>
     <div class="btn-overlay btn-l5" onclick="setLines(5)"></div>
@@ -273,6 +292,7 @@ html, body {
     <div class="btn-overlay btn-l15" onclick="setLines(15)"></div>
     <div class="btn-overlay btn-l21" onclick="setLines(21)"></div>
 
+    <!-- Нижние кнопки -->
     <div class="btn-overlay btn-action btn-wheel" onclick="openModal('wheelModal')"></div>
     <div class="btn-overlay btn-action btn-shop" onclick="openModal('shopModal')"></div>
     <div class="btn-overlay btn-action btn-risk" id="btnRiskUI" onclick="openRiskModal()"></div>
@@ -295,7 +315,7 @@ html, body {
 
 <script>
 const REELS = 5, ROWS = 5; 
-const IMG_VER = '?v=9999';
+const IMG_VER = '?v=99999';
 const SYMBOLS = ['gem.png', 'mushroom.png', 'hedgehog.png', 'acorn.png', 'leaf.png', 'coin.png'];
 const WEIGHTS = {'gem.png':5, 'mushroom.png':10, 'hedgehog.png':15, 'acorn.png':25, 'leaf.png':25, 'coin.png':30};
 const PAYTABLE = { 'gem.png': [15, 60, 250], 'mushroom.png': [10, 40, 150], 'hedgehog.png': [8, 25, 80], 'acorn.png': [5, 15, 50], 'leaf.png': [5, 15, 50], 'coin.png': [2, 5, 15] };
@@ -585,6 +605,7 @@ async function startSpin() {
     updateUI(); 
     $('btnRiskUI').classList.remove('active-risk');
     overlay.innerHTML = '';
+    document.querySelectorAll('.cell').forEach(c => c.classList.remove('win')); // Убираем старую подсветку
     
     haptic('medium');
     sfx.spinStart();
@@ -607,6 +628,8 @@ async function requestStop(pregeneratedGrid) {
     await Promise.all(tracks.map((tr, i) => stopReelAnim(i, finalGrid[i])));
     
     let total = 0, scatterCount = 0;
+    const winCells = []; // Массив для выигрышных ячеек
+    
     for(let r=0; r<REELS; r++) for(let c=0; c<ROWS; c++) if(finalGrid[r][c] === 'mushroom.png') scatterCount++;
 
     PAYLINES.slice(0, state.lines).forEach(line => {
@@ -615,7 +638,11 @@ async function requestStop(pregeneratedGrid) {
         if(firstSym === 'mushroom.png') return;
         let count = 1;
         for(let i=1; i<REELS; i++) { if(syms[i] === firstSym || syms[i] === 'gem.png') count++; else break; }
-        if(count >= 3) total += PAYTABLE[firstSym][count-3] * state.betPerLine;
+        if(count >= 3) {
+            total += PAYTABLE[firstSym][count-3] * state.betPerLine;
+            // Запоминаем координаты для подсветки
+            for(let i=0; i<count; i++) winCells.push({r: line[i][0], c: line[i][1]});
+        }
     });
 
     if (total > 0) {
@@ -624,6 +651,12 @@ async function requestStop(pregeneratedGrid) {
         $('winVal').textContent = fmt(total); 
         notif(locales[state.lang].win + fmt(total), 'gold');
         
+        // ПОДСВЕТКА ВЫИГРЫШНЫХ ЯЧЕЕК
+        winCells.forEach(cell => {
+            const el = tracks[cell.r].children[cell.c];
+            if(el) el.classList.add('win');
+        });
+
         haptic('success');
         sfx.win();
         
