@@ -17,76 +17,59 @@
 
 html, body { height: 100%; overflow: hidden; background: #000; display: flex; align-items: center; justify-content: center; font-family: Arial, sans-serif; }
 
-/* ============================================================
-   СТАРТОВЫЙ ЭКРАН
-   ============================================================ */
+/* СТАРТОВЫЙ ЭКРАН */
 #startScreen {
     position: fixed; inset: 0; background: radial-gradient(circle, #112211, #000);
-    z-index: 2147483647; 
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    transition: opacity 0.5s;
+    z-index: 2147483647; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s;
 }
 #startScreen.hidden { opacity: 0; pointer-events: none; }
-
 .start-title { font-size: 34px; color: #a8ff78; font-family: Georgia, serif; font-weight: 900; text-shadow: 0 0 20px #2ecc71; margin-bottom: 25px; text-align: center; }
-
 .animals-container { display: flex; gap: 20px; margin-bottom: 40px; font-size: 60px; }
 .pulse-animal { animation: heartbeat 1.5s infinite ease-in-out; filter: drop-shadow(0 0 15px rgba(46, 204, 113, 0.8)); }
 .pulse-animal:nth-child(2) { animation-delay: 0.2s; }
 @keyframes heartbeat { 0% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(46, 204, 113, 0.5)); } 50% { transform: scale(1.2); filter: drop-shadow(0 0 25px rgba(168, 255, 120, 1)); } 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(46, 204, 113, 0.5)); } }
-
 .start-btn { background: linear-gradient(180deg, #2ecc71, #1a7d43); border: 2px solid #a8ff78; color: #fff; padding: 18px 45px; border-radius: 12px; font-size: 22px; font-weight: 900; box-shadow: 0 6px 20px rgba(46, 204, 113, 0.6); cursor: pointer; font-family: Georgia, serif; }
 .start-btn:active { transform: scale(0.95); }
 
-/* ============================================================
-   АРХИТЕКТУРА ИГРОВОГО ПОЛЯ
-   ============================================================ */
+/* АРХИТЕКТУРА */
 .game-board { position: relative; aspect-ratio: 768 / 1370; width: 100vw; max-height: 100dvh; background: url('bg.png?v=55555555') no-repeat center center; background-size: 100% 100%; overflow: hidden; }
 
 /* ДЕКОРАЦИИ */
 .fire-glow { position: absolute; top: 12.5%; width: 12%; height: 4%; background: radial-gradient(circle, rgba(255, 140, 0, 0.8) 0%, transparent 70%); mix-blend-mode: screen; pointer-events: none; z-index: 5; animation: fireFlicker 1.5s infinite alternate; }
 .fire-left { left: 12%; } .fire-right { right: 12%; }
 @keyframes fireFlicker { 0% { opacity: 0.4; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1.1); } }
-
 .firefly { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: #a8ff78; box-shadow: 0 0 12px 3px #2ecc71, 0 0 4px #fff; pointer-events: none; z-index: 6; opacity: 0; animation: floatFly 4s infinite ease-in-out; }
-.f1 { bottom: 18%; left: 8%; animation-delay: 0s; } .f2 { bottom: 25%; left: 12%; animation-delay: 1s; }
-.f3 { bottom: 20%; right: 10%; animation-delay: 0.5s; } .f4 { bottom: 30%; right: 15%; animation-delay: 1.5s; }
-.f5 { bottom: 35%; left: 5%; animation-delay: 2s; } .f6 { bottom: 15%; right: 6%; animation-delay: 0.8s; }
+.f1 { bottom: 18%; left: 8%; } .f2 { bottom: 25%; left: 12%; animation-delay: 1s; } .f3 { bottom: 20%; right: 10%; animation-delay: 0.5s; } .f4 { bottom: 30%; right: 15%; animation-delay: 1.5s; } .f5 { bottom: 35%; left: 5%; animation-delay: 2s; } .f6 { bottom: 15%; right: 6%; animation-delay: 0.8s; }
 @keyframes floatFly { 0%, 100% { transform: translateY(0) scale(0.5); opacity: 0; } 50% { transform: translateY(-40px) scale(1.5); opacity: 1; } }
 
-/* ============================================================
-   UI ЭЛЕМЕНТЫ
-   ============================================================ */
+/* UI ЭЛЕМЕНТЫ */
 .ui-val { 
     position: absolute; display: flex; align-items: center; justify-content: center; 
     background: radial-gradient(ellipse at center, var(--wood) 30%, transparent 100%); 
-    color: var(--gold); 
-    font-family: 'Arial Black', Impact, sans-serif; 
-    font-weight: 900; 
-    letter-spacing: -0.5px;
-    line-height: 1; 
+    color: var(--gold); font-family: 'Arial Black', Impact, sans-serif; font-weight: 900; 
+    letter-spacing: -0.5px; line-height: 1; 
     text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0px 2px 4px rgba(0,0,0,0.9);
-    z-index: 60; 
-    height: 3.8%; 
-    overflow: visible; 
-    white-space: nowrap;
+    z-index: 60; height: 3.8%; overflow: visible; white-space: nowrap;
 }
 
-/* Баланс и Выигрыш (Большие + подняты на 0.15мм) */
+/* Баланс и Выигрыш */
 .ui-balance { top: calc(18.05% - 1px); left: 29%; width: 16%; font-size: 5.2vw; }
-.ui-win { top: calc(18.05% - 1px); right: 13%; width: 12%; font-size: 5.2vw; }
+.ui-win { top: calc(18.05% - 1px); right: 13%; width: 12%; font-size: 5.2vw; color: #fff; transition: color 0.3s; }
+.ui-win.has-win { color: #00ffff; text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; animation: winPulseText 0.5s infinite alternate; }
+@keyframes winPulseText { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
 
-/* Линии, Ставка, Всего (Средние + подняты на 0.15мм) */
+/* Линии, Ставка, Всего */
 .ui-lines { top: calc(68.95% - 1px); left: 20.5%; width: 9.5%; font-size: 4.2vw; }
 .ui-bet { top: calc(68.95% - 1px); left: 45%; width: 9%; font-size: 4.2vw; }
-.ui-total { top: calc(68.8% - 1px); right: 20%; width: 9%; font-size: 4.2vw; } 
+/* «Всего» сдвинуто влево на 3.5% */
+.ui-total { top: calc(68.8% - 1px); right: 23.5%; width: 9%; font-size: 4.2vw; } 
 
 /* СЕТКА 5x5 */
 .reels-frame { position: absolute; top: 26.7%; left: 14.5%; right: 14.5%; height: 40.8%; background: #0d2112; border-radius: 4px; overflow: hidden; z-index: 10; }
 .reels { display: grid; grid-template-columns: repeat(5, 1fr); height: 100%; width: 100%; background: #000; gap: 1px; }
 .reel { background: #0d2112; overflow: hidden; position: relative; height: 100%; }
 .track { position: absolute; left: 0; right: 0; top: 0; display: flex; flex-direction: column; will-change: transform; }
-.cell { display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; width: 100%; height: 20%; } 
+.cell { display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; width: 100%; height: 20%; background: #0d2112; } 
 .cell img { width: 90%; height: 90%; object-fit: contain; filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.5)) drop-shadow(0 2px 2px rgba(0,0,0,0.8)); }
 
 .cell.win::before { content: ""; position: absolute; inset: 2px; border: 3px solid #ffd966; border-radius: 8px; background: rgba(255, 217, 102, 0.3); box-shadow: 0 0 20px #ffd966, inset 0 0 15px #ffd966; animation: winPulse .4s infinite alternate; z-index: 30; }
@@ -94,30 +77,21 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 
 .lines-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 20; }
 
-/* ============================================================
-   КНОПКИ И ЗОНЫ КЛИКА
-   ============================================================ */
+/* КНОПКИ */
 .btn-overlay { position: absolute; z-index: 999999; cursor: pointer; border-radius: 8px; pointer-events: auto; }
 .btn-lang { top: 1.5%; left: 2.5%; width: 9%; height: 4.5%; border-radius: 50%; }
 .btn-sound { top: 1.5%; right: 2.5%; width: 9%; height: 4.5%; border-radius: 50%; }
 
 /* Кнопка SPIN */
 .btn-spin { top: 73.5%; left: 34%; width: 32%; height: 7%; border-radius: 20px; }
-.stop-visual {
-    position: absolute; inset: 0; background: rgba(20, 10, 0, 0.85);
-    border: 2px solid #ffd966; border-radius: 20px;
-    color: #ffd966; font-family: Georgia, serif; font-weight: 900; font-size: 20px;
-    display: none; align-items: center; justify-content: center;
-    box-shadow: 0 0 15px #ffd966; text-shadow: 0 0 5px #ffd966;
-}
-
+.stop-visual { position: absolute; inset: 0; background: rgba(20, 10, 0, 0.85); border: 2px solid #ffd966; border-radius: 20px; color: #ffd966; font-family: Georgia, serif; font-weight: 900; font-size: 20px; display: none; align-items: center; justify-content: center; box-shadow: 0 0 15px #ffd966; text-shadow: 0 0 5px #ffd966; }
 .btn-auto { top: 73.8%; right: 11%; width: 13%; height: 5.5%; }
 
-/* НЕВИДИМЫЕ ПЛЮС И МИНУС */
-.btn-lines-dec { top: 68.6%; left: 18.5%; width: 6%; height: 5%; }
-.btn-lines-inc { top: 68.6%; left: 29%; width: 6%; height: 5%; }
-.btn-bet-dec { top: 68.6%; left: 43.5%; width: 6%; height: 5%; }
-.btn-bet-inc { top: 68.6%; left: 54.5%; width: 6%; height: 5%; }
+/* УВЕЛИЧЕННЫЕ ПЛЮС И МИНУС */
+.btn-lines-dec { top: 68%; left: 17.5%; width: 8.5%; height: 6.5%; }
+.btn-lines-inc { top: 68%; left: 28%; width: 8.5%; height: 6.5%; }
+.btn-bet-dec { top: 68%; left: 42.5%; width: 8.5%; height: 6.5%; }
+.btn-bet-inc { top: 68%; left: 54%; width: 8.5%; height: 6.5%; }
 
 /* НЕВИДИМЫЕ КНОПКИ ЛИНИЙ */
 .btn-line-1  { top: 69.2%; left: 9.5%;  width: 5%; height: 4%; z-index: 900000; }
@@ -128,14 +102,26 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 .btn-line-21 { top: 69.2%; left: 39.5%; width: 5%; height: 4%; z-index: 900000; }
 
 /* Нижнее меню */
-.btn-action { top: 80%; width: 11%; height: 5.5%; z-index: 999999; }
-.btn-wheel { left: 2.5%; } .btn-shop { left: 14.5%; } .btn-risk { left: 26.5%; } .btn-friends { left: 39%; }
-.btn-tasks { right: 39%; } .btn-top { right: 26.5%; } .btn-bonus { right: 14.5%; } .btn-rules { right: 2.5%; }
+.btn-action { top: 80%; width: 11%; height: 5.5%; z-index: 999999; transition: all 0.3s; }
+.btn-wheel { left: 2.5%; } .btn-shop { left: 14.5%; } 
+.btn-risk { left: 26.5%; border-radius: 50%; } 
+.btn-friends { left: 39%; } .btn-tasks { right: 39%; } .btn-top { right: 26.5%; } .btn-bonus { right: 14.5%; } .btn-rules { right: 2.5%; }
+
+/* Пульсация кнопки Риск */
+.btn-risk.pulse-risk {
+    animation: riskGlow 1s infinite alternate;
+    border: 3px solid #ff0000;
+    box-shadow: 0 0 20px #ff0000, inset 0 0 15px #ff0000;
+}
+@keyframes riskGlow {
+    0% { transform: scale(1); opacity: 0.8; }
+    100% { transform: scale(1.15); opacity: 1; }
+}
 
 /* Модалки */
 .modal { position: fixed; inset: 0; background: rgba(0,0,0,.9); display: flex; align-items: center; justify-content: center; z-index: 1000000; opacity: 0; pointer-events: none; transition: opacity .2s; padding: 15px; }
 .modal.active { opacity: 1; pointer-events: auto; }
-.modal-box { background: linear-gradient(180deg, #1a2e1a, #0a1208); border: 2px solid var(--gold); border-radius: 14px; padding: 20px; max-width: 340px; width: 100%; text-align: center; color: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+.modal-box { background: linear-gradient(180deg, #1a2e1a, #0a1208); border: 2px solid var(--gold); border-radius: 14px; padding: 20px; max-width: 340px; width: 100%; text-align: center; color: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.8); position: relative; overflow: hidden; }
 .modal-title { font-size: 20px; font-weight: 900; color: var(--gold); margin-bottom: 15px; font-family: Georgia, serif; }
 .modal-text { font-size: 14px; color: #ccc; margin-bottom: 15px; line-height: 1.4; }
 .modal-close { background: #576574; color: #fff; border: none; padding: 12px; border-radius: 8px; font-weight: 800; margin-top: 15px; width: 100%; font-size: 14px; cursor: pointer; }
@@ -147,6 +133,47 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 
 .notif { position: fixed; top: -80px; left: 50%; transform: translateX(-50%); background: #2ecc71; color: #fff; padding: 10px 20px; border-radius: 20px; font-size: 13px; font-weight: 800; transition: top .3s; z-index: 9999999; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,.5); }
 .notif.show { top: 15px; } .notif.error { background: #e74c3c; } .notif.gold { background: linear-gradient(180deg, #ffd966, #b8860b); color: #1a1200; }
+
+/* ============================================================
+   КОЛЕСО ФОРТУНЫ (Визуал)
+   ============================================================ */
+.wheel-container {
+    position: relative; width: 280px; height: 280px; margin: 0 auto 20px auto;
+}
+.wheel {
+    width: 100%; height: 100%; border-radius: 50%;
+    border: 8px solid #ffd966;
+    box-shadow: 0 0 20px rgba(255, 217, 102, 0.5), inset 0 0 20px rgba(0,0,0,0.8);
+    background: conic-gradient(
+        #e74c3c 0deg 45deg, 
+        #f1c40f 45deg 90deg, 
+        #2ecc71 90deg 135deg, 
+        #3498db 135deg 180deg, 
+        #9b59b6 180deg 225deg, 
+        #e67e22 225deg 270deg, 
+        #1abc9c 270deg 315deg, 
+        #c0392b 315deg 360deg
+    );
+    transition: transform 5s cubic-bezier(0.1, 0.8, 0.1, 1);
+    position: relative;
+}
+.wheel-text {
+    position: absolute; top: 50%; left: 50%; transform-origin: 0 0; font-size: 12px; font-weight: bold; color: white; text-shadow: 1px 1px 2px black;
+}
+.wheel-pointer {
+    position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
+    width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 25px solid #ffd966;
+    z-index: 10; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
+}
+
+/* Конфетти */
+.confetti {
+    position: fixed; width: 10px; height: 10px; background: #f00; opacity: 0; z-index: 9999998; pointer-events: none;
+}
+@keyframes fall {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
 </style>
 </head>
 <body>
@@ -167,7 +194,6 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
     <div class="firefly f1"></div><div class="firefly f2"></div><div class="firefly f3"></div>
     <div class="firefly f4"></div><div class="firefly f5"></div><div class="firefly f6"></div>
 
-    <!-- UI -->
     <div class="ui-val ui-balance" id="balanceVal">1 120</div>
     <div class="ui-val ui-win" id="winVal">0</div>
     <div class="ui-val ui-lines" id="linesVal">15/21</div>
@@ -185,10 +211,8 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
     <div class="btn-overlay btn-spin" id="spinBtn">
         <div class="stop-visual" id="stopVisual">СТОП</div>
     </div>
-    
     <div class="btn-overlay btn-auto" onclick="toggleAuto()"></div>
     
-    <!-- Невидимые кнопки -->
     <div class="btn-overlay btn-lines-dec" id="linesDec"></div>
     <div class="btn-overlay btn-lines-inc" id="linesInc"></div>
     <div class="btn-overlay btn-bet-dec" id="betDec"></div>
@@ -201,7 +225,6 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
     <div class="btn-overlay btn-line-15" onclick="setLines(15)"></div>
     <div class="btn-overlay btn-line-21" onclick="setLines(21)"></div>
 
-    <!-- Нижнее меню -->
     <div class="btn-overlay btn-action btn-wheel" onclick="openModal('wheelModal')"></div>
     <div class="btn-overlay btn-action btn-shop" onclick="openModal('shopModal')"></div>
     <div class="btn-overlay btn-action btn-risk" id="btnRiskUI" onclick="openRiskModal()"></div>
@@ -213,13 +236,33 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 </div>
 
 <!-- МОДАЛКИ -->
-<div class="modal" id="wheelModal"><div class="modal-box"><div class="modal-title">🎡 КОЛЕСО</div><div class="modal-text">Крути раз в 24 часа!</div><button class="modal-close" onclick="closeModal('wheelModal')">Закрыть</button></div></div>
+<div class="modal" id="wheelModal">
+    <div class="modal-box" style="max-width: 360px;">
+        <div class="modal-title">🎡 КОЛЕСО ФОРТУНЫ</div>
+        <div class="wheel-container">
+            <div class="wheel-pointer"></div>
+            <div class="wheel" id="fortuneWheel">
+                <!-- Текст секторов -->
+                <span class="wheel-text" style="transform: rotate(22deg) translate(80px, -10px);">x2</span>
+                <span class="wheel-text" style="transform: rotate(67deg) translate(80px, -10px);">x5</span>
+                <span class="wheel-text" style="transform: rotate(112deg) translate(80px, -10px);">10 FS</span>
+                <span class="wheel-text" style="transform: rotate(157deg) translate(80px, -10px);">x10</span>
+                <span class="wheel-text" style="transform: rotate(202deg) translate(80px, -10px);">x2</span>
+                <span class="wheel-text" style="transform: rotate(247deg) translate(80px, -10px);">JACKPOT</span>
+                <span class="wheel-text" style="transform: rotate(292deg) translate(80px, -10px);">20 FS</span>
+                <span class="wheel-text" style="transform: rotate(337deg) translate(80px, -10px);">x50</span>
+            </div>
+        </div>
+        <button class="modal-btn green" id="spinWheelBtn" onclick="spinFortuneWheel()">КРУТИТЬ КОЛЕСО</button>
+        <button class="modal-close" onclick="closeModal('wheelModal')">Закрыть</button>
+    </div>
+</div>
 <div class="modal" id="shopModal"><div class="modal-box"><div class="modal-title">⭐ МАГАЗИН</div><div class="modal-text">Покупка звезд (в разработке)</div><button class="modal-close" onclick="closeModal('shopModal')">Закрыть</button></div></div>
 <div class="modal" id="riskModal"><div class="modal-box" style="border-color:#f1c40f;"><div class="modal-title">🃏 РИСК-ИГРА</div><div class="modal-text" id="riskText">Рискнуть?</div><div class="modal-btns"><button class="modal-btn green" onclick="playRisk(true)">ВЫШЕ (x2)</button><button class="modal-btn red" onclick="playRisk(false)">НИЖЕ (x2)</button></div><button class="modal-close" onclick="takeRiskMoney()">ЗАБРАТЬ ВСЁ</button></div></div>
 <div class="modal" id="friendsModal"><div class="modal-box"><div class="modal-title">🤝 ДРУЗЬЯ</div><div class="modal-text">Приглашайте и получайте 5000 монет!</div><button class="modal-close" onclick="closeModal('friendsModal')">Закрыть</button></div></div>
 <div class="modal" id="tasksModal"><div class="modal-box"><div class="modal-title">📜 ЗАДАНИЯ</div><div class="modal-text">Скоро тут будут задания</div><button class="modal-close" onclick="closeModal('tasksModal')">Закрыть</button></div></div>
 <div class="modal" id="topModal"><div class="modal-box"><div class="modal-title">🏆 ТОП</div><div class="modal-text">Загрузка...</div><button class="modal-close" onclick="closeModal('topModal')">Закрыть</button></div></div>
-<div class="modal" id="paytableModal"><div class="modal-box"><div class="modal-title">📋 ПРАВИЛА</div><div class="modal-text">Собери 3+ одинаковых символа слева направо. Грибы дают фриспины.</div><button class="modal-close" onclick="closeModal('paytableModal')">Закрыть</button></div></div>
+<div class="modal" id="paytableModal"><div class="modal-box"><div class="modal-title">📋 ПРАВИЛА</div><div class="modal-text">Собери 3+ одинаковых символа слева направо. Грибы дают фриспины или колесо фортуны.</div><button class="modal-close" onclick="closeModal('paytableModal')">Закрыть</button></div></div>
 <div class="notif" id="notif"></div>
 
 <script>
@@ -247,6 +290,9 @@ let freeSpins = 0, isFreeSpin = false;
 let pendingRisk = 0;
 let spinTimeout = null; 
 
+/* ============================================================
+   🔊 АУДИО И ТАКТИЛЬНАЯ ОТДАЧА
+   ============================================================ */
 let audioCtx = null;
 let isAudioInit = false;
 
@@ -270,7 +316,6 @@ function initAudio() {
         if (AudioContext) audioCtx = new AudioContext();
     }
     if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-    
     if (!isAudioInit) {
         isAudioInit = true;
         if (state.sound) playBGM();
@@ -326,11 +371,30 @@ function toggleSound() {
 document.body.addEventListener('touchstart', initAudio, {once:true});
 document.body.addEventListener('click', initAudio, {once:true});
 
+/* ============================================================
+   ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ И UI
+   ============================================================ */
 const $ = (id) => document.getElementById(id);
 const fmt = (n) => Math.round(n).toLocaleString('ru-RU');
 function notif(msg, type='') { const n=$('notif'); n.textContent=msg; n.className='notif show '+type; clearTimeout(n._t); n._t=setTimeout(()=>{n.className='notif '+type}, 3000); }
 const openModal = (id) => { $(id).classList.add('active'); haptic('light'); sfx.click(); };
 const closeModal = (id) => { $(id).classList.remove('active'); };
+
+/* ФЕЕРВЕРКИ / КОНФЕТТИ */
+function spawnConfetti() {
+    const colors = ['#ff3b30', '#ffcc00', '#2ecc71', '#3498db', '#9b59b6', '#ffd966'];
+    for (let i = 0; i < 40; i++) {
+        const c = document.createElement('div');
+        c.className = 'confetti';
+        c.style.left = Math.random() * 100 + 'vw';
+        c.style.top = '-20px';
+        c.style.background = colors[Math.floor(Math.random() * colors.length)];
+        c.style.animation = `fall ${1 + Math.random() * 2}s linear forwards`;
+        c.style.animationDelay = Math.random() * 0.5 + 's';
+        document.body.appendChild(c);
+        setTimeout(() => c.remove(), 3000);
+    }
+}
 
 const reelsEl = $('reels');
 const overlay = $('linesOverlay');
@@ -349,7 +413,7 @@ function buildReels() {
         const track = document.createElement('div'); track.className = 'track';
         track.style.height = '100%'; 
         let html = '';
-        for (let row = 0; row < ROWS; row++) html += `<div class="cell"><img src="${randSym()}${IMG_VER}"></div>`;
+        for (let row = 0; row < ROWS; row++) html += `<div class="cell"><img src="${randSym()}${IMG_VER}" onerror="this.style.opacity=0"></div>`;
         track.innerHTML = html; reel.appendChild(track); reelsEl.appendChild(reel); tracks.push(track);
     }
     updateUI();
@@ -360,12 +424,21 @@ function updateUI() {
     $('betVal').textContent = fmt(state.betPerLine); 
     $('linesVal').textContent = state.lines + '/21';
     $('totalBetVal').textContent = fmt(totalBet());
-    if(!isSpinning) $('winVal').textContent = '0';
+    
+    // Логика подсветки выигрыша и кнопки РИСК
+    if (!isSpinning) {
+        $('winVal').textContent = '0';
+        $('winVal').classList.remove('has-win');
+        $('btnRiskUI').classList.remove('pulse-risk');
+    }
 }
 
+/* ============================================================
+   АНИМАЦИЯ БАРАБАНОВ
+   ============================================================ */
 function startReelSpin(r) {
     const track = tracks[r]; let html = ''; 
-    for (let i = 0; i < 40; i++) html += `<div class="cell"><img src="${randSym()}${IMG_VER}"></div>`;
+    for (let i = 0; i < 40; i++) html += `<div class="cell"><img src="${randSym()}${IMG_VER}" onerror="this.style.opacity=0"></div>`;
     track.innerHTML = html; 
     let lastTime = performance.now(); const speed = 2000; const frameHeight = track.clientHeight / 5; 
     
@@ -387,9 +460,9 @@ function stopReelAnim(r, final5) {
             const track = tracks[r]; const currentY = reelPositions[r]; const frameHeight = track.clientHeight / 5; 
             
             let html = ''; 
-            for (let i = 0; i < 15; i++) html += `<div class="cell"><img src="${randSym()}${IMG_VER}"></div>`;
-            final5.forEach(s => html += `<div class="cell"><img src="${s}${IMG_VER}"></div>`);
-            for (let i = 0; i < 5; i++) html += `<div class="cell"><img src="${randSym()}${IMG_VER}"></div>`;
+            for (let i = 0; i < 15; i++) html += `<div class="cell"><img src="${randSym()}${IMG_VER}" onerror="this.style.opacity=0"></div>`;
+            final5.forEach(s => html += `<div class="cell"><img src="${s}${IMG_VER}" onerror="this.style.opacity=0"></div>`);
+            for (let i = 0; i < 5; i++) html += `<div class="cell"><img src="${randSym()}${IMG_VER}" onerror="this.style.opacity=0"></div>`;
             
             track.innerHTML = html; 
             let startY = currentY % (15 * frameHeight); 
@@ -405,7 +478,7 @@ function stopReelAnim(r, final5) {
             setTimeout(() => { 
                 track.style.transition = 'none'; 
                 track.style.transform = 'translate3d(0,0,0)'; 
-                track.innerHTML = final5.map(s => `<div class="cell"><img src="${s}${IMG_VER}"></div>`).join(''); 
+                track.innerHTML = final5.map(s => `<div class="cell"><img src="${s}${IMG_VER}" onerror="this.style.opacity=0"></div>`).join(''); 
                 haptic('light'); sfx.reelStop();
                 resolve(); 
             }, 800 + r*200 + 50);
@@ -413,6 +486,9 @@ function stopReelAnim(r, final5) {
     });
 }
 
+/* ============================================================
+   ИГРОВОЙ ПРОЦЕСС (SPIN)
+   ============================================================ */
 async function startSpin() {
     if (isSpinning) return;
     if (state.balance < totalBet()) { notif('Мало монет!', 'error'); haptic('error'); sfx.lose(); return; }
@@ -421,11 +497,12 @@ async function startSpin() {
     isSpinning = true; 
     stopRequested = false; 
     $('winVal').textContent = '0';
+    $('winVal').classList.remove('has-win');
+    $('btnRiskUI').classList.remove('pulse-risk');
     
     $('stopVisual').style.display = 'flex';
     
     updateUI(); 
-    $('btnRiskUI').classList.remove('active-risk');
     overlay.innerHTML = '';
     document.querySelectorAll('.cell').forEach(c => c.classList.remove('win')); 
     
@@ -472,6 +549,7 @@ async function requestStop(pregeneratedGrid) {
         if (isFreeSpin) total *= 2;
         state.balance += total; 
         $('winVal').textContent = fmt(total); 
+        $('winVal').classList.add('has-win');
         notif('Выигрыш: +' + fmt(total), 'gold');
         
         winCells.forEach(cell => {
@@ -481,20 +559,22 @@ async function requestStop(pregeneratedGrid) {
 
         haptic('success');
         sfx.win();
+        spawnConfetti(); // Взрыв конфетти
         
         if (total >= totalBet() * 2 && !isFreeSpin) {
             pendingRisk = total;
-            $('btnRiskUI').classList.add('active-risk');
+            $('btnRiskUI').classList.add('pulse-risk'); // Пульсация кнопки Риск
         }
     } else { 
         notif('Повезет в следующий раз!', 'error'); 
         sfx.lose();
     }
 
+    // Если 3+ гриба - открываем Колесо Фортуны
     if (scatterCount >= 3 && !isFreeSpin) { 
-        freeSpins = 10; 
-        notif('🎉 3 ГРИБА! 10 ФРИСПИНОВ x2!', 'gold'); 
+        notif('🎉 3 ГРИБА! КОЛЕСО ФОРТУНЫ!', 'gold'); 
         haptic('heavy');
+        setTimeout(() => { openModal('wheelModal'); }, 1000);
     }
     
     isSpinning = false; 
@@ -515,6 +595,70 @@ function genGrid() {
     return g;
 }
 
+/* ============================================================
+   КОЛЕСО ФОРТУНЫ ЛОГИКА
+   ============================================================ */
+let isWheelSpinning = false;
+let currentWheelAngle = 0;
+const wheelPrizes = [
+    { type: 'mult', val: 2, text: 'x2' },
+    { type: 'mult', val: 5, text: 'x5' },
+    { type: 'fs', val: 10, text: '10 FS' },
+    { type: 'mult', val: 10, text: 'x10' },
+    { type: 'mult', val: 2, text: 'x2' },
+    { type: 'jackpot', val: 500000, text: 'JACKPOT' },
+    { type: 'fs', val: 20, text: '20 FS' },
+    { type: 'mult', val: 50, text: 'x50' }
+];
+
+function spinFortuneWheel() {
+    if (isWheelSpinning) return;
+    isWheelSpinning = true;
+    $('spinWheelBtn').disabled = true;
+    $('spinWheelBtn').textContent = 'КРУТИТСЯ...';
+    haptic('medium');
+    sfx.spinStart();
+
+    // Выбираем случайный индекс (0-7)
+    const winIndex = Math.floor(Math.random() * 8);
+    
+    // Угол для выигрышного сектора: (360 / 8) = 45 градусов на сектор.
+    // Сектор 0 находится сверху (от 0 до 45 град, центр 22.5).
+    // Чтобы он остановился ровно под указателем (сверху), нужно повернуть на 360 - (winIndex * 45) - 22.5
+    const segmentAngle = 45;
+    const targetAngle = (360 - (winIndex * segmentAngle) - (segmentAngle / 2)) + 3600; // +10 полных оборотов для красоты
+    
+    currentWheelAngle += targetAngle;
+    $('fortuneWheel').style.transform = `rotate(${currentWheelAngle}deg)`;
+
+    setTimeout(() => {
+        isWheelSpinning = false;
+        $('spinWheelBtn').disabled = false;
+        $('spinWheelBtn').textContent = 'КРУТИТЬ КОЛЕСО';
+        sfx.win();
+        spawnConfetti();
+        
+        const prize = wheelPrizes[winIndex];
+        if (prize.type === 'mult') {
+            const winAmt = totalBet() * prize.val;
+            state.balance += winAmt;
+            notif(`🎉 Колесо: х${prize.val}! Выигрыш +${fmt(winAmt)}`, 'gold');
+        } else if (prize.type === 'fs') {
+            freeSpins = prize.val;
+            notif(`🎉 Колесо: ${prize.val} ФРИСПИНОВ!`, 'gold');
+            setTimeout(startSpin, 1000);
+        } else if (prize.type === 'jackpot') {
+            state.balance += prize.val;
+            notif(`🏆 СУПЕР ПРИЗ! ДЖЕКПОТ +${fmt(prize.val)}!`, 'gold');
+        }
+        updateUI();
+        closeModal('wheelModal');
+    }, 5200); // Ждем окончания анимации (5 сек + запас)
+}
+
+/* ============================================================
+   ОСТАЛЬНЫЕ ФУНКЦИИ
+   ============================================================ */
 function showActiveLines() {
     overlay.innerHTML = '';
     const fRect = $('reelsFrame').getBoundingClientRect();
@@ -582,24 +726,31 @@ function playRisk(isHigher) {
     if (card1 === card2) won = false;
 
     if (won) {
-        state.balance += pendingRisk; notif(`🎉 Победа! +${fmt(pendingRisk)}`, 'gold');
-        haptic('success'); sfx.win();
+        state.balance += pendingRisk; 
+        notif(`🎉 Победа! +${fmt(pendingRisk)}`, 'gold');
+        haptic('success'); sfx.win(); spawnConfetti();
     } else {
-        state.balance -= pendingRisk; notif(`❌ Проигрыш: -${fmt(pendingRisk)}`, 'error');
+        state.balance -= pendingRisk; 
+        notif(`❌ Проигрыш: -${fmt(pendingRisk)}`, 'error');
         haptic('error'); sfx.lose();
     }
-    pendingRisk = 0; $('btnRiskUI').classList.remove('active-risk'); updateUI();
+    pendingRisk = 0; 
+    $('btnRiskUI').classList.remove('pulse-risk'); 
+    $('winVal').classList.remove('has-win');
+    $('winVal').textContent = '0';
+    updateUI();
 }
 
 function takeRiskMoney() {
-    closeModal('riskModal'); pendingRisk = 0; $('btnRiskUI').classList.remove('active-risk');
+    closeModal('riskModal'); pendingRisk = 0; 
+    $('btnRiskUI').classList.remove('pulse-risk');
     notif('Вы забрали выигрыш!', 'success'); haptic('success'); sfx.click();
 }
 
 function claimDaily() {
     if (Date.now() - state.lastDaily < 24*3600*1000) { notif('Бонус уже получен! Ждите 24ч', 'error'); return; }
     state.lastDaily = Date.now(); state.balance += 1000; updateUI(); notif('🎁 Ежедневный бонус: +1000 🪙', 'gold');
-    haptic('heavy'); sfx.win();
+    haptic('heavy'); sfx.win(); spawnConfetti();
 }
 
 $('startBtn').onclick = () => {
