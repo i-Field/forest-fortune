@@ -8,7 +8,7 @@
 <style>
 :root {
     --text: #f0f4f8;
-    --gold: #ffd966; /* Золотой цвет как у слова БАЛАНС */
+    --gold: #ffd966; /* Золотой цвет */
     --wood: #1a0d05; /* Темно-коричневый фон */
     --holo: #00ffff;
 }
@@ -33,7 +33,7 @@ html, body {
 }
 
 /* ============================================================
-   СТАРТОВЫЙ ЭКРАН (ДЛЯ ЗВУКА)
+   СТАРТОВЫЙ ЭКРАН (ДЛЯ АКТИВАЦИИ ЗВУКА)
    ============================================================ */
 #startScreen {
     position: fixed; inset: 0; background: radial-gradient(circle, #112211, #000);
@@ -57,7 +57,7 @@ html, body {
     aspect-ratio: 768 / 1370; 
     width: 100vw;
     max-height: 100dvh; 
-    background: url('bg.png?v=777777') no-repeat center center;
+    background: url('bg.png?v=888888') no-repeat center center;
     background-size: 100% 100%; 
     overflow: hidden;
 }
@@ -98,7 +98,7 @@ html, body {
 }
 
 /* ============================================================
-   ДИНАМИЧЕСКИЕ ЦИФРЫ (ЗОЛОТЫЕ, ТОЧНЫЕ СДВИГИ)
+   ДИНАМИЧЕСКИЕ ЦИФРЫ (УВЕЛИЧЕНЫ, ФОН УМЕНЬШЕН)
    ============================================================ */
 .ui-val {
     position: absolute;
@@ -107,23 +107,21 @@ html, body {
     color: var(--gold);
     font-family: Georgia, serif; 
     font-weight: 900; 
-    font-size: 3vw; 
+    font-size: 3.3vw; /* Увеличен шрифт на 10% */
     text-shadow: 1px 1px 2px #000;
     border-radius: 4px; 
     z-index: 60; 
     overflow: hidden;
-    height: 2.8%; 
+    height: 2.4%; /* Уменьшена высота плашки */
     border: 1px solid #3a2211; 
 }
 
 /* Точные позиции по твоим мм */
-.ui-balance { top: 18.3%; left: 31.8%; width: 10.5%; } /* +0.5мм вправо */
-/* Линии: вверх 0.5мм, вправо 0.5мм */
-.ui-lines { top: 69.4%; left: 20.8%; width: 9%; }
-/* Ставка: вверх 0.5мм */
-.ui-bet { top: 69.4%; left: 45.5%; width: 8%; }
-/* Всего: вверх 1мм, влево 1мм */
-.ui-total { top: 69.4%; right: 19.6%; width: 8.5%; }
+.ui-balance { top: 18.3%; left: 31.8%; width: 10.5%; }
+/* Линии, Ставка, Всего подняты на 0.5 мм */
+.ui-lines { top: 69.2%; left: 20.8%; width: 9%; }
+.ui-bet { top: 69.2%; left: 45.5%; width: 8%; }
+.ui-total { top: 69.2%; right: 19.6%; width: 8.5%; }
 
 /* ============================================================
    СЕТКА 5x5
@@ -216,10 +214,10 @@ html, body {
 .btn-spin { top: 69.8%; left: 33%; width: 34%; height: 7.5%; border-radius: 20px; }
 
 .btn-auto { top: 70.5%; right: 10.5%; width: 14%; height: 5.5%; }
-.btn-lines-dec { top: 69.4%; left: 17.5%; width: 4%; height: 3.3%; }
-.btn-lines-inc { top: 69.4%; left: 32.5%; width: 4%; height: 3.3%; }
-.btn-bet-dec { top: 69.4%; left: 43%; width: 4%; height: 3.3%; }
-.btn-bet-inc { top: 69.4%; left: 57.5%; width: 4%; height: 3.3%; }
+.btn-lines-dec { top: 69.2%; left: 17.5%; width: 4%; height: 3.3%; }
+.btn-lines-inc { top: 69.2%; left: 32.5%; width: 4%; height: 3.3%; }
+.btn-bet-dec { top: 69.2%; left: 43%; width: 4%; height: 3.3%; }
+.btn-bet-inc { top: 69.2%; left: 57.5%; width: 4%; height: 3.3%; }
 
 /* УВЕЛИЧЕННЫЕ ЗОНЫ КЛИКА ДЛЯ ЛИНИЙ */
 .btn-l1 { top: 69.2%; left: 9.5%; width: 6%; height: 4%; }
@@ -328,7 +326,7 @@ html, body {
 for (let i = 1; i < 9999; i++) clearTimeout(i);
 
 const REELS = 5, ROWS = 5; 
-const IMG_VER = '?v=777777';
+const IMG_VER = '?v=888888';
 const SYMBOLS = ['gem.png', 'mushroom.png', 'hedgehog.png', 'acorn.png', 'leaf.png', 'coin.png'];
 const WEIGHTS = {'gem.png':5, 'mushroom.png':10, 'hedgehog.png':15, 'acorn.png':25, 'leaf.png':25, 'coin.png':30};
 const PAYTABLE = { 'gem.png': [15, 60, 250], 'mushroom.png': [10, 40, 150], 'hedgehog.png': [8, 25, 80], 'acorn.png': [5, 15, 50], 'leaf.png': [5, 15, 50], 'coin.png': [2, 5, 15] };
