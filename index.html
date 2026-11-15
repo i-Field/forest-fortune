@@ -6,10 +6,13 @@
 <title>Forest Fortune 5x5</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
+/* ============================================================
+   1. ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ И СБРОС СТИЛЕЙ
+   ============================================================ */
 :root {
     --text: #f0f4f8;
-    --gold: #ffd966; /* Золотой цвет */
-    --wood: rgba(15, 7, 2, 0.9); /* Мягкий темный фон */
+    --gold: #ffd966; 
+    --wood: rgba(15, 7, 2, 0.9); 
     --holo: #00ffff;
 }
 
@@ -30,10 +33,11 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
+    font-family: Arial, sans-serif;
 }
 
 /* ============================================================
-   СТАРТОВЫЙ ЭКРАН
+   2. СТАРТОВЫЙ ЭКРАН
    ============================================================ */
 #startScreen {
     position: fixed; inset: 0; background: radial-gradient(circle, #112211, #000);
@@ -41,20 +45,24 @@ html, body {
     transition: opacity 0.5s;
 }
 #startScreen.hidden { opacity: 0; pointer-events: none; }
-.start-title { font-size: 32px; color: #a8ff78; font-family: Georgia, serif; font-weight: 900; text-shadow: 0 0 20px #2ecc71; margin-bottom: 20px; }
+.start-title { 
+    font-size: 34px; color: #a8ff78; font-family: Georgia, serif; font-weight: 900; 
+    text-shadow: 0 0 20px #2ecc71; margin-bottom: 25px; text-align: center;
+}
 .start-btn { 
     background: linear-gradient(180deg, #2ecc71, #1a7d43); border: 2px solid #a8ff78;
-    color: #fff; padding: 15px 40px; border-radius: 12px; font-size: 20px; font-weight: 900;
-    box-shadow: 0 5px 15px rgba(46, 204, 113, 0.5); cursor: pointer;
-    font-family: Georgia, serif;
+    color: #fff; padding: 18px 45px; border-radius: 12px; font-size: 22px; font-weight: 900;
+    box-shadow: 0 6px 20px rgba(46, 204, 113, 0.6); cursor: pointer;
+    font-family: Georgia, serif; transition: transform 0.1s;
 }
+.start-btn:active { transform: scale(0.95); }
 
 /* ============================================================
-   АРХИТЕКТУРА
+   3. АРХИТЕКТУРА ИГРОВОГО ПОЛЯ
    ============================================================ */
 .game-board {
     position: relative;
-    aspect-ratio: 768 / 1370; 
+    aspect-ratio: 768 / 1370; /* Пропорции оригинальной картинки */
     width: 100vw;
     max-height: 100dvh; 
     background: url('bg.png?v=55555555') no-repeat center center;
@@ -63,12 +71,10 @@ html, body {
 }
 
 /* ============================================================
-   МАГИЯ (ОГОНЬ)
+   4. ДЕКОРАЦИИ (ОГОНЬ, СВЕТЛЯЧКИ)
    ============================================================ */
 .fire-glow {
-    position: absolute; 
-    top: 12.5%; 
-    width: 12%; height: 4%;
+    position: absolute; top: 12.5%; width: 12%; height: 4%;
     background: radial-gradient(circle, rgba(255, 140, 0, 0.8) 0%, transparent 70%);
     mix-blend-mode: screen; pointer-events: none; z-index: 5;
     animation: fireFlicker 1.5s infinite alternate;
@@ -98,88 +104,60 @@ html, body {
 }
 
 /* ============================================================
-   ДИНАМИЧЕСКИЕ ЦИФРЫ (ПОДНЯТЫ НА 0.1ММ)
+   5. UI ЭЛЕМЕНТЫ (ЦИФРЫ И СЧЕТЧИКИ)
    ============================================================ */
 .ui-val {
     position: absolute;
     display: flex; align-items: center; justify-content: center;
     background: radial-gradient(ellipse at center, var(--wood) 30%, transparent 100%); 
     color: var(--gold);
-    font-family: Georgia, serif; 
-    font-weight: 900; 
-    font-size: 3.5vw; 
-    line-height: 1; 
-    text-shadow: 1px 1px 3px #000;
-    z-index: 60; 
-    height: 3.2%; 
-    overflow: visible; 
+    font-family: Georgia, serif; font-weight: 900; font-size: 3.5vw; 
+    line-height: 1; text-shadow: 1px 1px 3px #000;
+    z-index: 60; height: 3.2%; overflow: visible; 
 }
 
-/* Баланс, Выигрыш, Линии, Ставка подняты вверх на 0.1мм */
+/* Выравнивание по скриншоту */
 .ui-balance { top: 18.05%; left: 31.8%; width: 10.5%; }
 .ui-win { top: 18.05%; right: 15.5%; width: 7%; }
 .ui-lines { top: 68.95%; left: 20.8%; width: 9%; }
 .ui-bet { top: 68.95%; left: 45.5%; width: 8%; }
-/* «Всего» оставляем ровно на том же месте */
-.ui-total { top: 69.25%; right: 20.6%; width: 8.5%; } 
+
+/* "Всего" - поднято ровно на 0.1 мм (визуально чуть выше) */
+.ui-total { top: 68.8%; right: 20.6%; width: 8.5%; } 
 
 /* ============================================================
-   СЕТКА 5x5 (НЕ ТРОГАЕМ)
+   6. ИГРОВАЯ СЕТКА 5x5
    ============================================================ */
 .reels-frame {
-    position: absolute;
-    top: 26.7%; 
-    left: 14.5%; 
-    right: 14.5%; 
-    height: 40.8%; 
-    background: #0d2112;
-    border-radius: 4px;
-    overflow: hidden; 
-    z-index: 10;
+    position: absolute; top: 26.7%; left: 14.5%; right: 14.5%; height: 40.8%; 
+    background: #0d2112; border-radius: 4px; overflow: hidden; z-index: 10;
 }
 
 .reels { 
-    display: grid; 
-    grid-template-columns: repeat(5, 1fr); 
-    height: 100%; 
-    width: 100%; 
-    background: #000; 
-    gap: 1px; 
+    display: grid; grid-template-columns: repeat(5, 1fr); height: 100%; width: 100%; 
+    background: #000; gap: 1px; 
 }
-.reel { 
-    background: #0d2112; 
-    overflow: hidden; 
-    position: relative; 
-    height: 100%; 
-}
+.reel { background: #0d2112; overflow: hidden; position: relative; height: 100%; }
 .track { 
-    position: absolute; 
-    left: 0; 
-    right: 0; 
-    top: 0; 
-    display: flex; 
-    flex-direction: column; 
-    will-change: transform; 
+    position: absolute; left: 0; right: 0; top: 0; 
+    display: flex; flex-direction: column; will-change: transform; 
 }
 .cell { 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    position: relative; 
-    flex-shrink: 0; 
-    width: 100%; 
-    height: 20%; 
+    display: flex; align-items: center; justify-content: center; 
+    position: relative; flex-shrink: 0; width: 100%; height: 20%; 
 } 
-.cell img { width: 90%; height: 90%; object-fit: contain; filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.5)) drop-shadow(0 2px 2px rgba(0,0,0,0.8)); }
+.cell img { 
+    width: 90%; height: 90%; object-fit: contain; 
+    filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.5)) drop-shadow(0 2px 2px rgba(0,0,0,0.8)); 
+}
 
-/* Подсветка выигрышных ячеек */
+/* Анимация выигрышной ячейки */
 .cell.win::before { 
     content: ""; position: absolute; inset: 2px; 
     border: 3px solid #ffd966; border-radius: 8px; 
     background: rgba(255, 217, 102, 0.3); 
     box-shadow: 0 0 20px #ffd966, inset 0 0 15px #ffd966; 
-    animation: winPulse .4s infinite alternate; 
-    z-index: 30;
+    animation: winPulse .4s infinite alternate; z-index: 30;
 }
 @keyframes winPulse { 
     0% { transform: scale(0.95); opacity: 0.8; } 
@@ -189,15 +167,11 @@ html, body {
 .lines-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 20; }
 
 /* ============================================================
-   ГОЛОГРАФИЧЕСКИЕ КНОПКИ
+   7. КНОПКИ И ЗОНЫ КЛИКА
    ============================================================ */
 .btn-overlay { 
-    position: absolute; 
-    z-index: 999999; 
-    cursor: pointer; 
-    border-radius: 8px; 
-    pointer-events: auto;
-    transition: all 0.2s;
+    position: absolute; z-index: 999999; cursor: pointer; border-radius: 8px; 
+    pointer-events: auto; transition: all 0.2s;
 }
 
 .btn-overlay:active, .btn-overlay.glow { 
@@ -206,20 +180,23 @@ html, body {
     border: 2px solid var(--holo); 
 }
 
-/* Позиции кнопок */
+/* Верхние кнопки */
 .btn-lang { top: 1.5%; left: 2.5%; width: 9%; height: 4.5%; border-radius: 50%; }
 .btn-sound { top: 1.5%; right: 2.5%; width: 9%; height: 4.5%; border-radius: 50%; }
 
-/* Кнопка Spin */
-.btn-spin { top: 69.8%; left: 33%; width: 34%; height: 7.5%; border-radius: 20px; }
+/* Кнопка "Крутить" - опущена вниз для точного совпадения с картинкой */
+.btn-spin { top: 71.5%; left: 33%; width: 34%; height: 7.5%; border-radius: 20px; }
 
-.btn-auto { top: 70.5%; right: 10.5%; width: 14%; height: 5.5%; }
+/* Кнопка Авто */
+.btn-auto { top: 71.8%; right: 10.5%; width: 14%; height: 5.5%; }
+
+/* Кнопки + и - */
 .btn-lines-dec { top: 68.95%; left: 17.5%; width: 4%; height: 3.3%; }
 .btn-lines-inc { top: 68.95%; left: 32.5%; width: 4%; height: 3.3%; }
 .btn-bet-dec { top: 68.95%; left: 43%; width: 4%; height: 3.3%; }
 .btn-bet-inc { top: 68.95%; left: 57.5%; width: 4%; height: 3.3%; }
 
-/* УВЕЛИЧЕННЫЕ ЗОНЫ КЛИКА ДЛЯ ЛИНИЙ */
+/* Быстрые ставки линий */
 .btn-l1 { top: 69.2%; left: 9.5%; width: 6%; height: 4%; }
 .btn-l3 { top: 69.2%; left: 15.5%; width: 6%; height: 4%; }
 .btn-l5 { top: 69.2%; left: 21.5%; width: 6%; height: 4%; }
@@ -227,6 +204,7 @@ html, body {
 .btn-l15 { top: 69.2%; left: 33.5%; width: 6%; height: 4%; }
 .btn-l21 { top: 69.2%; left: 39.5%; width: 6%; height: 4%; }
 
+/* Нижнее меню */
 .btn-action { top: 80%; width: 11%; height: 5.5%; z-index: 999999; }
 .btn-wheel { left: 2.5%; }
 .btn-shop { left: 14.5%; }
@@ -237,51 +215,70 @@ html, body {
 .btn-bonus { right: 14.5%; }
 .btn-rules { right: 2.5%; }
 
-/* Модалки и Уведомления */
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.9);display:flex;align-items:center;justify-content:center;z-index:1000000;opacity:0;pointer-events:none;transition:opacity .2s;padding:15px}
-.modal.active{opacity:1;pointer-events:auto}
-.modal-box{background:linear-gradient(180deg,#1a2e1a,#0a1208);border:2px solid var(--gold);border-radius:14px;padding:20px;max-width:340px;width:100%;text-align:center;color:#fff;box-shadow:0 10px 30px rgba(0,0,0,0.8);}
-.modal-title{font-size:20px;font-weight:900;color:var(--gold);margin-bottom:15px;font-family:Georgia,serif;}
-.modal-text{font-size:14px;color:#ccc;margin-bottom:15px;line-height:1.4;}
-.modal-close{background:#576574;color:#fff;border:none;padding:12px;border-radius:8px;font-weight:800;margin-top:15px;width:100%;font-size:14px;}
-.modal-btns{display:flex;flex-direction:column;gap:8px;}
-.modal-btn{padding:14px;border-radius:8px;border:none;font-size:16px;font-weight:900;cursor:pointer;color:#fff;}
-.modal-btn.green{background:linear-gradient(180deg,#2ecc71,#1a7d43); box-shadow:0 4px 0 #0f3d22;}
-.modal-btn.red{background:linear-gradient(180deg,#e74c3c,#922b21); box-shadow:0 4px 0 #4d0e07;}
-.modal-btn:active{transform:translateY(3px); box-shadow:none;}
+/* ============================================================
+   8. МОДАЛЬНЫЕ ОКНА И УВЕДОМЛЕНИЯ
+   ============================================================ */
+.modal { position: fixed; inset: 0; background: rgba(0,0,0,.9); display: flex; align-items: center; justify-content: center; z-index: 1000000; opacity: 0; pointer-events: none; transition: opacity .2s; padding: 15px; }
+.modal.active { opacity: 1; pointer-events: auto; }
+.modal-box { background: linear-gradient(180deg, #1a2e1a, #0a1208); border: 2px solid var(--gold); border-radius: 14px; padding: 20px; max-width: 340px; width: 100%; text-align: center; color: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+.modal-title { font-size: 20px; font-weight: 900; color: var(--gold); margin-bottom: 15px; font-family: Georgia, serif; }
+.modal-text { font-size: 14px; color: #ccc; margin-bottom: 15px; line-height: 1.4; }
+.modal-close { background: #576574; color: #fff; border: none; padding: 12px; border-radius: 8px; font-weight: 800; margin-top: 15px; width: 100%; font-size: 14px; cursor: pointer; }
+.modal-btns { display: flex; flex-direction: column; gap: 8px; }
+.modal-btn { padding: 14px; border-radius: 8px; border: none; font-size: 16px; font-weight: 900; cursor: pointer; color: #fff; }
+.modal-btn.green { background: linear-gradient(180deg, #2ecc71, #1a7d43); box-shadow: 0 4px 0 #0f3d22; }
+.modal-btn.red { background: linear-gradient(180deg, #e74c3c, #922b21); box-shadow: 0 4px 0 #4d0e07; }
+.modal-btn:active { transform: translateY(3px); box-shadow: none; }
 
-.notif{position:fixed;top:-80px;left:50%;transform:translateX(-50%);background:#2ecc71;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:800;transition:top .3s;z-index:9999999;text-align:center;box-shadow:0 5px 15px rgba(0,0,0,.5);}
-.notif.show{top:15px} .notif.error{background:#e74c3c} .notif.gold{background:linear-gradient(180deg,#ffd966,#b8860b);color:#1a1200}
+.notif { position: fixed; top: -80px; left: 50%; transform: translateX(-50%); background: #2ecc71; color: #fff; padding: 10px 20px; border-radius: 20px; font-size: 13px; font-weight: 800; transition: top .3s; z-index: 9999999; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,.5); }
+.notif.show { top: 15px; } 
+.notif.error { background: #e74c3c; } 
+.notif.gold { background: linear-gradient(180deg, #ffd966, #b8860b); color: #1a1200; }
 </style>
 </head>
 <body>
 
+<!-- ============================================================
+     АУДИО-ПЛЕЕР ДЛЯ ФОНОВОЙ МУЗЫКИ
+     ============================================================ -->
+<audio id="bgMusic" loop>
+    <!-- Ссылка на тестовую лесную музыку -->
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+</audio>
+
+<!-- ============================================================
+     СТАРТОВЫЙ ЭКРАН
+     ============================================================ -->
 <div id="startScreen">
     <div class="start-title">FOREST FORTUNE</div>
     <button class="start-btn" id="startBtn">ИГРАТЬ 🔊</button>
 </div>
 
+<!-- ============================================================
+     ИГРОВОЕ ПОЛЕ
+     ============================================================ -->
 <div class="game-board" id="gameBoard">
     
+    <!-- Эффекты -->
     <div class="fire-glow fire-left"></div>
     <div class="fire-glow fire-right"></div>
     <div class="firefly f1"></div><div class="firefly f2"></div><div class="firefly f3"></div>
     <div class="firefly f4"></div><div class="firefly f5"></div><div class="firefly f6"></div>
 
-    <!-- Динамические цифры -->
+    <!-- Табло -->
     <div class="ui-val ui-balance" id="balanceVal">1 120</div>
     <div class="ui-val ui-win" id="winVal">0</div>
     <div class="ui-val ui-lines" id="linesVal">15/21</div>
     <div class="ui-val ui-bet" id="betVal">1</div>
     <div class="ui-val ui-total" id="totalBetVal">15</div>
 
-    <!-- Сетка -->
+    <!-- Барабаны -->
     <div class="reels-frame" id="reelsFrame">
         <div class="reels" id="reels"></div>
         <svg class="lines-overlay" id="linesOverlay"></svg>
     </div>
 
-    <!-- Кнопки -->
+    <!-- Невидимые кнопки (зоны клика) -->
     <div class="btn-overlay btn-lang" onclick="cycleLang()"></div>
     <div class="btn-overlay btn-sound" onclick="toggleSound()"></div>
     <div class="btn-overlay btn-spin" id="spinBtn"></div>
@@ -292,7 +289,6 @@ html, body {
     <div class="btn-overlay btn-bet-dec" id="betDec"></div>
     <div class="btn-overlay btn-bet-inc" id="betInc"></div>
 
-    <!-- Кнопки линий -->
     <div class="btn-overlay btn-l1" onclick="setLines(1)"></div>
     <div class="btn-overlay btn-l3" onclick="setLines(3)"></div>
     <div class="btn-overlay btn-l5" onclick="setLines(5)"></div>
@@ -300,7 +296,6 @@ html, body {
     <div class="btn-overlay btn-l15" onclick="setLines(15)"></div>
     <div class="btn-overlay btn-l21" onclick="setLines(21)"></div>
 
-    <!-- Нижние кнопки -->
     <div class="btn-overlay btn-action btn-wheel" onclick="openModal('wheelModal')"></div>
     <div class="btn-overlay btn-action btn-shop" onclick="openModal('shopModal')"></div>
     <div class="btn-overlay btn-action btn-risk" id="btnRiskUI" onclick="openRiskModal()"></div>
@@ -311,7 +306,9 @@ html, body {
     <div class="btn-overlay btn-action btn-rules" onclick="openModal('paytableModal')"></div>
 </div>
 
-<!-- МОДАЛКИ -->
+<!-- ============================================================
+     МОДАЛЬНЫЕ ОКНА
+     ============================================================ -->
 <div class="modal" id="wheelModal"><div class="modal-box"><div class="modal-title">🎡 КОЛЕСО</div><div class="modal-text">Крути раз в 24 часа!</div><button class="modal-close" onclick="closeModal('wheelModal')">Закрыть</button></div></div>
 <div class="modal" id="shopModal"><div class="modal-box"><div class="modal-title">⭐ МАГАЗИН</div><div class="modal-text">Покупка звезд (в разработке)</div><button class="modal-close" onclick="closeModal('shopModal')">Закрыть</button></div></div>
 <div class="modal" id="riskModal"><div class="modal-box" style="border-color:#f1c40f;"><div class="modal-title">🃏 РИСК-ИГРА</div><div class="modal-text" id="riskText">Рискнуть?</div><div class="modal-btns"><button class="modal-btn green" onclick="playRisk(true)">ВЫШЕ (x2)</button><button class="modal-btn red" onclick="playRisk(false)">НИЖЕ (x2)</button></div><button class="modal-close" onclick="takeRiskMoney()">ЗАБРАТЬ ВСЁ</button></div></div>
@@ -321,39 +318,82 @@ html, body {
 <div class="modal" id="paytableModal"><div class="modal-box"><div class="modal-title">📋 ПРАВИЛА</div><div class="modal-text">Собери 3+ одинаковых символа слева направо. Грибы дают фриспины.</div><button class="modal-close" onclick="closeModal('paytableModal')">Закрыть</button></div></div>
 <div class="notif" id="notif"></div>
 
+<!-- ============================================================
+     JAVASCRIPT ЛОГИКА
+     ============================================================ -->
 <script>
-// Очистка таймеров от старых зависаний
+// Очистка старых таймеров
 for (let i = 1; i < 9999; i++) clearTimeout(i);
 
+// ==========================================
+// 1. КОНСТАНТЫ И КОНФИГУРАЦИЯ
+// ==========================================
 const REELS = 5, ROWS = 5; 
-const IMG_VER = '?v=55555555';
+const IMG_VER = '?v=55555555'; // Версия кэша картинок
+
+// Символы и их выпадение
 const SYMBOLS = ['gem.png', 'mushroom.png', 'hedgehog.png', 'acorn.png', 'leaf.png', 'coin.png'];
 const WEIGHTS = {'gem.png':5, 'mushroom.png':10, 'hedgehog.png':15, 'acorn.png':25, 'leaf.png':25, 'coin.png':30};
-const PAYTABLE = { 'gem.png': [15, 60, 250], 'mushroom.png': [10, 40, 150], 'hedgehog.png': [8, 25, 80], 'acorn.png': [5, 15, 50], 'leaf.png': [5, 15, 50], 'coin.png': [2, 5, 15] };
 
+// Таблица выплат (x1, x3, x5 символов)
+const PAYTABLE = { 
+    'gem.png': [15, 60, 250], 
+    'mushroom.png': [10, 40, 150], 
+    'hedgehog.png': [8, 25, 80], 
+    'acorn.png': [5, 15, 50], 
+    'leaf.png': [5, 15, 50], 
+    'coin.png': [2, 5, 15] 
+};
+
+// Линии (координаты [барабан][ряд])
 const PAYLINES = [
-    [[0,0],[1,0],[2,0],[3,0],[4,0]], [[0,1],[1,1],[2,1],[3,1],[4,1]], [[0,2],[1,2],[2,2],[3,2],[4,2]], [[0,3],[1,3],[2,3],[3,3],[4,3]], [[0,4],[1,4],[2,4],[3,4],[4,4]],
-    [[0,0],[1,1],[2,2],[3,1],[4,0]], [[0,4],[1,3],[2,2],[3,3],[4,4]], [[0,1],[1,2],[2,3],[3,2],[4,1]], [[0,3],[1,2],[2,1],[3,2],[4,3]],
-    [[0,0],[1,0],[2,1],[3,2],[4,2]], [[0,4],[1,4],[2,3],[3,2],[4,2]], [[0,2],[1,1],[2,0],[3,1],[4,2]], [[0,2],[1,3],[2,4],[3,3],[4,2]],
-    [[0,1],[1,0],[2,0],[3,0],[4,1]], [[0,3],[1,4],[2,4],[3,4],[4,3]], [[0,0],[1,1],[2,1],[3,1],[4,0]], [[0,4],[1,3],[2,3],[3,3],[4,4]],
-    [[0,1],[1,1],[2,2],[3,3],[4,3]], [[0,3],[1,3],[2,2],[3,1],[4,1]], [[0,0],[1,2],[2,4],[3,2],[4,0]], [[0,4],[1,2],[2,0],[3,2],[4,4]]
+    [[0,0],[1,0],[2,0],[3,0],[4,0]], [[0,1],[1,1],[2,1],[3,1],[4,1]], 
+    [[0,2],[1,2],[2,2],[3,2],[4,2]], [[0,3],[1,3],[2,3],[3,3],[4,3]], 
+    [[0,4],[1,4],[2,4],[3,4],[4,4]], [[0,0],[1,1],[2,2],[3,1],[4,0]], 
+    [[0,4],[1,3],[2,2],[3,3],[4,4]], [[0,1],[1,2],[2,3],[3,2],[4,1]], 
+    [[0,3],[1,2],[2,1],[3,2],[4,3]], [[0,0],[1,0],[2,1],[3,2],[4,2]], 
+    [[0,4],[1,4],[2,3],[3,2],[4,2]], [[0,2],[1,1],[2,0],[3,1],[4,2]], 
+    [[0,2],[1,3],[2,4],[3,3],[4,2]], [[0,1],[1,0],[2,0],[3,0],[4,1]], 
+    [[0,3],[1,4],[2,4],[3,4],[4,3]], [[0,0],[1,1],[2,1],[3,1],[4,0]], 
+    [[0,4],[1,3],[2,3],[3,3],[4,4]], [[0,1],[1,1],[2,2],[3,3],[4,3]], 
+    [[0,3],[1,3],[2,2],[3,1],[4,1]], [[0,0],[1,2],[2,4],[3,2],[4,0]], 
+    [[0,4],[1,2],[2,0],[3,2],[4,4]]
 ];
-const LINE_COLORS = ['#ff3b30','#ff9500','#ffcc00','#34c759','#00c7be','#30b0ff','#5856d6','#af52de','#ff2d95','#ff6b6b','#ffd93d','#6bcf7f','#4ecdc4','#95e1d3','#a8e6cf','#c7ceea','#e2a4d1','#f6d365','#b5eaea','#e0aaff','#ffb4a2'];
-const POOL=[];Object.entries(WEIGHTS).forEach(([s,w])=>{for(let i=0;i<w;i++)POOL.push(s)});
 
-let state = { balance: 1120, betPerLine: 1, lines: 15, lastDaily: 0, sound: true, lang: 'ru' };
-let isSpinning = false, stopRequested = false;
-let freeSpins = 0, isFreeSpin = false;
+const LINE_COLORS = ['#ff3b30','#ff9500','#ffcc00','#34c759','#00c7be','#30b0ff','#5856d6','#af52de','#ff2d95','#ff6b6b','#ffd93d','#6bcf7f','#4ecdc4','#95e1d3','#a8e6cf','#c7ceea','#e2a4d1','#f6d365','#b5eaea','#e0aaff','#ffb4a2'];
+
+// Пул символов для генерации
+const POOL = [];
+Object.entries(WEIGHTS).forEach(([s,w]) => {
+    for(let i=0; i<w; i++) POOL.push(s);
+});
+
+// ==========================================
+// 2. СОСТОЯНИЕ ИГРЫ
+// ==========================================
+let state = { 
+    balance: 1120, 
+    betPerLine: 1, 
+    lines: 15, 
+    lastDaily: 0, 
+    sound: true, 
+    lang: 'ru' 
+};
+
+let isSpinning = false;
+let stopRequested = false;
+let freeSpins = 0;
+let isFreeSpin = false;
 let pendingRisk = 0;
 let spinTimeout = null; 
 
-/* ============================================================
-   🔊 АУДИО И ТАКТИЛЬНАЯ ОТДАЧА
-   ============================================================ */
+// ==========================================
+// 3. АУДИО-СИСТЕМА (Web Audio API + HTML5 Audio)
+// ==========================================
 let audioCtx = null;
-let bgmInterval = null;
 let isAudioInit = false;
 
+// Вспомогательная функция для тактильного отклика (Telegram)
 function haptic(type) {
     const tg = window.Telegram?.WebApp;
     if (tg?.HapticFeedback) {
@@ -371,23 +411,47 @@ function haptic(type) {
     }
 }
 
+// Инициализация AudioContext
 function initAudio() {
-    if (isAudioInit) return;
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    if (AudioContext) {
-        audioCtx = new AudioContext();
-        if (audioCtx.state === 'suspended') audioCtx.resume();
+    if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (AudioContext) audioCtx = new AudioContext();
+    }
+    if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+    
+    if (!isAudioInit) {
         isAudioInit = true;
-        startBGM();
+        if (state.sound) {
+            playBGM();
+        }
     }
 }
 
-function playTone(freq, type, duration, vol=0.1) {
+// Воспроизведение MP3-музыки
+function playBGM() {
+    const bgm = document.getElementById('bgMusic');
+    if (bgm && state.sound) {
+        bgm.volume = 0.3; // Громкость музыки (от 0.0 до 1.0)
+        bgm.play().catch(e => console.log("Ожидание клика для запуска музыки..."));
+    }
+}
+
+// Остановка музыки
+function stopBGM() {
+    const bgm = document.getElementById('bgMusic');
+    if (bgm) bgm.pause();
+}
+
+// Генератор звуковых эффектов (SFX)
+function playTone(freq, type, duration, vol=0.3) {
     if (!audioCtx || !state.sound) return;
     try {
         if (audioCtx.state === 'suspended') audioCtx.resume();
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
+        
         osc.type = type;
         osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
         
@@ -396,71 +460,324 @@ function playTone(freq, type, duration, vol=0.1) {
         
         osc.connect(gain);
         gain.connect(audioCtx.destination);
+        
         osc.start();
         osc.stop(audioCtx.currentTime + duration);
     } catch(e) {}
 }
 
-// Лесная мелодия
-const bgmNotes = [261.63, 329.63, 392.00, 523.25, 392.00, 329.63]; 
-let bgmIndex = 0;
-
-function startBGM() {
-    if (!audioCtx || bgmInterval) return;
-    bgmInterval = setInterval(() => {
-        if (!state.sound || !audioCtx) return;
-        const note = bgmNotes[bgmIndex % bgmNotes.length];
-        playTone(note, 'sine', 1.5, 0.03); 
-        bgmIndex++;
-    }, 800); 
-}
-
-function stopBGM() {
-    if (bgmInterval) {
-        clearInterval(bgmInterval);
-        bgmInterval = null;
-    }
-}
-
+// Библиотека звуков
 const sfx = {
-    click: () => playTone(800, 'sine', 0.1, 0.15),
-    spinStart: () => playTone(200, 'sawtooth', 0.3, 0.1),
-    reelStop: () => playTone(400, 'triangle', 0.1, 0.2),
-    win: () => { playTone(523.25, 'sine', 0.2, 0.3); setTimeout(()=>playTone(659.25, 'sine', 0.2, 0.3), 100); setTimeout(()=>playTone(783.99, 'sine', 0.3, 0.3), 200); },
-    lose: () => playTone(150, 'sawtooth', 0.3, 0.1)
+    click: () => playTone(800, 'sine', 0.1, 0.4),
+    spinStart: () => playTone(150, 'sawtooth', 0.3, 0.2),
+    reelStop: () => playTone(300, 'triangle', 0.1, 0.3),
+    win: () => { 
+        playTone(523.25, 'sine', 0.2, 0.5); 
+        setTimeout(()=>playTone(659.25, 'sine', 0.2, 0.5), 100); 
+        setTimeout(()=>playTone(783.99, 'sine', 0.3, 0.5), 200); 
+    },
+    lose: () => playTone(100, 'sawtooth', 0.3, 0.1)
 };
 
+// Переключатель звука
 function toggleSound() { 
     state.sound = !state.sound; 
-    if(state.sound) { initAudio(); sfx.click(); }
+    if(state.sound) { 
+        initAudio(); 
+        sfx.click(); 
+        playBGM();
+    } else {
+        stopBGM();
+    }
     haptic('light'); 
     notif(state.sound ? '🔊 Звук ВКЛ' : '🔇 Звук ВЫКЛ'); 
 }
 
-/* ============================================================
-   ЛОГИКА ИГРЫ
-   ============================================================ */
-const reelsEl = document.getElementById('reels');
-const overlay = document.getElementById('linesOverlay');
-const tracks = [];
+// Разблокировка звука при первом клике
+document.body.addEventListener('touchstart', initAudio, {once:true});
+document.body.addEventListener('click', initAudio, {once:true});
 
+// ==========================================
+// 4. ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ UI
+// ==========================================
 const $ = (id) => document.getElementById(id);
 const fmt = (n) => Math.round(n).toLocaleString('ru-RU');
-function notif(msg, type='') { const n=$('notif'); n.textContent=msg; n.className='notif show '+type; clearTimeout(n._t); n._t=setTimeout(()=>{n.className='notif '+type}, 3000); }
-const randSym = () => POOL[Math.floor(Math.random()*POOL.length)];
-const totalBet = () => state.lines * state.betPerLine;
+
+function notif(msg, type='') { 
+    const n = $('notif'); 
+    n.textContent = msg; 
+    n.className = 'notif show ' + type; 
+    clearTimeout(n._t); 
+    n._t = setTimeout(()=>{ n.className = 'notif ' + type; }, 3000); 
+}
+
 const openModal = (id) => { $(id).classList.add('active'); haptic('light'); sfx.click(); };
 const closeModal = (id) => { $(id).classList.remove('active'); };
 
-function cycleLang() {
-    const langs = ['ru', 'uk', 'en'];
-    let idx = langs.indexOf(state.lang);
-    idx = (idx + 1) % langs.length;
-    state.lang = langs[idx];
-    haptic('light'); sfx.click();
-    notif('Language: ' + state.lang.toUpperCase());
+// ==========================================
+// 5. ИНИЦИАЛИЗАЦИЯ БАРАБАНОВ
+// ==========================================
+const reelsEl = $('reels');
+const overlay = $('linesOverlay');
+const tracks = []; // Ссылки на DOM элементы лент
+const reelAnimFrames = [null, null, null, null, null];
+let reelPositions = [0, 0, 0, 0, 0];
+
+const randSym = () => POOL[Math.floor(Math.random() * POOL.length)];
+const totalBet = () => state.lines * state.betPerLine;
+
+function buildReels() {
+    reelsEl.innerHTML = ''; 
+    tracks.length = 0;
+    
+    for (let r = 0; r < REELS; r++) {
+        const reel = document.createElement('div'); 
+        reel.className = 'reel';
+        const track = document.createElement('div'); 
+        track.className = 'track';
+        track.style.height = '100%'; 
+        
+        let html = '';
+        for (let row = 0; row < ROWS; row++) {
+            html += `<div class="cell"><img src="${randSym()}${IMG_VER}"></div>`;
+        }
+        
+        track.innerHTML = html; 
+        reel.appendChild(track); 
+        reelsEl.appendChild(reel); 
+        tracks.push(track);
+    }
+    updateUI();
 }
 
+function updateUI() {
+    $('balanceVal').textContent = fmt(state.balance); 
+    $('betVal').textContent = fmt(state.betPerLine); 
+    $('linesVal').textContent = state.lines + '/21';
+    $('totalBetVal').textContent = fmt(totalBet());
+    if(!isSpinning) $('winVal').textContent = '0';
+}
+
+// ==========================================
+// 6. ЛОГИКА ВРАЩЕНИЯ БАРАБАНОВ
+// ==========================================
+function startReelSpin(r) {
+    const track = tracks[r]; 
+    let html = ''; 
+    
+    // Генерируем длинную ленту для анимации
+    for (let i = 0; i < 40; i++) {
+        html += `<div class="cell"><img src="${randSym()}${IMG_VER}"></div>`;
+    }
+    
+    track.innerHTML = html; 
+    let lastTime = performance.now(); 
+    const speed = 2000; // Скорость прокрутки
+    const frameHeight = track.clientHeight / 5; 
+    
+    function frame(now) {
+        if (!isSpinning) return; 
+        const dt = (now - lastTime) / 1000; 
+        lastTime = now;
+        
+        reelPositions[r] -= speed * dt; 
+        // Зацикливание позиции
+        if (reelPositions[r] <= -(20 * frameHeight)) {
+            reelPositions[r] += 20 * frameHeight;
+        }
+        
+        track.style.transform = `translate3d(0, ${reelPositions[r]}px, 0)`;
+        reelAnimFrames[r] = requestAnimationFrame(frame);
+    }
+    reelAnimFrames[r] = requestAnimationFrame(frame);
+}
+
+function stopReelAnim(r, final5) {
+    return new Promise(resolve => {
+        // Задержка для эффекта каскада
+        setTimeout(() => {
+            cancelAnimationFrame(reelAnimFrames[r]); 
+            const track = tracks[r]; 
+            const currentY = reelPositions[r];
+            const frameHeight = track.clientHeight / 5; 
+            
+            // Формируем ленту с финальными символами
+            let html = ''; 
+            for (let i = 0; i < 15; i++) html += `<div class="cell"><img src="${randSym()}${IMG_VER}"></div>`;
+            final5.forEach(s => html += `<div class="cell"><img src="${s}${IMG_VER}"></div>`);
+            for (let i = 0; i < 5; i++) html += `<div class="cell"><img src="${randSym()}${IMG_VER}"></div>`;
+            
+            track.innerHTML = html; 
+            
+            // Математика для плавного "доезда" до нужного символа
+            let startY = currentY % (15 * frameHeight); 
+            if(startY > 0) startY -= 15 * frameHeight;
+            
+            track.style.transition = 'none'; 
+            track.style.transform = `translate3d(0, ${startY}px, 0)`; 
+            track.getBoundingClientRect(); // Форсируем reflow
+            
+            track.style.transition = `transform ${800 + r*200}ms cubic-bezier(0.1, 0.8, 0.2, 1)`; 
+            track.style.transform = `translate3d(0, -${15 * frameHeight}px, 0)`;
+            
+            setTimeout(() => { 
+                track.style.transition = 'none'; 
+                track.style.transform = 'translate3d(0,0,0)'; 
+                track.innerHTML = final5.map(s => `<div class="cell"><img src="${s}${IMG_VER}"></div>`).join(''); 
+                haptic('light');
+                sfx.reelStop();
+                resolve(); 
+            }, 800 + r*200 + 50);
+        }, r * 200); // Каскадная остановка
+    });
+}
+
+// ==========================================
+// 7. ОСНОВНОЙ ЦИКЛ ИГРЫ (SPIN)
+// ==========================================
+async function startSpin() {
+    if (isSpinning) return;
+    
+    // Проверка баланса
+    if (state.balance < totalBet()) { 
+        notif('Недостаточно монет!', 'error'); 
+        haptic('error');
+        sfx.lose();
+        return; 
+    }
+    
+    // Списание ставки
+    state.balance -= totalBet(); 
+    isSpinning = true; 
+    stopRequested = false; 
+    $('winVal').textContent = '0';
+    
+    updateUI(); 
+    $('btnRiskUI').classList.remove('active-risk');
+    overlay.innerHTML = '';
+    document.querySelectorAll('.cell').forEach(c => c.classList.remove('win')); 
+    
+    haptic('medium');
+    sfx.spinStart();
+    
+    // Предварительная генерация поля (RNG)
+    const finalGrid = []; 
+    for (let r=0; r<REELS; r++) { 
+        const col=[]; 
+        for(let c=0; c<ROWS; c++) col.push(randSym()); 
+        finalGrid.push(col); 
+    }
+    
+    reelPositions = [0, 0, 0, 0, 0]; 
+    tracks.forEach((tr, i) => startReelSpin(i));
+    
+    // Автостоп через 5 секунд (если игрок не нажал кнопку)
+    spinTimeout = setTimeout(() => { 
+        if(!stopRequested && isSpinning) requestStop(finalGrid); 
+    }, 5000);
+}
+
+async function requestStop(pregeneratedGrid) {
+    if (!isSpinning || stopRequested) return; 
+    stopRequested = true;
+    if(spinTimeout) clearTimeout(spinTimeout);
+    
+    // Остановка барабанов
+    const finalGrid = pregeneratedGrid || genGrid(); 
+    await Promise.all(tracks.map((tr, i) => stopReelAnim(i, finalGrid[i])));
+    
+    // Подсчет выигрыша
+    let total = 0, scatterCount = 0;
+    const winCells = []; 
+    
+    // Считаем скаттеры (грибы)
+    for(let r=0; r<REELS; r++) {
+        for(let c=0; c<ROWS; c++) {
+            if(finalGrid[r][c] === 'mushroom.png') scatterCount++;
+        }
+    }
+
+    // Проверка линий
+    PAYLINES.slice(0, state.lines).forEach(line => {
+        const syms = line.map(([r,row]) => finalGrid[r][row]); 
+        const firstSym = syms[0];
+        
+        if(firstSym === 'mushroom.png') return; // Грибы не собираются в линии
+        
+        let count = 1;
+        for(let i=1; i<REELS; i++) { 
+            if(syms[i] === firstSym || syms[i] === 'gem.png') count++; 
+            else break; 
+        }
+        
+        if(count >= 3) {
+            total += PAYTABLE[firstSym][count-3] * state.betPerLine;
+            for(let i=0; i<count; i++) {
+                winCells.push({r: line[i][0], c: line[i][1]});
+            }
+        }
+    });
+
+    // Начисление выигрыша
+    if (total > 0) {
+        if (isFreeSpin) total *= 2; // x2 во фриспинах
+        state.balance += total; 
+        $('winVal').textContent = fmt(total); 
+        notif('Выигрыш: +' + fmt(total), 'gold');
+        
+        winCells.forEach(cell => {
+            const el = tracks[cell.r].children[cell.c];
+            if(el) el.classList.add('win');
+        });
+
+        haptic('success');
+        sfx.win();
+        
+        // Активация риска
+        if (total >= totalBet() * 2 && !isFreeSpin) {
+            pendingRisk = total;
+            $('btnRiskUI').classList.add('active-risk');
+        }
+    } else { 
+        notif('Повезет в следующий раз!', 'error'); 
+        sfx.lose();
+    }
+
+    // Проверка фриспинов
+    if (scatterCount >= 3 && !isFreeSpin) { 
+        freeSpins = 10; 
+        notif('🎉 3 ГРИБА! 10 ФРИСПИНОВ x2!', 'gold'); 
+        haptic('heavy');
+    }
+    
+    isSpinning = false; 
+    updateUI();
+
+    // Запуск фриспина, если есть
+    if (freeSpins > 0) { 
+        freeSpins--; 
+        isFreeSpin = true; 
+        spinTimeout = setTimeout(startSpin, 1500); 
+    } else { 
+        isFreeSpin = false; 
+    }
+}
+
+function genGrid() {
+    const g = [];
+    for (let r = 0; r < REELS; r++) { 
+        const col = []; 
+        for (let row = 0; row < ROWS; row++) col.push(randSym()); 
+        g.push(col); 
+    }
+    return g;
+}
+
+// ==========================================
+// 8. УПРАВЛЕНИЕ ИНТЕРФЕЙСОМ И НАСТРОЙКАМИ
+// ==========================================
+
+// Отображение линий поверх игры
 function showActiveLines() {
     overlay.innerHTML = '';
     const fRect = $('reelsFrame').getBoundingClientRect();
@@ -476,6 +793,7 @@ function showActiveLines() {
             pts.push([cr.left + cr.width/2 - fRect.left, cr.top + cr.height/2 - fRect.top]);
         }
         if (pts.length < 2) return;
+        
         const color = LINE_COLORS[idx % LINE_COLORS.length];
         const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
         poly.setAttribute('points', pts.map(p => p.join(',')).join(' '));
@@ -500,178 +818,13 @@ function setLines(num) {
     showActiveLines();
 }
 
-function updateUI() {
-    $('balanceVal').textContent = fmt(state.balance); 
-    $('betVal').textContent = fmt(state.betPerLine); 
-    $('linesVal').textContent = state.lines + '/21';
-    $('totalBetVal').textContent = fmt(totalBet());
-    if(!isSpinning) $('winVal').textContent = '0';
-}
-
-function buildReels() {
-    reelsEl.innerHTML = ''; tracks.length = 0;
-    for (let r = 0; r < REELS; r++) {
-        const reel = document.createElement('div'); reel.className = 'reel';
-        const track = document.createElement('div'); track.className = 'track';
-        track.style.height = '100%'; 
-        let html = '';
-        for (let row = 0; row < ROWS; row++) html += `<div class="cell"><img src="${randSym()}${IMG_VER}"></div>`;
-        track.innerHTML = html; reel.appendChild(track); reelsEl.appendChild(reel); tracks.push(track);
-    }
-    updateUI();
-}
-
-let reelAnimFrames = [null, null, null, null, null];
-let reelPositions = [0, 0, 0, 0, 0];
-
-function startReelSpin(r) {
-    const track = tracks[r]; let html = ''; 
-    for (let i = 0; i < 40; i++) html += `<div class="cell"><img src="${randSym()}${IMG_VER}"></div>`;
-    track.innerHTML = html; 
-    let lastTime = performance.now(); 
-    const speed = 2000;
-    const frameHeight = track.clientHeight / 5; 
-    
-    function frame(now) {
-        if (!isSpinning) return; 
-        const dt = (now - lastTime) / 1000; lastTime = now;
-        reelPositions[r] -= speed * dt; 
-        if (reelPositions[r] <= -(20 * frameHeight)) reelPositions[r] += 20 * frameHeight;
-        track.style.transform = `translate3d(0, ${reelPositions[r]}px, 0)`;
-        reelAnimFrames[r] = requestAnimationFrame(frame);
-    }
-    reelAnimFrames[r] = requestAnimationFrame(frame);
-}
-
-function stopReelAnim(r, final5) {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            cancelAnimationFrame(reelAnimFrames[r]); 
-            const track = tracks[r]; const currentY = reelPositions[r];
-            const frameHeight = track.clientHeight / 5; 
-            
-            let html = ''; 
-            for (let i = 0; i < 15; i++) html += `<div class="cell"><img src="${randSym()}${IMG_VER}"></div>`;
-            final5.forEach(s => html += `<div class="cell"><img src="${s}${IMG_VER}"></div>`);
-            for (let i = 0; i < 5; i++) html += `<div class="cell"><img src="${randSym()}${IMG_VER}"></div>`;
-            
-            track.innerHTML = html; 
-            let startY = currentY % (15 * frameHeight); 
-            if(startY > 0) startY -= 15 * frameHeight;
-            
-            track.style.transition = 'none'; 
-            track.style.transform = `translate3d(0, ${startY}px, 0)`; 
-            track.getBoundingClientRect(); 
-            
-            track.style.transition = `transform ${800 + r*200}ms cubic-bezier(0.1, 0.8, 0.2, 1)`; 
-            track.style.transform = `translate3d(0, -${15 * frameHeight}px, 0)`;
-            
-            setTimeout(() => { 
-                track.style.transition = 'none'; 
-                track.style.transform = 'translate3d(0,0,0)'; 
-                track.innerHTML = final5.map(s => `<div class="cell"><img src="${s}${IMG_VER}"></div>`).join(''); 
-                haptic('light');
-                sfx.reelStop();
-                resolve(); 
-            }, 800 + r*200 + 50);
-        }, r * 200);
-    });
-}
-
-async function startSpin() {
-    if (isSpinning) return;
-    if (state.balance < totalBet()) { 
-        notif('Мало монет!', 'error'); 
-        haptic('error');
-        sfx.lose();
-        return; 
-    }
-    
-    state.balance -= totalBet(); 
-    isSpinning = true; 
-    stopRequested = false; 
-    $('winVal').textContent = '0';
-    updateUI(); 
-    $('btnRiskUI').classList.remove('active-risk');
-    overlay.innerHTML = '';
-    document.querySelectorAll('.cell').forEach(c => c.classList.remove('win')); 
-    
-    haptic('medium');
-    sfx.spinStart();
-    
-    const finalGrid = []; 
-    for (let r=0; r<REELS; r++) { const col=[]; for(let c=0; c<ROWS; c++) col.push(randSym()); finalGrid.push(col); }
-    
-    reelPositions = [0, 0, 0, 0, 0]; 
-    tracks.forEach((tr, i) => startReelSpin(i));
-    
-    spinTimeout = setTimeout(() => { if(!stopRequested && isSpinning) requestStop(finalGrid); }, 5000);
-}
-
-async function requestStop(pregeneratedGrid) {
-    if (!isSpinning || stopRequested) return; 
-    stopRequested = true;
-    if(spinTimeout) clearTimeout(spinTimeout);
-    
-    const finalGrid = pregeneratedGrid || genGrid(); 
-    await Promise.all(tracks.map((tr, i) => stopReelAnim(i, finalGrid[i])));
-    
-    let total = 0, scatterCount = 0;
-    const winCells = []; 
-    
-    for(let r=0; r<REELS; r++) for(let c=0; c<ROWS; c++) if(finalGrid[r][c] === 'mushroom.png') scatterCount++;
-
-    PAYLINES.slice(0, state.lines).forEach(line => {
-        const syms = line.map(([r,row])=>finalGrid[r][row]); 
-        const firstSym = syms[0];
-        if(firstSym === 'mushroom.png') return;
-        let count = 1;
-        for(let i=1; i<REELS; i++) { if(syms[i] === firstSym || syms[i] === 'gem.png') count++; else break; }
-        if(count >= 3) {
-            total += PAYTABLE[firstSym][count-3] * state.betPerLine;
-            for(let i=0; i<count; i++) winCells.push({r: line[i][0], c: line[i][1]});
-        }
-    });
-
-    if (total > 0) {
-        if (isFreeSpin) total *= 2;
-        state.balance += total; 
-        $('winVal').textContent = fmt(total); 
-        notif('Выигрыш: +' + fmt(total), 'gold');
-        
-        winCells.forEach(cell => {
-            const el = tracks[cell.r].children[cell.c];
-            if(el) el.classList.add('win');
-        });
-
-        haptic('success');
-        sfx.win();
-        
-        if (total >= totalBet() * 2 && !isFreeSpin) {
-            pendingRisk = total;
-            $('btnRiskUI').classList.add('active-risk');
-        }
-    } else { 
-        notif('Повезет в следующий раз!', 'error'); 
-        sfx.lose();
-    }
-
-    if (scatterCount >= 3 && !isFreeSpin) { 
-        freeSpins = 10; 
-        notif('🎉 3 ГРИБА! 10 ФРИСПИНОВ x2!', 'gold'); 
-        haptic('heavy');
-    }
-    
-    isSpinning = false; 
-    updateUI();
-
-    if (freeSpins > 0) { 
-        freeSpins--; 
-        isFreeSpin = true; 
-        spinTimeout = setTimeout(startSpin, 1000); 
-    } else { 
-        isFreeSpin = false; 
-    }
+function cycleLang() {
+    const langs = ['ru', 'uk', 'en'];
+    let idx = langs.indexOf(state.lang);
+    idx = (idx + 1) % langs.length;
+    state.lang = langs[idx];
+    haptic('light'); sfx.click();
+    notif('Language: ' + state.lang.toUpperCase());
 }
 
 function toggleAuto() {
@@ -682,15 +835,15 @@ function toggleAuto() {
     startSpin();
 }
 
-function genGrid() {
-    const g = [];
-    for (let r = 0; r < REELS; r++) { const col = []; for (let row = 0; row < ROWS; row++) col.push(randSym()); g.push(col); }
-    return g;
-}
-
+// ==========================================
+// 9. РИСК-ИГРА И ЕЖЕДНЕВНЫЙ БОНУС
+// ==========================================
 function openRiskModal() {
     haptic('light'); sfx.click();
-    if (pendingRisk <= 0) { notif('Нет выигрыша для риска!', 'error'); return; }
+    if (pendingRisk <= 0) { 
+        notif('Нет выигрыша для риска!', 'error'); 
+        return; 
+    }
     $('riskText').textContent = `Вы рискуете суммой ${fmt(pendingRisk)} 🪙. Угадайте карту (шанс 50/50), чтобы удвоить!`;
     openModal('riskModal');
 }
@@ -698,19 +851,26 @@ function openRiskModal() {
 function playRisk(isHigher) {
     if (pendingRisk <= 0) return;
     closeModal('riskModal');
+    
     const card1 = Math.floor(Math.random() * 13) + 1;
     const card2 = Math.floor(Math.random() * 13) + 1;
+    
     let won = false;
-    if (isHigher) won = card2 > card1; else won = card2 < card1;
-    if (card1 === card2) won = false;
+    if (isHigher) won = card2 > card1; 
+    else won = card2 < card1;
+    
+    if (card1 === card2) won = false; // Ничья в пользу казино
 
     if (won) {
-        state.balance += pendingRisk; notif(`🎉 Победа! +${fmt(pendingRisk)}`, 'gold');
+        state.balance += pendingRisk; 
+        notif(`🎉 Победа! +${fmt(pendingRisk)}`, 'gold');
         haptic('success'); sfx.win();
     } else {
-        state.balance -= pendingRisk; notif(`❌ Проигрыш: -${fmt(pendingRisk)}`, 'error');
+        state.balance -= pendingRisk; 
+        notif(`❌ Проигрыш: -${fmt(pendingRisk)}`, 'error');
         haptic('error'); sfx.lose();
     }
+    
     pendingRisk = 0;
     $('btnRiskUI').classList.remove('active-risk');
     updateUI();
@@ -725,12 +885,23 @@ function takeRiskMoney() {
 }
 
 function claimDaily() {
-    if (Date.now() - state.lastDaily < 24*3600*1000) { notif('Бонус уже получен! Ждите 24ч', 'error'); return; }
-    state.lastDaily = Date.now(); state.balance += 1000; updateUI(); notif('🎁 Ежедневный бонус: +1000 🪙', 'gold');
+    if (Date.now() - state.lastDaily < 24*3600*1000) { 
+        notif('Бонус уже получен! Ждите 24ч', 'error'); 
+        return; 
+    }
+    
+    state.lastDaily = Date.now(); 
+    state.balance += 1000; 
+    updateUI(); 
+    notif('🎁 Ежедневный бонус: +1000 🪙', 'gold');
     haptic('heavy'); sfx.win();
 }
 
-// Инициализация кнопок
+// ==========================================
+// 10. ПРИВЯЗКА СОБЫТИЙ
+// ==========================================
+
+// Старт игры
 $('startBtn').onclick = () => {
     initAudio();
     $('startScreen').classList.add('hidden');
@@ -739,7 +910,7 @@ $('startBtn').onclick = () => {
     sfx.click();
 };
 
-// Эффект голографической вспышки
+// Визуальный отклик на кнопки
 document.querySelectorAll('.btn-overlay').forEach(btn => {
     btn.addEventListener('touchstart', function() {
         this.classList.add('glow');
@@ -747,17 +918,34 @@ document.querySelectorAll('.btn-overlay').forEach(btn => {
     });
 });
 
+// Кнопка SPIN
 $('spinBtn').onclick = (e) => { 
     e.preventDefault(); e.stopPropagation();
-    if (isSpinning) requestStop(); else startSpin(); 
+    if (isSpinning) requestStop(); 
+    else startSpin(); 
 };
 
-$('linesDec').onclick = () => { if(!isSpinning){ setLines(Math.max(1, state.lines-1)); } };
-$('linesInc').onclick = () => { if(!isSpinning){ setLines(Math.min(21, state.lines+1)); } };
-$('betDec').onclick = () => { if(!isSpinning){ state.betPerLine = Math.max(1, state.betPerLine-1); updateUI(); haptic('select'); sfx.click(); } };
-$('betInc').onclick = () => { if(!isSpinning){ state.betPerLine += 1; updateUI(); haptic('select'); sfx.click(); } };
+// Управление ставками и линиями
+$('linesDec').onclick = () => { if(!isSpinning) setLines(Math.max(1, state.lines-1)); };
+$('linesInc').onclick = () => { if(!isSpinning) setLines(Math.min(21, state.lines+1)); };
+$('betDec').onclick = () => { 
+    if(!isSpinning){ 
+        state.betPerLine = Math.max(1, state.betPerLine-1); 
+        updateUI(); haptic('select'); sfx.click(); 
+    } 
+};
+$('betInc').onclick = () => { 
+    if(!isSpinning){ 
+        state.betPerLine += 1; 
+        updateUI(); haptic('select'); sfx.click(); 
+    } 
+};
 
-window.addEventListener('resize', () => { if(!isSpinning) buildReels(); });
+// Адаптация при повороте экрана
+window.addEventListener('resize', () => { 
+    if(!isSpinning) buildReels(); 
+});
+
 </script>
 </body>
 </html>
