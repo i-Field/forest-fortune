@@ -35,7 +35,11 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 .game-board { position: relative; aspect-ratio: 768 / 1370; width: 100vw; max-height: 100dvh; background: url('bg.png?v=55555555') no-repeat center center; background-size: 100% 100%; overflow: hidden; transition: background 0.5s; }
 .game-board.free-spins-mode { background-color: rgba(0, 50, 0, 0.8); background-blend-mode: overlay; }
 
-/* ДЕКОРАЦИИ */
+/* ДЕКОРАЦИИ И ОГОНЬ */
+.fire-glow { position: absolute; top: 12.5%; width: 12%; height: 4%; background: radial-gradient(circle, rgba(255, 140, 0, 0.8) 0%, transparent 70%); mix-blend-mode: screen; pointer-events: none; z-index: 5; animation: fireFlicker 1.5s infinite alternate; }
+.fire-left { left: 12%; } .fire-right { right: 12%; }
+@keyframes fireFlicker { 0% { opacity: 0.4; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1.1); } }
+
 .mushroom-glow { position: absolute; bottom: 2%; width: 20%; height: 20%; background: radial-gradient(circle, rgba(0, 255, 255, 0.3) 0%, transparent 70%); mix-blend-mode: screen; pointer-events: none; z-index: 5; animation: pulseGlow 3s infinite alternate; }
 .mush-left { left: -5%; } .mush-right { right: -5%; }
 @keyframes pulseGlow { 0% { opacity: 0.5; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1.2); } }
@@ -90,9 +94,9 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 .stop-visual { position: absolute; inset: 0; background: rgba(20, 10, 0, 0.85); border: 2px solid #ffd966; border-radius: 20px; color: #ffd966; font-family: Georgia, serif; font-weight: 900; font-size: 20px; display: none; align-items: center; justify-content: center; box-shadow: 0 0 15px #ffd966; text-shadow: 0 0 5px #ffd966; }
 .btn-auto { top: 73.8%; right: 9%; width: 13%; height: 5.5%; }
 
-/* Кнопка МАКС БЕТ (смещена вправо) */
+/* Кнопка МАКС БЕТ (смещена к центру) */
 .btn-maxbet { 
-    top: 92.5%; right: 15%; width: 25%; height: 3.8%; 
+    top: 92.5%; right: 26%; width: 25%; height: 3.8%; 
     background: linear-gradient(270deg, #2ecc71, #00ffff, #2ecc71, #00ffff); background-size: 300% 300%; animation: holoGradient 3s ease infinite;
     border: 1px solid rgba(255,255,255,0.6); border-radius: 20px; color: #fff; font-size: 10px; font-weight: 900; font-family: 'Arial', sans-serif;
     display: flex; align-items: center; justify-content: center; text-align: center;
@@ -104,9 +108,9 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 @keyframes waveShine { 0% { left: -100%; } 100% { left: 200%; } }
 .btn-maxbet:active { transform: translateY(2px) scale(0.95); box-shadow: 0 2px 5px rgba(0,0,0,0.4), 0 0 20px rgba(0, 255, 255, 0.8); }
 
-/* Кнопка ТУРБО (рядом с максбетом) */
+/* Кнопка ТУРБО (смещена к центру) */
 .btn-turbo { 
-    top: 92.5%; right: 2%; width: 11%; height: 3.8%; 
+    top: 92.5%; right: 13%; width: 11%; height: 3.8%; 
     background: rgba(0,0,0,0.6); border: 2px solid #ffd966; border-radius: 20px; 
     display: flex; align-items: center; justify-content: center; font-size: 18px; 
     color: #ffd966; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
@@ -191,6 +195,9 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 </div>
 
 <div class="game-board" id="gameBoard">
+    <!-- ВОЗВРАЩАЕМ ОГОНЬ ВОЗЛЕ ДЖЕКПОТА -->
+    <div class="fire-glow fire-left"></div> <div class="fire-glow fire-right"></div>
+    
     <div class="mushroom-glow mush-left"></div> <div class="mushroom-glow mush-right"></div>
     <div class="firefly f1"></div><div class="firefly f2"></div><div class="firefly f3"></div>
     <div class="firefly f4"></div><div class="firefly f5"></div><div class="firefly f6"></div>
@@ -236,7 +243,7 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
     <div class="btn-overlay btn-action btn-bonus" id="btnDaily" onclick="claimDaily()"></div>
     <div class="btn-overlay btn-action btn-rules" onclick="openModal('paytableModal')"></div>
 
-    <!-- НОВОЕ РАСПОЛОЖЕНИЕ: МАКС БЕТ И ТУРБО ВНИЗУ СПРАВА -->
+    <!-- МАКС БЕТ И ТУРБО (СМЕЩЕНЫ К ЦЕНТРУ) -->
     <div class="btn-maxbet" onclick="setMaxBet()">МАКС. СТАВКА</div>
     <div class="btn-turbo" id="btnTurbo" onclick="toggleTurbo()">⚡</div>
 </div>
