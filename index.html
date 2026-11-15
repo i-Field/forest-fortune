@@ -8,7 +8,8 @@
 <style>
 :root {
     --text: #f0f4f8;
-    --gold: #ffd700; /* Ярко-желтый (золотой) */
+    --gold: #ffd966; /* Золотой цвет как у слова БАЛАНС */
+    --wood: #1a0d05; /* Темно-коричневый фон */
     --holo: #00ffff;
 }
 
@@ -32,7 +33,7 @@ html, body {
 }
 
 /* ============================================================
-   СТАРТОВЫЙ ЭКРАН (ДЛЯ АКТИВАЦИИ ЗВУКА)
+   СТАРТОВЫЙ ЭКРАН
    ============================================================ */
 #startScreen {
     position: fixed; inset: 0; background: radial-gradient(circle, #112211, #000);
@@ -56,13 +57,13 @@ html, body {
     aspect-ratio: 768 / 1370; 
     width: 100vw;
     max-height: 100dvh; 
-    background: url('bg.png?v=888888') no-repeat center center;
+    background: url('bg.png?v=999999') no-repeat center center;
     background-size: 100% 100%; 
     overflow: hidden;
 }
 
 /* ============================================================
-   МАГИЯ (ОГОНЬ И СВЕТЛЯЧКИ)
+   МАГИЯ (ОГОНЬ)
    ============================================================ */
 .fire-glow {
     position: absolute; 
@@ -97,31 +98,33 @@ html, body {
 }
 
 /* ============================================================
-   ДИНАМИЧЕСКИЕ ЦИФРЫ (ЖЕЛТЫЕ, УМЕНЬШЕННЫЙ ФОН)
+   ДИНАМИЧЕСКИЕ ЦИФРЫ (ЕСТЕСТВЕННЫЙ СТИЛЬ, КАК НА ФОНЕ)
    ============================================================ */
 .ui-val {
     position: absolute;
     display: flex; align-items: center; justify-content: center;
-    background: rgba(10, 5, 0, 0.95); /* Темный фон */
+    background: var(--wood); 
     color: var(--gold);
-    font-family: 'Arial Black', Impact, sans-serif;
+    font-family: Georgia, serif; /* Тот же шрифт, что и на табличках */
     font-weight: 900; 
-    font-size: 3.2vw; 
-    -webkit-text-stroke: 1px #000; /* Черная обводка */
-    text-shadow: 0 0 5px var(--gold), 0 0 10px rgba(255, 215, 0, 0.5); 
+    font-size: 3vw; 
+    text-shadow: 1px 1px 2px #000;
     border-radius: 4px; 
     z-index: 60; 
     overflow: hidden;
-    height: 2.4%; /* Уменьшена высота плашки */
-    border: 1px solid rgba(255, 215, 0, 0.3);
+    height: 2.8%; /* Высота под размер букв */
+    border: 1px solid #3a2211; /* Тонкая рамка под дерево */
 }
 
 /* Позиции цифр */
-.ui-balance { top: 18.2%; left: 31.5%; width: 10.5%; }
-.ui-win { top: 18.2%; right: 13%; width: 7%; } /* Сдвинуто вправо на 5мм */
-.ui-lines { top: 69.2%; left: 20.5%; width: 9%; }
-.ui-bet { top: 69.2%; left: 45.5%; width: 8%; }
-.ui-total { top: 69.5%; right: 19%; width: 8.5%; }
+.ui-balance { top: 18.3%; left: 31.5%; width: 10.5%; }
+/* Выигрыш сдвинут влево на 2 мм */
+.ui-win { top: 18.3%; right: 15.5%; width: 7%; }
+/* Линии и Ставка опущены на 0.5 мм */
+.ui-lines { top: 69.7%; left: 20.5%; width: 9%; }
+.ui-bet { top: 69.7%; left: 45.5%; width: 8%; }
+/* Всего тоже опущено */
+.ui-total { top: 70%; right: 19%; width: 8.5%; }
 
 /* ============================================================
    СЕТКА 5x5
@@ -175,9 +178,9 @@ html, body {
 /* Подсветка выигрышных ячеек */
 .cell.win::before { 
     content: ""; position: absolute; inset: 2px; 
-    border: 3px solid #ffd700; border-radius: 8px; 
-    background: rgba(255, 215, 0, 0.3); 
-    box-shadow: 0 0 20px #ffd700, inset 0 0 15px #ffd700; 
+    border: 3px solid #ffd966; border-radius: 8px; 
+    background: rgba(255, 217, 102, 0.3); 
+    box-shadow: 0 0 20px #ffd966, inset 0 0 15px #ffd966; 
     animation: winPulse .4s infinite alternate; 
     z-index: 30;
 }
@@ -211,14 +214,14 @@ html, body {
 .btn-lang { top: 1.5%; left: 2.5%; width: 9%; height: 4.5%; border-radius: 50%; }
 .btn-sound { top: 1.5%; right: 2.5%; width: 9%; height: 4.5%; border-radius: 50%; }
 
-/* Кнопка Spin (чуть выше и шире для попадания) */
-.btn-spin { top: 69.5%; left: 33%; width: 34%; height: 7.5%; border-radius: 20px; }
+/* Кнопка Spin */
+.btn-spin { top: 69.8%; left: 33%; width: 34%; height: 7.5%; border-radius: 20px; }
 
 .btn-auto { top: 70.5%; right: 10.5%; width: 14%; height: 5.5%; }
-.btn-lines-dec { top: 69.2%; left: 17.5%; width: 4%; height: 3.3%; }
-.btn-lines-inc { top: 69.2%; left: 32.5%; width: 4%; height: 3.3%; }
-.btn-bet-dec { top: 69.2%; left: 43%; width: 4%; height: 3.3%; }
-.btn-bet-inc { top: 69.2%; left: 57.5%; width: 4%; height: 3.3%; }
+.btn-lines-dec { top: 69.7%; left: 17.5%; width: 4%; height: 3.3%; }
+.btn-lines-inc { top: 69.7%; left: 32.5%; width: 4%; height: 3.3%; }
+.btn-bet-dec { top: 69.7%; left: 43%; width: 4%; height: 3.3%; }
+.btn-bet-inc { top: 69.7%; left: 57.5%; width: 4%; height: 3.3%; }
 
 /* УВЕЛИЧЕННЫЕ ЗОНЫ КЛИКА ДЛЯ ЛИНИЙ */
 .btn-l1 { top: 69.5%; left: 9.5%; width: 6%; height: 4%; }
@@ -252,7 +255,7 @@ html, body {
 .modal-btn:active{transform:translateY(3px); box-shadow:none;}
 
 .notif{position:fixed;top:-80px;left:50%;transform:translateX(-50%);background:#2ecc71;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:800;transition:top .3s;z-index:9999999;text-align:center;box-shadow:0 5px 15px rgba(0,0,0,.5);}
-.notif.show{top:15px} .notif.error{background:#e74c3c} .notif.gold{background:linear-gradient(180deg,#ffd700,#b8860b);color:#1a1200}
+.notif.show{top:15px} .notif.error{background:#e74c3c} .notif.gold{background:linear-gradient(180deg,#ffd966,#b8860b);color:#1a1200}
 </style>
 </head>
 <body>
@@ -327,7 +330,7 @@ html, body {
 for (let i = 1; i < 9999; i++) clearTimeout(i);
 
 const REELS = 5, ROWS = 5; 
-const IMG_VER = '?v=888888';
+const IMG_VER = '?v=999999';
 const SYMBOLS = ['gem.png', 'mushroom.png', 'hedgehog.png', 'acorn.png', 'leaf.png', 'coin.png'];
 const WEIGHTS = {'gem.png':5, 'mushroom.png':10, 'hedgehog.png':15, 'acorn.png':25, 'leaf.png':25, 'coin.png':30};
 const PAYTABLE = { 'gem.png': [15, 60, 250], 'mushroom.png': [10, 40, 150], 'hedgehog.png': [8, 25, 80], 'acorn.png': [5, 15, 50], 'leaf.png': [5, 15, 50], 'coin.png': [2, 5, 15] };
@@ -349,7 +352,7 @@ let pendingRisk = 0;
 let spinTimeout = null; 
 
 /* ============================================================
-   🔊 АУДИО ДВИЖОК (ЖЕЛЕЗОБЕТОННЫЙ ДЛЯ iOS)
+   🔊 АУДИО И ТАКТИЛЬНАЯ ОТДАЧА (HAPTICS)
    ============================================================ */
 let audioCtx = null;
 let bgmInterval = null;
@@ -372,19 +375,13 @@ function haptic(type) {
     }
 }
 
-// Инициализация строго по клику
 function initAudio() {
     if (isAudioInit) return;
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     if (AudioContext) {
         audioCtx = new AudioContext();
-        // Принудительное пробуждение контекста на iOS
-        if (audioCtx.state === 'suspended') {
-            audioCtx.resume();
-        }
+        if (audioCtx.state === 'suspended') audioCtx.resume();
         isAudioInit = true;
-        
-        // Включаем фоновую музыку (простую мелодию)
         startBGM();
     }
 }
@@ -408,7 +405,7 @@ function playTone(freq, type, duration, vol=0.1) {
     } catch(e) {}
 }
 
-// Лесная мелодия (последовательность нот)
+// Лесная мелодия
 const bgmNotes = [261.63, 329.63, 392.00, 523.25, 392.00, 329.63]; 
 let bgmIndex = 0;
 
@@ -417,9 +414,9 @@ function startBGM() {
     bgmInterval = setInterval(() => {
         if (!state.sound || !audioCtx) return;
         const note = bgmNotes[bgmIndex % bgmNotes.length];
-        playTone(note, 'sine', 1.5, 0.03); // Мягкий тихий фон
+        playTone(note, 'sine', 1.5, 0.03); 
         bgmIndex++;
-    }, 800); // Нота каждые 0.8 сек
+    }, 800); 
 }
 
 function stopBGM() {
@@ -445,24 +442,6 @@ function toggleSound() {
 }
 
 /* ============================================================
-   ЯЗЫКИ
-   ============================================================ */
-const langs = ['ru', 'uk', 'en'];
-const locales = {
-    ru: { spin: 'КРУТИТЬ', stop: 'СТОП', win: 'ВЫИГРЫШ: +', noMoney: 'Мало монет!', lines: 'Линий', bet: 'Ставка' },
-    uk: { spin: 'КРУТИТИ', stop: 'СТОП', win: 'ВИГРАШ: +', noMoney: 'Мало монет!', lines: 'Ліній', bet: 'Ставка' },
-    en: { spin: 'SPIN', stop: 'STOP', win: 'WIN: +', noMoney: 'Not enough coins!', lines: 'Lines', bet: 'Bet' }
-};
-
-function cycleLang() {
-    let idx = langs.indexOf(state.lang);
-    idx = (idx + 1) % langs.length;
-    state.lang = langs[idx];
-    haptic('light'); sfx.click();
-    notif('Language: ' + state.lang.toUpperCase());
-}
-
-/* ============================================================
    ЛОГИКА ИГРЫ
    ============================================================ */
 const reelsEl = document.getElementById('reels');
@@ -476,6 +455,15 @@ const randSym = () => POOL[Math.floor(Math.random()*POOL.length)];
 const totalBet = () => state.lines * state.betPerLine;
 const openModal = (id) => { $(id).classList.add('active'); haptic('light'); sfx.click(); };
 const closeModal = (id) => { $(id).classList.remove('active'); };
+
+function cycleLang() {
+    const langs = ['ru', 'uk', 'en'];
+    let idx = langs.indexOf(state.lang);
+    idx = (idx + 1) % langs.length;
+    state.lang = langs[idx];
+    haptic('light'); sfx.click();
+    notif('Language: ' + state.lang.toUpperCase());
+}
 
 function showActiveLines() {
     overlay.innerHTML = '';
@@ -512,7 +500,7 @@ function setLines(num) {
     updateUI(); 
     haptic('select');
     sfx.click();
-    notif(locales[state.lang].lines + ': ' + num);
+    notif('Линий: ' + num);
     showActiveLines();
 }
 
@@ -597,7 +585,7 @@ function stopReelAnim(r, final5) {
 async function startSpin() {
     if (isSpinning) return;
     if (state.balance < totalBet()) { 
-        notif(locales[state.lang].noMoney, 'error'); 
+        notif('Мало монет!', 'error'); 
         haptic('error');
         sfx.lose();
         return; 
@@ -653,7 +641,7 @@ async function requestStop(pregeneratedGrid) {
         if (isFreeSpin) total *= 2;
         state.balance += total; 
         $('winVal').textContent = fmt(total); 
-        notif(locales[state.lang].win + fmt(total), 'gold');
+        notif('Выигрыш: +' + fmt(total), 'gold');
         
         winCells.forEach(cell => {
             const el = tracks[cell.r].children[cell.c];
@@ -748,7 +736,7 @@ function claimDaily() {
 
 // Инициализация кнопок
 $('startBtn').onclick = () => {
-    initAudio(); // Запускаем аудио строго по клику
+    initAudio();
     $('startScreen').classList.add('hidden');
     buildReels();
     haptic('success');
