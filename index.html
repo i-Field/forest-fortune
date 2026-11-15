@@ -8,9 +8,8 @@
 <style>
 :root {
     --text: #f0f4f8;
-    --gold: #ffd966;
-    --mask: #1a0d05;
-    --holo: #00ffcc;
+    --neon: #39ff14; /* Кислотно-зеленый */
+    --holo: #00ffff; /* Бирюзовый для кнопок */
 }
 
 * {
@@ -57,16 +56,18 @@ html, body {
     aspect-ratio: 768 / 1370; 
     width: 100vw;
     max-height: 100dvh; 
-    background: url('bg.png?v=99999') no-repeat center center;
+    background: url('bg.png?v=777777') no-repeat center center;
     background-size: 100% 100%; 
     overflow: hidden;
 }
 
 /* ============================================================
-   МАГИЯ (СВЕТЛЯЧКИ И ОГОНЬ)
+   МАГИЯ (ОГОНЬ СДВИНУТ ВВЕРХ)
    ============================================================ */
 .fire-glow {
-    position: absolute; top: 14.5%; width: 12%; height: 4%;
+    position: absolute; 
+    top: 12.5%; /* Сдвинули вверх на 10 мм */
+    width: 12%; height: 4%;
     background: radial-gradient(circle, rgba(255, 140, 0, 0.8) 0%, transparent 70%);
     mix-blend-mode: screen; pointer-events: none; z-index: 5;
     animation: fireFlicker 1.5s infinite alternate;
@@ -96,20 +97,22 @@ html, body {
 }
 
 /* ============================================================
-   ДИНАМИЧЕСКИЕ ЦИФРЫ (КРУПНЫЕ, ЖИРНЫЕ, КАК В КАЗИНО)
+   ДИНАМИЧЕСКИЕ ЦИФРЫ (КИСЛОТНО-ЗЕЛЕНЫЕ, УМЕНЬШЕННЫЙ ФОН)
    ============================================================ */
 .ui-val {
     position: absolute;
     display: flex; align-items: center; justify-content: center;
-    background: var(--mask); 
-    color: var(--gold);
-    font-family: 'Arial', sans-serif;
+    background: rgba(10, 5, 0, 0.85); /* Полупрозрачный темный фон */
+    color: var(--neon);
+    font-family: 'Arial Black', Impact, sans-serif;
     font-weight: 900; 
-    font-size: 3.5vw; 
-    -webkit-text-stroke: 1.5px #000; /* Жирная обводка */
-    text-shadow: 2px 2px 4px #000;
-    border-radius: 4px; z-index: 60; overflow: hidden;
-    height: 3.2%; 
+    font-size: 3.2vw; 
+    text-shadow: 0 0 5px var(--neon), 0 0 10px var(--neon); /* Неоновое свечение */
+    border-radius: 4px; 
+    z-index: 60; 
+    overflow: hidden;
+    height: 2.5%; /* Уменьшенная высота плашки под буквы */
+    border: 1px solid rgba(57, 255, 20, 0.3); /* Легкая рамка */
 }
 
 /* Позиции цифр */
@@ -189,16 +192,18 @@ html, body {
    ============================================================ */
 .btn-overlay { 
     position: absolute; 
-    z-index: 999999; /* Максимальный приоритет */
+    z-index: 999999; 
     cursor: pointer; 
     border-radius: 8px; 
     pointer-events: auto;
     transition: all 0.2s;
 }
-.btn-overlay:active { 
-    background: rgba(0, 255, 204, 0.15); 
+
+/* Эффект голографической линии при нажатии */
+.btn-overlay:active, .btn-overlay.glow { 
+    background: rgba(0, 255, 255, 0.15); 
     box-shadow: 0 0 15px var(--holo), inset 0 0 10px var(--holo);
-    border: 1px solid var(--holo);
+    border: 2px solid var(--holo); /* Тонкая голографическая линия */
 }
 
 /* Позиции кнопок */
@@ -232,8 +237,8 @@ html, body {
 /* Модалки и Уведомления */
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.9);display:flex;align-items:center;justify-content:center;z-index:1000000;opacity:0;pointer-events:none;transition:opacity .2s;padding:15px}
 .modal.active{opacity:1;pointer-events:auto}
-.modal-box{background:linear-gradient(180deg,#1a2e1a,#0a1208);border:2px solid var(--gold);border-radius:14px;padding:20px;max-width:340px;width:100%;text-align:center;color:#fff;box-shadow:0 10px 30px rgba(0,0,0,0.8);}
-.modal-title{font-size:20px;font-weight:900;color:var(--gold);margin-bottom:15px;font-family:Georgia,serif;}
+.modal-box{background:linear-gradient(180deg,#1a2e1a,#0a1208);border:2px solid #ffd966;border-radius:14px;padding:20px;max-width:340px;width:100%;text-align:center;color:#fff;box-shadow:0 10px 30px rgba(0,0,0,0.8);}
+.modal-title{font-size:20px;font-weight:900;color:#ffd966;margin-bottom:15px;font-family:Georgia,serif;}
 .modal-text{font-size:14px;color:#ccc;margin-bottom:15px;line-height:1.4;}
 .modal-close{background:#576574;color:#fff;border:none;padding:12px;border-radius:8px;font-weight:800;margin-top:15px;width:100%;font-size:14px;}
 .modal-btns{display:flex;flex-direction:column;gap:8px;}
@@ -314,8 +319,11 @@ html, body {
 <div class="notif" id="notif"></div>
 
 <script>
+// ПРИНУДИТЕЛЬНАЯ ОЧИСТКА ВСЕХ ТАЙМЕРОВ ПРИ ЗАГРУЗКЕ (Убирает самокрут)
+for (let i = 1; i < 9999; i++) clearTimeout(i);
+
 const REELS = 5, ROWS = 5; 
-const IMG_VER = '?v=99999';
+const IMG_VER = '?v=777777';
 const SYMBOLS = ['gem.png', 'mushroom.png', 'hedgehog.png', 'acorn.png', 'leaf.png', 'coin.png'];
 const WEIGHTS = {'gem.png':5, 'mushroom.png':10, 'hedgehog.png':15, 'acorn.png':25, 'leaf.png':25, 'coin.png':30};
 const PAYTABLE = { 'gem.png': [15, 60, 250], 'mushroom.png': [10, 40, 150], 'hedgehog.png': [8, 25, 80], 'acorn.png': [5, 15, 50], 'leaf.png': [5, 15, 50], 'coin.png': [2, 5, 15] };
@@ -605,7 +613,7 @@ async function startSpin() {
     updateUI(); 
     $('btnRiskUI').classList.remove('active-risk');
     overlay.innerHTML = '';
-    document.querySelectorAll('.cell').forEach(c => c.classList.remove('win')); // Убираем старую подсветку
+    document.querySelectorAll('.cell').forEach(c => c.classList.remove('win')); 
     
     haptic('medium');
     sfx.spinStart();
@@ -628,7 +636,7 @@ async function requestStop(pregeneratedGrid) {
     await Promise.all(tracks.map((tr, i) => stopReelAnim(i, finalGrid[i])));
     
     let total = 0, scatterCount = 0;
-    const winCells = []; // Массив для выигрышных ячеек
+    const winCells = []; 
     
     for(let r=0; r<REELS; r++) for(let c=0; c<ROWS; c++) if(finalGrid[r][c] === 'mushroom.png') scatterCount++;
 
@@ -640,7 +648,6 @@ async function requestStop(pregeneratedGrid) {
         for(let i=1; i<REELS; i++) { if(syms[i] === firstSym || syms[i] === 'gem.png') count++; else break; }
         if(count >= 3) {
             total += PAYTABLE[firstSym][count-3] * state.betPerLine;
-            // Запоминаем координаты для подсветки
             for(let i=0; i<count; i++) winCells.push({r: line[i][0], c: line[i][1]});
         }
     });
@@ -651,7 +658,6 @@ async function requestStop(pregeneratedGrid) {
         $('winVal').textContent = fmt(total); 
         notif(locales[state.lang].win + fmt(total), 'gold');
         
-        // ПОДСВЕТКА ВЫИГРЫШНЫХ ЯЧЕЕК
         winCells.forEach(cell => {
             const el = tracks[cell.r].children[cell.c];
             if(el) el.classList.add('win');
@@ -751,6 +757,14 @@ $('startBtn').onclick = () => {
     haptic('success');
     sfx.click();
 };
+
+// Добавляем эффект голографической вспышки для ВСЕХ кнопок
+document.querySelectorAll('.btn-overlay').forEach(btn => {
+    btn.addEventListener('touchstart', function() {
+        this.classList.add('glow');
+        setTimeout(() => this.classList.remove('glow'), 300);
+    });
+});
 
 $('spinBtn').onclick = (e) => { 
     e.preventDefault(); e.stopPropagation();
