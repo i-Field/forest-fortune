@@ -72,14 +72,14 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
     white-space: nowrap;
 }
 
-/* Баланс и Выигрыш - ОГРОМНЫЕ */
-.ui-balance { top: 18.05%; left: 29%; width: 16%; font-size: 5.2vw; }
-.ui-win { top: 18.05%; right: 13%; width: 12%; font-size: 5.2vw; }
+/* Баланс и Выигрыш (Большие + подняты на 0.15мм) */
+.ui-balance { top: calc(18.05% - 1px); left: 29%; width: 16%; font-size: 5.2vw; }
+.ui-win { top: calc(18.05% - 1px); right: 13%; width: 12%; font-size: 5.2vw; }
 
-/* Линии, Ставка, Всего - Стандартные (чуть крупнее обычного) */
-.ui-lines { top: 68.95%; left: 20.5%; width: 9.5%; font-size: 4.2vw; }
-.ui-bet { top: 68.95%; left: 45%; width: 9%; font-size: 4.2vw; }
-.ui-total { top: 68.8%; right: 20%; width: 9%; font-size: 4.2vw; } 
+/* Линии, Ставка, Всего (Средние + подняты на 0.15мм) */
+.ui-lines { top: calc(68.95% - 1px); left: 20.5%; width: 9.5%; font-size: 4.2vw; }
+.ui-bet { top: calc(68.95% - 1px); left: 45%; width: 9%; font-size: 4.2vw; }
+.ui-total { top: calc(68.8% - 1px); right: 20%; width: 9%; font-size: 4.2vw; } 
 
 /* СЕТКА 5x5 */
 .reels-frame { position: absolute; top: 26.7%; left: 14.5%; right: 14.5%; height: 40.8%; background: #0d2112; border-radius: 4px; overflow: hidden; z-index: 10; }
