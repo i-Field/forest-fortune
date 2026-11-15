@@ -31,51 +31,50 @@ html, body {
 }
 
 /* ============================================================
-   ГЛАВНЫЙ КОНТЕЙНЕР (ЖЕСТКИЕ ПРОПОРЦИИ)
+   АРХИТЕКТУРА: ЖЕСТКИЕ ПРОПОРЦИИ КАРТИНКИ
    ============================================================ */
 .game-board {
     position: relative;
-    /* Соотношение сторон твоей картинки (ширина 768, высота 1370) */
     aspect-ratio: 768 / 1370; 
     width: 100vw;
     max-height: 100dvh; 
-    background: url('bg.png?v=9999') no-repeat center center;
+    background: url('bg.png?v=10000') no-repeat center center;
     background-size: 100% 100%; 
     overflow: hidden;
 }
 
 /* ============================================================
-   ДИНАМИЧЕСКИЕ ЦИФРЫ (ТОЧНО ПОВЕРХ СТАРЫХ)
+   ЦИФРЫ (ИДЕАЛЬНО ПОВЕРХ СТАРЫХ)
    ============================================================ */
 .ui-val {
     position: absolute;
     display: flex; align-items: center; justify-content: center;
-    background: #1c0d03; /* Темное дерево */
+    background: #1c0d03; /* Темное дерево, перекрывает старые цифры */
     color: #ffd966;
     font-weight: 900;
     font-size: 2.8vw;
     text-shadow: 1px 1px 2px #000;
     border-radius: 4px;
-    z-index: 50;
+    z-index: 60;
     box-shadow: inset 0 0 8px rgba(0,0,0,1);
 }
 
-/* Верхние цифры (сдвинуты идеально в окошки) */
-.ui-balance { top: 18.5%; left: 23.2%; width: 11%; height: 3.2%; }
-.ui-win { top: 18.5%; right: 26%; width: 6.5%; height: 3.2%; }
+/* Верхние цифры (Баланс и Выигрыш) */
+.ui-balance { top: 18.3%; left: 23.2%; width: 11%; height: 3.2%; }
+.ui-win { top: 18.3%; right: 26%; width: 6.5%; height: 3.2%; }
 
-/* Нижние цифры */
-.ui-lines { top: 65.8%; left: 19.5%; width: 7.5%; height: 3.2%; }
-.ui-bet { top: 65.8%; left: 45.5%; width: 7.5%; height: 3.2%; }
-.ui-total { top: 65.8%; right: 17.8%; width: 7.5%; height: 3.2%; }
+/* Нижние цифры (Линии, Ставка, Всего) */
+.ui-lines { top: 65.6%; left: 19.5%; width: 7.5%; height: 3.2%; }
+.ui-bet { top: 65.6%; left: 45.5%; width: 7.5%; height: 3.2%; }
+.ui-total { top: 65.6%; right: 17.8%; width: 7.5%; height: 3.2%; }
 
 /* ============================================================
-   СЕТКА 5x5 (ПЕРЕКРЫВАЕТ 6-й РЯД)
+   СЕТКА 5x5 (ПЕРЕКРЫВАЕТ 6-Й РЯД С КАРТИНКИ)
    ============================================================ */
 .reels-frame {
     position: absolute;
-    top: 24.2%; left: 13.8%; right: 13.8%; 
-    height: 41%; /* Высота увеличена, чтобы закрыть нарисованный 6-й ряд */
+    top: 24.2%; left: 13.6%; right: 13.6%; 
+    height: 40.8%; /* Высота увеличена, чтобы закрыть 6-й ряд */
     background: #0d2112;
     border-radius: 4px;
     overflow: hidden; 
@@ -83,12 +82,12 @@ html, body {
     box-shadow: inset 0 0 20px #000;
 }
 
-/* ЗАГЛУШКА СНИЗУ (гарантия, что ничего не вылезет) */
+/* Страховка снизу (гарантия, что ничего не вылезет) */
 .reels-frame::after {
     content: '';
     position: absolute;
     bottom: 0; left: 0; right: 0;
-    height: 5px;
+    height: 2px;
     background: #0d2112;
     z-index: 15;
     pointer-events: none;
@@ -132,7 +131,7 @@ html, body {
 .lines-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 20; }
 
 /* ============================================================
-   НЕВИДИМЫЕ КНОПКИ
+   КНОПКИ (ПОДНЯТЫ, С МАКСИМАЛЬНЫМ Z-INDEX)
    ============================================================ */
 .btn-overlay { 
     position: absolute; 
@@ -147,13 +146,13 @@ html, body {
 .btn-lang { top: 1.5%; left: 2.5%; width: 9%; height: 4.5%; border-radius: 50%; }
 .btn-sound { top: 1.5%; right: 2.5%; width: 9%; height: 4.5%; border-radius: 50%; }
 
-/* Кнопка Spin */
+/* Кнопка Spin (Только зона клика) */
 .btn-spin { top: 69.5%; left: 34%; width: 32%; height: 6.5%; border-radius: 20px; }
 
 /* Кнопка Auto */
 .btn-auto { top: 70%; right: 10.5%; width: 14%; height: 5.5%; }
 
-/* Стрелки линий и ставки */
+/* Стрелки линий и ставки (Опущены ровно в окошки) */
 .btn-lines-dec { top: 66.2%; left: 15%; width: 4%; height: 3.2%; }
 .btn-lines-inc { top: 66.2%; left: 29%; width: 4%; height: 3.2%; }
 .btn-bet-dec { top: 66.2%; left: 41.5%; width: 4%; height: 3.2%; }
@@ -167,7 +166,7 @@ html, body {
 .btn-l15 { top: 69.5%; left: 32.5%; width: 4.5%; height: 3.5%; }
 .btn-l21 { top: 69.5%; left: 38%; width: 4.5%; height: 3.5%; }
 
-/* НИЖНИЕ КНОПКИ (Подняты, работают) */
+/* НИЖНИЕ КНОПКИ (Подняты, z-index максимальный) */
 .btn-action { top: 79.5%; width: 11%; height: 5.5%; z-index: 99999; }
 .btn-wheel { left: 2.5%; }
 .btn-shop { left: 14.5%; }
@@ -261,7 +260,7 @@ html, body {
 
 <script>
 const REELS = 5, ROWS = 5; 
-const IMG_VER = '?v=9999';
+const IMG_VER = '?v=10000';
 const SYMBOLS = ['gem.png', 'mushroom.png', 'hedgehog.png', 'acorn.png', 'leaf.png', 'coin.png'];
 const WEIGHTS = {'gem.png':5, 'mushroom.png':10, 'hedgehog.png':15, 'acorn.png':25, 'leaf.png':25, 'coin.png':30};
 const PAYTABLE = { 'gem.png': [15, 60, 250], 'mushroom.png': [10, 40, 150], 'hedgehog.png': [8, 25, 80], 'acorn.png': [5, 15, 50], 'leaf.png': [5, 15, 50], 'coin.png': [2, 5, 15] };
@@ -278,7 +277,7 @@ const LINE_COLORS = ['#ff3b30','#ff9500','#ffcc00','#34c759','#00c7be','#30b0ff'
 const POOL=[];Object.entries(WEIGHTS).forEach(([s,w])=>{for(let i=0;i<w;i++)POOL.push(s)});
 
 let state = { balance: 1120, betPerLine: 1, lines: 15, lastDaily: 0, sound: true, lang: 'ru' };
-let isSpinning = false, stopRequested = false, cellH = 0;
+let isSpinning = false, stopRequested = false;
 let freeSpins = 0, isFreeSpin = false;
 let pendingRisk = 0;
 
