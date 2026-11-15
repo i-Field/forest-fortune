@@ -8,8 +8,8 @@
 <style>
 :root {
     --text: #f0f4f8;
-    --neon: #39ff14; /* Кислотно-зеленый */
-    --holo: #00ffff; /* Бирюзовый для кнопок */
+    --gold: #ffd700; /* Ярко-желтый (золотой) */
+    --holo: #00ffff;
 }
 
 * {
@@ -32,7 +32,7 @@ html, body {
 }
 
 /* ============================================================
-   СТАРТОВЫЙ ЭКРАН
+   СТАРТОВЫЙ ЭКРАН (ДЛЯ АКТИВАЦИИ ЗВУКА)
    ============================================================ */
 #startScreen {
     position: fixed; inset: 0; background: radial-gradient(circle, #112211, #000);
@@ -56,17 +56,17 @@ html, body {
     aspect-ratio: 768 / 1370; 
     width: 100vw;
     max-height: 100dvh; 
-    background: url('bg.png?v=777777') no-repeat center center;
+    background: url('bg.png?v=888888') no-repeat center center;
     background-size: 100% 100%; 
     overflow: hidden;
 }
 
 /* ============================================================
-   МАГИЯ (ОГОНЬ СДВИНУТ ВВЕРХ)
+   МАГИЯ (ОГОНЬ И СВЕТЛЯЧКИ)
    ============================================================ */
 .fire-glow {
     position: absolute; 
-    top: 12.5%; /* Сдвинули вверх на 10 мм */
+    top: 12.5%; 
     width: 12%; height: 4%;
     background: radial-gradient(circle, rgba(255, 140, 0, 0.8) 0%, transparent 70%);
     mix-blend-mode: screen; pointer-events: none; z-index: 5;
@@ -97,27 +97,28 @@ html, body {
 }
 
 /* ============================================================
-   ДИНАМИЧЕСКИЕ ЦИФРЫ (КИСЛОТНО-ЗЕЛЕНЫЕ, УМЕНЬШЕННЫЙ ФОН)
+   ДИНАМИЧЕСКИЕ ЦИФРЫ (ЖЕЛТЫЕ, УМЕНЬШЕННЫЙ ФОН)
    ============================================================ */
 .ui-val {
     position: absolute;
     display: flex; align-items: center; justify-content: center;
-    background: rgba(10, 5, 0, 0.85); /* Полупрозрачный темный фон */
-    color: var(--neon);
+    background: rgba(10, 5, 0, 0.95); /* Темный фон */
+    color: var(--gold);
     font-family: 'Arial Black', Impact, sans-serif;
     font-weight: 900; 
     font-size: 3.2vw; 
-    text-shadow: 0 0 5px var(--neon), 0 0 10px var(--neon); /* Неоновое свечение */
+    -webkit-text-stroke: 1px #000; /* Черная обводка */
+    text-shadow: 0 0 5px var(--gold), 0 0 10px rgba(255, 215, 0, 0.5); 
     border-radius: 4px; 
     z-index: 60; 
     overflow: hidden;
-    height: 2.5%; /* Уменьшенная высота плашки под буквы */
-    border: 1px solid rgba(57, 255, 20, 0.3); /* Легкая рамка */
+    height: 2.4%; /* Уменьшена высота плашки */
+    border: 1px solid rgba(255, 215, 0, 0.3);
 }
 
 /* Позиции цифр */
 .ui-balance { top: 18.2%; left: 31.5%; width: 10.5%; }
-.ui-win { top: 18.2%; right: 18%; width: 7%; }
+.ui-win { top: 18.2%; right: 13%; width: 7%; } /* Сдвинуто вправо на 5мм */
 .ui-lines { top: 69.2%; left: 20.5%; width: 9%; }
 .ui-bet { top: 69.2%; left: 45.5%; width: 8%; }
 .ui-total { top: 69.5%; right: 19%; width: 8.5%; }
@@ -174,9 +175,9 @@ html, body {
 /* Подсветка выигрышных ячеек */
 .cell.win::before { 
     content: ""; position: absolute; inset: 2px; 
-    border: 3px solid #ffd966; border-radius: 8px; 
-    background: rgba(255, 217, 102, 0.3); 
-    box-shadow: 0 0 20px #ffd966, inset 0 0 15px #ffd966; 
+    border: 3px solid #ffd700; border-radius: 8px; 
+    background: rgba(255, 215, 0, 0.3); 
+    box-shadow: 0 0 20px #ffd700, inset 0 0 15px #ffd700; 
     animation: winPulse .4s infinite alternate; 
     z-index: 30;
 }
@@ -203,13 +204,16 @@ html, body {
 .btn-overlay:active, .btn-overlay.glow { 
     background: rgba(0, 255, 255, 0.15); 
     box-shadow: 0 0 15px var(--holo), inset 0 0 10px var(--holo);
-    border: 2px solid var(--holo); /* Тонкая голографическая линия */
+    border: 2px solid var(--holo); 
 }
 
 /* Позиции кнопок */
 .btn-lang { top: 1.5%; left: 2.5%; width: 9%; height: 4.5%; border-radius: 50%; }
 .btn-sound { top: 1.5%; right: 2.5%; width: 9%; height: 4.5%; border-radius: 50%; }
-.btn-spin { top: 70%; left: 34%; width: 32%; height: 6.5%; border-radius: 20px; }
+
+/* Кнопка Spin (чуть выше и шире для попадания) */
+.btn-spin { top: 69.5%; left: 33%; width: 34%; height: 7.5%; border-radius: 20px; }
+
 .btn-auto { top: 70.5%; right: 10.5%; width: 14%; height: 5.5%; }
 .btn-lines-dec { top: 69.2%; left: 17.5%; width: 4%; height: 3.3%; }
 .btn-lines-inc { top: 69.2%; left: 32.5%; width: 4%; height: 3.3%; }
@@ -237,8 +241,8 @@ html, body {
 /* Модалки и Уведомления */
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.9);display:flex;align-items:center;justify-content:center;z-index:1000000;opacity:0;pointer-events:none;transition:opacity .2s;padding:15px}
 .modal.active{opacity:1;pointer-events:auto}
-.modal-box{background:linear-gradient(180deg,#1a2e1a,#0a1208);border:2px solid #ffd966;border-radius:14px;padding:20px;max-width:340px;width:100%;text-align:center;color:#fff;box-shadow:0 10px 30px rgba(0,0,0,0.8);}
-.modal-title{font-size:20px;font-weight:900;color:#ffd966;margin-bottom:15px;font-family:Georgia,serif;}
+.modal-box{background:linear-gradient(180deg,#1a2e1a,#0a1208);border:2px solid var(--gold);border-radius:14px;padding:20px;max-width:340px;width:100%;text-align:center;color:#fff;box-shadow:0 10px 30px rgba(0,0,0,0.8);}
+.modal-title{font-size:20px;font-weight:900;color:var(--gold);margin-bottom:15px;font-family:Georgia,serif;}
 .modal-text{font-size:14px;color:#ccc;margin-bottom:15px;line-height:1.4;}
 .modal-close{background:#576574;color:#fff;border:none;padding:12px;border-radius:8px;font-weight:800;margin-top:15px;width:100%;font-size:14px;}
 .modal-btns{display:flex;flex-direction:column;gap:8px;}
@@ -248,7 +252,7 @@ html, body {
 .modal-btn:active{transform:translateY(3px); box-shadow:none;}
 
 .notif{position:fixed;top:-80px;left:50%;transform:translateX(-50%);background:#2ecc71;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:800;transition:top .3s;z-index:9999999;text-align:center;box-shadow:0 5px 15px rgba(0,0,0,.5);}
-.notif.show{top:15px} .notif.error{background:#e74c3c} .notif.gold{background:linear-gradient(180deg,#ffd966,#b8860b);color:#1a1200}
+.notif.show{top:15px} .notif.error{background:#e74c3c} .notif.gold{background:linear-gradient(180deg,#ffd700,#b8860b);color:#1a1200}
 </style>
 </head>
 <body>
@@ -319,11 +323,11 @@ html, body {
 <div class="notif" id="notif"></div>
 
 <script>
-// ПРИНУДИТЕЛЬНАЯ ОЧИСТКА ВСЕХ ТАЙМЕРОВ ПРИ ЗАГРУЗКЕ (Убирает самокрут)
+// Очистка таймеров от старых зависаний
 for (let i = 1; i < 9999; i++) clearTimeout(i);
 
 const REELS = 5, ROWS = 5; 
-const IMG_VER = '?v=777777';
+const IMG_VER = '?v=888888';
 const SYMBOLS = ['gem.png', 'mushroom.png', 'hedgehog.png', 'acorn.png', 'leaf.png', 'coin.png'];
 const WEIGHTS = {'gem.png':5, 'mushroom.png':10, 'hedgehog.png':15, 'acorn.png':25, 'leaf.png':25, 'coin.png':30};
 const PAYTABLE = { 'gem.png': [15, 60, 250], 'mushroom.png': [10, 40, 150], 'hedgehog.png': [8, 25, 80], 'acorn.png': [5, 15, 50], 'leaf.png': [5, 15, 50], 'coin.png': [2, 5, 15] };
@@ -345,10 +349,10 @@ let pendingRisk = 0;
 let spinTimeout = null; 
 
 /* ============================================================
-   🔊 АУДИО И ТАКТИЛЬНАЯ ОТДАЧА (HAPTICS)
+   🔊 АУДИО ДВИЖОК (ЖЕЛЕЗОБЕТОННЫЙ ДЛЯ iOS)
    ============================================================ */
 let audioCtx = null;
-let bgmOsc = null, bgmGain = null;
+let bgmInterval = null;
 let isAudioInit = false;
 
 function haptic(type) {
@@ -368,18 +372,24 @@ function haptic(type) {
     }
 }
 
+// Инициализация строго по клику
 function initAudio() {
     if (isAudioInit) return;
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     if (AudioContext) {
         audioCtx = new AudioContext();
-        if (audioCtx.state === 'suspended') audioCtx.resume();
+        // Принудительное пробуждение контекста на iOS
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
         isAudioInit = true;
+        
+        // Включаем фоновую музыку (простую мелодию)
         startBGM();
     }
 }
 
-function playSound(freq, type, duration, vol=0.1) {
+function playTone(freq, type, duration, vol=0.1) {
     if (!audioCtx || !state.sound) return;
     try {
         if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -398,45 +408,40 @@ function playSound(freq, type, duration, vol=0.1) {
     } catch(e) {}
 }
 
-const sfx = {
-    click: () => playSound(800, 'sine', 0.1, 0.1),
-    spinStart: () => playSound(200, 'sawtooth', 0.5, 0.1),
-    reelStop: () => playSound(400, 'triangle', 0.15, 0.2),
-    win: () => { playSound(523.25, 'sine', 0.3); setTimeout(()=>playSound(659.25, 'sine', 0.3), 100); setTimeout(()=>playSound(783.99, 'sine', 0.4), 200); },
-    lose: () => playSound(150, 'sawtooth', 0.4, 0.1)
-};
+// Лесная мелодия (последовательность нот)
+const bgmNotes = [261.63, 329.63, 392.00, 523.25, 392.00, 329.63]; 
+let bgmIndex = 0;
 
 function startBGM() {
-    if (!audioCtx || !state.sound) return;
-    try {
-        if (bgmOsc) return;
-        bgmOsc = audioCtx.createOscillator();
-        bgmGain = audioCtx.createGain();
-        const lfo = audioCtx.createOscillator();
-        const lfoGain = audioCtx.createGain();
-
-        bgmOsc.type = 'sine';
-        bgmOsc.frequency.value = 110;
-
-        lfo.frequency.value = 0.1;
-        lfoGain.gain.value = 5;
-
-        lfo.connect(lfoGain);
-        lfoGain.connect(bgmOsc.frequency);
-
-        bgmOsc.connect(bgmGain);
-        bgmGain.connect(audioCtx.destination);
-
-        bgmGain.gain.value = 0.02;
-        bgmOsc.start();
-        lfo.start();
-    } catch(e) {}
+    if (!audioCtx || bgmInterval) return;
+    bgmInterval = setInterval(() => {
+        if (!state.sound || !audioCtx) return;
+        const note = bgmNotes[bgmIndex % bgmNotes.length];
+        playTone(note, 'sine', 1.5, 0.03); // Мягкий тихий фон
+        bgmIndex++;
+    }, 800); // Нота каждые 0.8 сек
 }
 
-function toggleBGM() {
-    if (bgmGain && audioCtx) {
-        bgmGain.gain.setTargetAtTime(state.sound ? 0.02 : 0, audioCtx.currentTime, 0.1);
+function stopBGM() {
+    if (bgmInterval) {
+        clearInterval(bgmInterval);
+        bgmInterval = null;
     }
+}
+
+const sfx = {
+    click: () => playTone(800, 'sine', 0.1, 0.15),
+    spinStart: () => playTone(200, 'sawtooth', 0.3, 0.1),
+    reelStop: () => playTone(400, 'triangle', 0.1, 0.2),
+    win: () => { playTone(523.25, 'sine', 0.2, 0.3); setTimeout(()=>playTone(659.25, 'sine', 0.2, 0.3), 100); setTimeout(()=>playTone(783.99, 'sine', 0.3, 0.3), 200); },
+    lose: () => playTone(150, 'sawtooth', 0.3, 0.1)
+};
+
+function toggleSound() { 
+    state.sound = !state.sound; 
+    if(state.sound) { initAudio(); sfx.click(); }
+    haptic('light'); 
+    notif(state.sound ? '🔊 Звук ВКЛ' : '🔇 Звук ВЫКЛ'); 
 }
 
 /* ============================================================
@@ -471,14 +476,6 @@ const randSym = () => POOL[Math.floor(Math.random()*POOL.length)];
 const totalBet = () => state.lines * state.betPerLine;
 const openModal = (id) => { $(id).classList.add('active'); haptic('light'); sfx.click(); };
 const closeModal = (id) => { $(id).classList.remove('active'); };
-
-function toggleSound() { 
-    state.sound = !state.sound; 
-    toggleBGM();
-    haptic('light'); 
-    if(state.sound) sfx.click();
-    notif(state.sound ? '🔊 Звук ВКЛ' : '🔇 Звук ВЫКЛ'); 
-}
 
 function showActiveLines() {
     overlay.innerHTML = '';
@@ -751,14 +748,14 @@ function claimDaily() {
 
 // Инициализация кнопок
 $('startBtn').onclick = () => {
-    initAudio();
+    initAudio(); // Запускаем аудио строго по клику
     $('startScreen').classList.add('hidden');
     buildReels();
     haptic('success');
     sfx.click();
 };
 
-// Добавляем эффект голографической вспышки для ВСЕХ кнопок
+// Эффект голографической вспышки
 document.querySelectorAll('.btn-overlay').forEach(btn => {
     btn.addEventListener('touchstart', function() {
         this.classList.add('glow');
