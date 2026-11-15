@@ -17,21 +17,48 @@
 
 html, body { height: 100%; overflow: hidden; background: #000; display: flex; align-items: center; justify-content: center; font-family: Arial, sans-serif; }
 
-/* СТАРТОВЫЙ ЭКРАН */
+/* ============================================================
+   СТАРТОВЫЙ ЭКРАН (С ПУЛЬСИРУЮЩИМИ ЖИВОТНЫМИ)
+   ============================================================ */
 #startScreen {
     position: fixed; inset: 0; background: radial-gradient(circle, #112211, #000);
-    z-index: 999999; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    z-index: 2147483647; /* Максимальный z-index, чтобы перекрыть всё */
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
     transition: opacity 0.5s;
 }
 #startScreen.hidden { opacity: 0; pointer-events: none; }
-.start-title { font-size: 34px; color: #a8ff78; font-family: Georgia, serif; font-weight: 900; text-shadow: 0 0 20px #2ecc71; margin-bottom: 25px; text-align: center; }
+
+.start-title { 
+    font-size: 34px; color: #a8ff78; font-family: Georgia, serif; font-weight: 900; 
+    text-shadow: 0 0 20px #2ecc71; margin-bottom: 25px; text-align: center;
+}
+
+/* Контейнер для пульсирующих животных */
+.animals-container {
+    display: flex; gap: 20px; margin-bottom: 40px; font-size: 60px;
+}
+.pulse-animal {
+    animation: heartbeat 1.5s infinite ease-in-out;
+    filter: drop-shadow(0 0 15px rgba(46, 204, 113, 0.8));
+}
+.pulse-animal:nth-child(2) { animation-delay: 0.2s; } /* Сдвиг анимации для белки */
+
+@keyframes heartbeat {
+    0% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(46, 204, 113, 0.5)); }
+    50% { transform: scale(1.2); filter: drop-shadow(0 0 25px rgba(168, 255, 120, 1)); }
+    100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(46, 204, 113, 0.5)); }
+}
+
 .start-btn { 
     background: linear-gradient(180deg, #2ecc71, #1a7d43); border: 2px solid #a8ff78;
     color: #fff; padding: 18px 45px; border-radius: 12px; font-size: 22px; font-weight: 900;
     box-shadow: 0 6px 20px rgba(46, 204, 113, 0.6); cursor: pointer; font-family: Georgia, serif;
 }
+.start-btn:active { transform: scale(0.95); }
 
-/* АРХИТЕКТУРА */
+/* ============================================================
+   АРХИТЕКТУРА ИГРОВОГО ПОЛЯ
+   ============================================================ */
 .game-board {
     position: relative; aspect-ratio: 768 / 1370; width: 100vw; max-height: 100dvh; 
     background: url('bg.png?v=55555555') no-repeat center center; background-size: 100% 100%; overflow: hidden;
@@ -55,7 +82,6 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 .ui-win { top: 18.05%; right: 15.5%; width: 7%; }
 .ui-lines { top: 68.95%; left: 20.8%; width: 9%; }
 .ui-bet { top: 68.95%; left: 45.5%; width: 8%; }
-/* "Всего" поднято ровно на 0.1 мм */
 .ui-total { top: 68.8%; right: 20.6%; width: 8.5%; } 
 
 /* СЕТКА 5x5 */
@@ -71,7 +97,9 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 
 .lines-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 20; }
 
-/* КНОПКИ */
+/* ============================================================
+   КНОПКИ И ЗОНЫ КЛИКА
+   ============================================================ */
 .btn-overlay { position: absolute; z-index: 999999; cursor: pointer; border-radius: 8px; pointer-events: auto; }
 .btn-lang { top: 1.5%; left: 2.5%; width: 9%; height: 4.5%; border-radius: 50%; }
 .btn-sound { top: 1.5%; right: 2.5%; width: 9%; height: 4.5%; border-radius: 50%; }
@@ -92,19 +120,13 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 .btn-bet-dec { top: 68.7%; left: 42%; width: 5%; height: 4.5%; background: rgba(0,0,0,0.5); border: 1px solid rgba(255, 217, 102, 0.3); color: #ffd966; display: flex; align-items: center; justify-content: center; font-size: 3vw; font-weight: bold; border-radius: 6px; }
 .btn-bet-inc { top: 68.7%; left: 55.5%; width: 5%; height: 4.5%; background: rgba(0,0,0,0.5); border: 1px solid rgba(255, 217, 102, 0.3); color: #ffd966; display: flex; align-items: center; justify-content: center; font-size: 3vw; font-weight: bold; border-radius: 6px; }
 
-/* Активные цифры линий */
-.line-numbers-container {
-    position: absolute; top: 69.2%; left: 9%; width: 37%; height: 4.5%;
-    display: flex; justify-content: space-around; align-items: center; z-index: 999999;
-}
-.line-num {
-    width: 15%; height: 100%; display: flex; align-items: center; justify-content: center;
-    font-size: 2.8vw; font-weight: bold; color: rgba(255,255,255,0.5);
-    cursor: pointer; border-radius: 4px; transition: 0.2s;
-}
-.line-num.active {
-    color: #ffd966; background: rgba(255, 217, 102, 0.2); box-shadow: 0 0 8px #ffd966; border: 1px solid #ffd966;
-}
+/* НЕВИДИМЫЕ КНОПКИ ПОВЕРХ ЦИФР НА ФОНЕ (1 3 5 9 15 21) */
+.btn-line-1  { top: 69.2%; left: 9.5%;  width: 5%; height: 4%; z-index: 900000; }
+.btn-line-3  { top: 69.2%; left: 15.5%; width: 5%; height: 4%; z-index: 900000; }
+.btn-line-5  { top: 69.2%; left: 21.5%; width: 5%; height: 4%; z-index: 900000; }
+.btn-line-9  { top: 69.2%; left: 27.5%; width: 5%; height: 4%; z-index: 900000; }
+.btn-line-15 { top: 69.2%; left: 33.5%; width: 5%; height: 4%; z-index: 900000; }
+.btn-line-21 { top: 69.2%; left: 39.5%; width: 5%; height: 4%; z-index: 900000; }
 
 /* Нижнее меню */
 .btn-action { top: 80%; width: 11%; height: 5.5%; z-index: 999999; }
@@ -132,8 +154,13 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 
 <audio id="bgMusic" loop><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg"></audio>
 
+<!-- СТАРТОВЫЙ ЭКРАН С АНИМАЦИЕЙ -->
 <div id="startScreen">
     <div class="start-title">FOREST FORTUNE</div>
+    <div class="animals-container">
+        <div class="pulse-animal">🦔</div>
+        <div class="pulse-animal">🐿️</div>
+    </div>
     <button class="start-btn" id="startBtn">ИГРАТЬ 🔊</button>
 </div>
 
@@ -153,33 +180,32 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
         <svg class="lines-overlay" id="linesOverlay"></svg>
     </div>
 
-    <!-- Кнопки управления -->
+    <!-- Верхние кнопки -->
     <div class="btn-overlay btn-lang" onclick="cycleLang()"></div>
     <div class="btn-overlay btn-sound" onclick="toggleSound()"></div>
     
-    <!-- Кнопка Крутить со встроенным стопом -->
+    <!-- Кнопка Крутить и Стоп -->
     <div class="btn-overlay btn-spin" id="spinBtn">
         <div class="stop-visual" id="stopVisual">СТОП</div>
     </div>
     
-    <div class="btn-overlay btn-auto" onclick="toggleAuto()" style="top: 71.8%; right: 10.5%; width: 14%; height: 5.5%;"></div>
+    <div class="btn-overlay" onclick="toggleAuto()" style="top: 71.8%; right: 10.5%; width: 14%; height: 5.5%;"></div>
     
-    <!-- Стрелочки + и - -->
+    <!-- Стрелочки -->
     <div class="btn-overlay btn-lines-dec" id="linesDec">-</div>
     <div class="btn-overlay btn-lines-inc" id="linesInc">+</div>
     <div class="btn-overlay btn-bet-dec" id="betDec">-</div>
     <div class="btn-overlay btn-bet-inc" id="betInc">+</div>
 
-    <!-- Кнопки выбора линий -->
-    <div class="line-numbers-container" id="lineNumbers">
-        <div class="line-num" data-lines="1" onclick="setLines(1)">1</div>
-        <div class="line-num" data-lines="3" onclick="setLines(3)">3</div>
-        <div class="line-num" data-lines="5" onclick="setLines(5)">5</div>
-        <div class="line-num" data-lines="9" onclick="setLines(9)">9</div>
-        <div class="line-num" data-lines="15" onclick="setLines(15)">15</div>
-        <div class="line-num" data-lines="21" onclick="setLines(21)">21</div>
-    </div>
+    <!-- НЕВИДИМЫЕ КНОПКИ ПОВЕРХ ЦИФР НА ФОНЕ -->
+    <div class="btn-overlay btn-line-1" onclick="setLines(1)"></div>
+    <div class="btn-overlay btn-line-3" onclick="setLines(3)"></div>
+    <div class="btn-overlay btn-line-5" onclick="setLines(5)"></div>
+    <div class="btn-overlay btn-line-9" onclick="setLines(9)"></div>
+    <div class="btn-overlay btn-line-15" onclick="setLines(15)"></div>
+    <div class="btn-overlay btn-line-21" onclick="setLines(21)"></div>
 
+    <!-- Нижнее меню -->
     <div class="btn-overlay btn-action btn-wheel" onclick="openModal('wheelModal')"></div>
     <div class="btn-overlay btn-action btn-shop" onclick="openModal('shopModal')"></div>
     <div class="btn-overlay btn-action btn-risk" id="btnRiskUI" onclick="openRiskModal()"></div>
@@ -190,6 +216,7 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
     <div class="btn-overlay btn-action btn-rules" onclick="openModal('paytableModal')"></div>
 </div>
 
+<!-- МОДАЛКИ -->
 <div class="modal" id="wheelModal"><div class="modal-box"><div class="modal-title">🎡 КОЛЕСО</div><div class="modal-text">Крути раз в 24 часа!</div><button class="modal-close" onclick="closeModal('wheelModal')">Закрыть</button></div></div>
 <div class="modal" id="shopModal"><div class="modal-box"><div class="modal-title">⭐ МАГАЗИН</div><div class="modal-text">Покупка звезд (в разработке)</div><button class="modal-close" onclick="closeModal('shopModal')">Закрыть</button></div></div>
 <div class="modal" id="riskModal"><div class="modal-box" style="border-color:#f1c40f;"><div class="modal-title">🃏 РИСК-ИГРА</div><div class="modal-text" id="riskText">Рискнуть?</div><div class="modal-btns"><button class="modal-btn green" onclick="playRisk(true)">ВЫШЕ (x2)</button><button class="modal-btn red" onclick="playRisk(false)">НИЖЕ (x2)</button></div><button class="modal-close" onclick="takeRiskMoney()">ЗАБРАТЬ ВСЁ</button></div></div>
@@ -260,7 +287,7 @@ function initAudio() {
 function playBGM() {
     const bgm = document.getElementById('bgMusic');
     if (bgm && state.sound) {
-        bgm.volume = 0.1; // УМЕНЬШИЛИ ГРОМКОСТЬ МУЗЫКИ (было 0.3)
+        bgm.volume = 0.1; // МУЗЫКА ТИХАЯ
         bgm.play().catch(e => console.log("Ожидание клика..."));
     }
 }
@@ -270,8 +297,8 @@ function stopBGM() {
     if (bgm) bgm.pause();
 }
 
-// УВЕЛИЧИЛИ ГРОМКОСТЬ ЗВУКОВЫХ ЭФФЕКТОВ
-function playTone(freq, type, duration, vol=0.5) {
+// СИЛЬНЫЕ ЗВУКОВЫЕ ЭФФЕКТЫ
+function playTone(freq, type, duration, vol=0.6) {
     if (!audioCtx || !state.sound) return;
     try {
         if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -290,8 +317,8 @@ function playTone(freq, type, duration, vol=0.5) {
 
 const sfx = {
     click: () => playTone(800, 'sine', 0.1, 0.4),
-    spinStart: () => playTone(200, 'sawtooth', 0.3, 0.6), // Сочный старт
-    reelStop: () => playTone(500, 'triangle', 0.15, 0.8), // ОЧЕНЬ ГРОМКИЙ СТОП БАРАБАНА
+    spinStart: () => playTone(200, 'sawtooth', 0.3, 0.6),
+    reelStop: () => playTone(500, 'triangle', 0.15, 0.9), // ОЧЕНЬ ГРОМКИЙ СТОП
     win: () => { playTone(523.25, 'sine', 0.2, 0.6); setTimeout(()=>playTone(659.25, 'sine', 0.2, 0.6), 100); setTimeout(()=>playTone(783.99, 'sine', 0.3, 0.6), 200); },
     lose: () => playTone(150, 'sawtooth', 0.3, 0.2)
 };
@@ -345,12 +372,6 @@ function updateUI() {
     $('linesVal').textContent = state.lines + '/21';
     $('totalBetVal').textContent = fmt(totalBet());
     if(!isSpinning) $('winVal').textContent = '0';
-    
-    // Обновляем активную цифру линий
-    document.querySelectorAll('.line-num').forEach(el => {
-        if (parseInt(el.dataset.lines) === state.lines) el.classList.add('active');
-        else el.classList.remove('active');
-    });
 }
 
 /* ============================================================
@@ -552,7 +573,7 @@ function setLines(num) {
     haptic('select');
     sfx.click();
     notif('Линий: ' + num);
-    showActiveLines();
+    showActiveLines(); // Показываем линии при клике на цифру
 }
 
 function cycleLang() {
