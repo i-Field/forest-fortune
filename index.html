@@ -43,18 +43,18 @@ body {
     position: relative;
     width: 100vw;
     height: 100dvh;
-    background: url('bg.png?v=2200') no-repeat center center;
+    background: url('bg.png?v=2300') no-repeat center center;
     background-size: 100% 100%; 
     overflow: hidden;
 }
 
 /* ============================================================
-   ДИНАМИЧЕСКИЕ ЦИФРЫ (ТОЧНО ПОВЕРХ СТАРЫХ)
+   ДИНАМИЧЕСКИЕ ЦИФРЫ (ПОВЕРХ СТАРЫХ)
    ============================================================ */
 .ui-val {
     position: absolute;
     display: flex; align-items: center; justify-content: center;
-    background: #1c0d03; /* Темное дерево */
+    background: #2b1505; /* Темное дерево */
     color: #ffd966;
     font-weight: 900;
     font-size: 2.8vw;
@@ -64,21 +64,21 @@ body {
     box-shadow: inset 0 0 8px rgba(0,0,0,1);
 }
 
-/* Верхние цифры (опущены и сдвинуты) */
-.ui-balance { top: 18.5%; left: 22.8%; width: 11.2%; height: 3.2%; }
-.ui-win { top: 18.5%; right: 25.5%; width: 7%; height: 3.2%; }
+/* Верхние цифры */
+.ui-balance { top: 18.6%; left: 23.5%; width: 11%; height: 3.2%; }
+.ui-win { top: 18.6%; right: 26%; width: 6.5%; height: 3.2%; }
 
-/* Нижние цифры (опущены ровно в окошки) */
-.ui-lines { top: 66.4%; left: 19.5%; width: 7.5%; height: 3.2%; }
-.ui-bet { top: 66.4%; left: 45.5%; width: 7.5%; height: 3.2%; }
-.ui-total { top: 66.4%; right: 17.8%; width: 7.5%; height: 3.2%; }
+/* Нижние цифры */
+.ui-lines { top: 65.8%; left: 19.5%; width: 7.5%; height: 3.2%; }
+.ui-bet { top: 65.8%; left: 45.5%; width: 7.5%; height: 3.2%; }
+.ui-total { top: 65.8%; right: 17.8%; width: 7.5%; height: 3.2%; }
 
 /* ============================================================
-   СЕТКА 5x5 (ОПУЩЕНА НИЖЕ)
+   СЕТКА 5x5 (ОПУЩЕНА, ЧТОБЫ НЕ ЗАДЕВАТЬ КНОПКИ)
    ============================================================ */
 .reels-frame {
     position: absolute;
-    top: 24.1%; left: 13.8%; right: 13.8%; height: 38.8%; /* Сдвинули вниз и подогнали высоту */
+    top: 24.5%; left: 13.8%; right: 13.8%; height: 37%; /* Высота уменьшена, чтобы не было 6-го ряда */
     background: #0d2112;
     border-radius: 4px;
     overflow: hidden;
@@ -95,7 +95,7 @@ body {
 .lines-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 20; }
 
 /* ============================================================
-   НЕВИДИМЫЕ КНОПКИ (СТРОГО ПО НАРИСОВАННЫМ)
+   НЕВИДИМЫЕ КНОПКИ
    ============================================================ */
 .btn-overlay { 
     position: absolute; 
@@ -106,21 +106,21 @@ body {
 }
 .btn-overlay:active { background: rgba(255,255,255,0.2); }
 
-/* Глобус (Язык) и Звук */
+/* Глобус и Звук */
 .btn-lang { top: 1.5%; left: 2.5%; width: 9%; height: 4.5%; border-radius: 50%; }
 .btn-sound { top: 1.5%; right: 2.5%; width: 9%; height: 4.5%; border-radius: 50%; }
 
-/* Кнопка Spin */
+/* Кнопка Spin (Только зона клика) */
 .btn-spin { top: 69.5%; left: 34%; width: 32%; height: 6.5%; border-radius: 20px; }
 
 /* Кнопка Auto */
 .btn-auto { top: 70%; right: 10.5%; width: 14%; height: 5.5%; }
 
-/* Стрелки линий и ставки (опущены под сеткой) */
-.btn-lines-dec { top: 66.4%; left: 15%; width: 4%; height: 3.2%; }
-.btn-lines-inc { top: 66.4%; left: 29%; width: 4%; height: 3.2%; }
-.btn-bet-dec { top: 66.4%; left: 41.5%; width: 4%; height: 3.2%; }
-.btn-bet-inc { top: 66.4%; left: 56%; width: 4%; height: 3.2%; }
+/* Стрелки линий и ставки */
+.btn-lines-dec { top: 66%; left: 15%; width: 4%; height: 3.2%; }
+.btn-lines-inc { top: 66%; left: 29%; width: 4%; height: 3.2%; }
+.btn-bet-dec { top: 66%; left: 41.5%; width: 4%; height: 3.2%; }
+.btn-bet-inc { top: 66%; left: 56%; width: 4%; height: 3.2%; }
 
 /* Кнопки 1, 3, 5, 9, 15, 21 */
 .btn-l1 { top: 69.5%; left: 10.5%; width: 4.5%; height: 3.5%; }
@@ -130,7 +130,7 @@ body {
 .btn-l15 { top: 69.5%; left: 32.5%; width: 4.5%; height: 3.5%; }
 .btn-l21 { top: 69.5%; left: 38%; width: 4.5%; height: 3.5%; }
 
-/* НИЖНИЕ КНОПКИ (ПРИВЯЗАНЫ К ВЕРХУ, РАБОТАЮТ) */
+/* НИЖНИЕ КНОПКИ (Привязаны к верху, работают) */
 .btn-action { top: 79.5%; width: 11%; height: 5.5%; z-index: 99999; }
 .btn-wheel { left: 2.5%; }
 .btn-shop { left: 14.5%; }
@@ -168,7 +168,7 @@ body {
 
 <div class="game-board" id="gameBoard">
     
-    <!-- Цифры (Только динамические) -->
+    <!-- ТОЛЬКО ДИНАМИЧЕСКИЕ ЦИФРЫ (БЕЗ ТЕКСТА КРУТИТЬ) -->
     <div class="ui-val ui-balance" id="balanceVal">1 120</div>
     <div class="ui-val ui-win" id="winVal">0</div>
     <div class="ui-val ui-lines" id="linesVal">15/21</div>
@@ -224,7 +224,7 @@ body {
 
 <script>
 const REELS = 5, ROWS = 5; 
-const IMG_VER = '?v=2200';
+const IMG_VER = '?v=2300';
 const SYMBOLS = ['gem.png', 'mushroom.png', 'hedgehog.png', 'acorn.png', 'leaf.png', 'coin.png'];
 const WEIGHTS = {'gem.png':5, 'mushroom.png':10, 'hedgehog.png':15, 'acorn.png':25, 'leaf.png':25, 'coin.png':30};
 const PAYTABLE = { 'gem.png': [15, 60, 250], 'mushroom.png': [10, 40, 150], 'hedgehog.png': [8, 25, 80], 'acorn.png': [5, 15, 50], 'leaf.png': [5, 15, 50], 'coin.png': [2, 5, 15] };
