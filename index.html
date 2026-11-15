@@ -9,7 +9,7 @@
 :root {
     --text: #f0f4f8;
     --gold: #ffd966;
-    --mask: #140702; /* Темное дерево для плашек */
+    --mask: #1a0d05; /* Темное дерево для плашек */
 }
 
 * {
@@ -39,13 +39,13 @@ html, body {
     aspect-ratio: 768 / 1370; 
     width: 100vw;
     max-height: 100dvh; 
-    background: url('bg.png?v=9999') no-repeat center center;
+    background: url('bg.png?v=1111') no-repeat center center;
     background-size: 100% 100%; 
     overflow: hidden;
 }
 
 /* ============================================================
-   ДИНАМИЧЕСКИЕ ЦИФРЫ (СДВИНУТЫ ТОЧНО ПО ТВОИМ ММ)
+   ДИНАМИЧЕСКИЕ ЦИФРЫ (СДВИНУТЫ ПО ТВОИМ ММ)
    ============================================================ */
 .ui-val {
     position: absolute;
@@ -62,27 +62,28 @@ html, body {
     overflow: hidden;
 }
 
-/* Верхние цифры */
-.ui-balance { top: 18.2%; left: 27.5%; width: 8.5%; height: 3.2%; }
-.ui-win { top: 17.8%; right: 20.5%; width: 5.5%; height: 3.2%; }
+/* Верхние цифры (Баланс вправо на 10мм, Ноль вправо 10мм и вниз 1мм) */
+.ui-balance { top: 18.2%; left: 27.5%; width: 11%; height: 3.2%; }
+.ui-win { top: 18.3%; right: 19%; width: 7%; height: 3.2%; }
 
-/* Нижние цифры */
-.ui-lines { top: 68.2%; left: 21.5%; width: 7.5%; height: 3.2%; }
-.ui-bet { top: 68.2%; left: 45.5%; width: 7.5%; height: 3.2%; }
-.ui-total { top: 67.7%; right: 20.5%; width: 7.5%; height: 3.2%; }
+/* Нижние цифры (Линии вниз 2мм, вправо 2мм. Всего вниз 2мм, влево) */
+.ui-lines { top: 68.3%; left: 21.5%; width: 8%; height: 3.2%; }
+.ui-bet { top: 68.3%; left: 45.5%; width: 8%; height: 3.2%; }
+.ui-total { top: 68.1%; right: 20%; width: 8%; height: 3.2%; }
 
 /* ============================================================
-   СЕТКА 5x5 (УВЕЛИЧЕНА, БЕЗ ЗЕЛЕНЫХ ПОЛОС)
+   СЕТКА 5x5 (ОПУЩЕНА НА 5 ММ И С ЖЕСТКОЙ ЗАГЛУШКОЙ)
    ============================================================ */
 .reels-frame {
     position: absolute;
-    top: 24.5%; left: 13.6%; right: 13.6%; 
-    height: 41.5%; /* УВЕЛИЧИЛИ ВЫСОТУ, ЧТОБЫ ПЕРЕКРЫТЬ НИЗ */
+    top: 26.5%; left: 13.6%; right: 13.6%; /* Опустили сетку вниз */
+    height: 40.5%; 
     background: #0d2112;
     border-radius: 4px;
     overflow: hidden; 
     z-index: 10;
-    /* Убрали border-bottom, который давал зеленую полосу */
+    /* ЖЕСТКАЯ ЗАГЛУШКА СНИЗУ */
+    border-bottom: 15px solid #0d2112; 
 }
 
 .reels { 
@@ -115,7 +116,7 @@ html, body {
     position: relative; 
     flex-shrink: 0; 
     width: 100%; 
-    height: 20%; /* Жестко 5 рядов */
+    height: 20%; 
 } 
 .cell img { width: 90%; height: 90%; object-fit: contain; filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.5)) drop-shadow(0 2px 2px rgba(0,0,0,0.8)); }
 
@@ -139,27 +140,27 @@ html, body {
 .btn-sound { top: 1.5%; right: 2.5%; width: 9%; height: 4.5%; border-radius: 50%; }
 
 /* Кнопка Spin */
-.btn-spin { top: 69.8%; left: 34%; width: 32%; height: 6.5%; border-radius: 20px; }
+.btn-spin { top: 70%; left: 34%; width: 32%; height: 6.5%; border-radius: 20px; }
 
 /* Кнопка Auto */
-.btn-auto { top: 70.2%; right: 10.5%; width: 14%; height: 5.5%; }
+.btn-auto { top: 70.5%; right: 10.5%; width: 14%; height: 5.5%; }
 
 /* Стрелки линий и ставки */
-.btn-lines-dec { top: 68.2%; left: 16%; width: 4%; height: 3.3%; }
-.btn-lines-inc { top: 68.2%; left: 31%; width: 4%; height: 3.3%; }
-.btn-bet-dec { top: 68.2%; left: 41.5%; width: 4%; height: 3.3%; }
-.btn-bet-inc { top: 68.2%; left: 56%; width: 4%; height: 3.3%; }
+.btn-lines-dec { top: 68.3%; left: 16%; width: 4%; height: 3.3%; }
+.btn-lines-inc { top: 68.3%; left: 31%; width: 4%; height: 3.3%; }
+.btn-bet-dec { top: 68.3%; left: 41.5%; width: 4%; height: 3.3%; }
+.btn-bet-inc { top: 68.3%; left: 56%; width: 4%; height: 3.3%; }
 
 /* Кнопки 1, 3, 5, 9, 15, 21 */
-.btn-l1 { top: 69.8%; left: 10.5%; width: 4.5%; height: 3.5%; }
-.btn-l3 { top: 69.8%; left: 16%; width: 4.5%; height: 3.5%; }
-.btn-l5 { top: 69.8%; left: 21.5%; width: 4.5%; height: 3.5%; }
-.btn-l9 { top: 69.8%; left: 27%; width: 4.5%; height: 3.5%; }
-.btn-l15 { top: 69.8%; left: 32.5%; width: 4.5%; height: 3.5%; }
-.btn-l21 { top: 69.8%; left: 38%; width: 4.5%; height: 3.5%; }
+.btn-l1 { top: 70%; left: 10.5%; width: 4.5%; height: 3.5%; }
+.btn-l3 { top: 70%; left: 16%; width: 4.5%; height: 3.5%; }
+.btn-l5 { top: 70%; left: 21.5%; width: 4.5%; height: 3.5%; }
+.btn-l9 { top: 70%; left: 27%; width: 4.5%; height: 3.5%; }
+.btn-l15 { top: 70%; left: 32.5%; width: 4.5%; height: 3.5%; }
+.btn-l21 { top: 70%; left: 38%; width: 4.5%; height: 3.5%; }
 
 /* НИЖНИЕ КНОПКИ */
-.btn-action { top: 79.8%; width: 11%; height: 5.5%; z-index: 99999; }
+.btn-action { top: 80%; width: 11%; height: 5.5%; z-index: 99999; }
 .btn-wheel { left: 2.5%; }
 .btn-shop { left: 14.5%; }
 .btn-risk { left: 26.5%; }
@@ -252,7 +253,7 @@ html, body {
 
 <script>
 const REELS = 5, ROWS = 5; 
-const IMG_VER = '?v=9999';
+const IMG_VER = '?v=1111';
 const SYMBOLS = ['gem.png', 'mushroom.png', 'hedgehog.png', 'acorn.png', 'leaf.png', 'coin.png'];
 const WEIGHTS = {'gem.png':5, 'mushroom.png':10, 'hedgehog.png':15, 'acorn.png':25, 'leaf.png':25, 'coin.png':30};
 const PAYTABLE = { 'gem.png': [15, 60, 250], 'mushroom.png': [10, 40, 150], 'hedgehog.png': [8, 25, 80], 'acorn.png': [5, 15, 50], 'leaf.png': [5, 15, 50], 'coin.png': [2, 5, 15] };
@@ -268,7 +269,7 @@ const LINE_COLORS = ['#ff3b30','#ff9500','#ffcc00','#34c759','#00c7be','#30b0ff'
 
 const POOL=[];Object.entries(WEIGHTS).forEach(([s,w])=>{for(let i=0;i<w;i++)POOL.push(s)});
 
-// Отключил сохранение в память, чтобы игра не запускалась сама
+// Полностью убрал localStorage, чтобы игра никогда не запускалась сама
 let state = { balance: 1120, betPerLine: 1, lines: 15, lastDaily: 0, sound: true, lang: 'ru' };
 let isSpinning = false, stopRequested = false;
 let freeSpins = 0, isFreeSpin = false;
