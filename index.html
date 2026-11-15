@@ -94,9 +94,9 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 .stop-visual { position: absolute; inset: 0; background: rgba(20, 10, 0, 0.85); border: 2px solid #ffd966; border-radius: 20px; color: #ffd966; font-family: Georgia, serif; font-weight: 900; font-size: 20px; display: none; align-items: center; justify-content: center; box-shadow: 0 0 15px #ffd966; text-shadow: 0 0 5px #ffd966; }
 .btn-auto { top: 73.8%; right: 9%; width: 13%; height: 5.5%; }
 
-/* Кнопка МАКС БЕТ (смещена к центру) */
+/* Кнопка МАКС БЕТ (СДВИНУТА В ЦЕНТР) */
 .btn-maxbet { 
-    top: 92.5%; right: 26%; width: 25%; height: 3.8%; 
+    top: 92.5%; right: 38%; width: 25%; height: 3.8%; 
     background: linear-gradient(270deg, #2ecc71, #00ffff, #2ecc71, #00ffff); background-size: 300% 300%; animation: holoGradient 3s ease infinite;
     border: 1px solid rgba(255,255,255,0.6); border-radius: 20px; color: #fff; font-size: 10px; font-weight: 900; font-family: 'Arial', sans-serif;
     display: flex; align-items: center; justify-content: center; text-align: center;
@@ -108,9 +108,9 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 @keyframes waveShine { 0% { left: -100%; } 100% { left: 200%; } }
 .btn-maxbet:active { transform: translateY(2px) scale(0.95); box-shadow: 0 2px 5px rgba(0,0,0,0.4), 0 0 20px rgba(0, 255, 255, 0.8); }
 
-/* Кнопка ТУРБО (смещена к центру) */
+/* Кнопка ТУРБО (СДВИНУТА В ЦЕНТР) */
 .btn-turbo { 
-    top: 92.5%; right: 13%; width: 11%; height: 3.8%; 
+    top: 92.5%; right: 25%; width: 11%; height: 3.8%; 
     background: rgba(0,0,0,0.6); border: 2px solid #ffd966; border-radius: 20px; 
     display: flex; align-items: center; justify-content: center; font-size: 18px; 
     color: #ffd966; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
@@ -195,9 +195,7 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 </div>
 
 <div class="game-board" id="gameBoard">
-    <!-- ВОЗВРАЩАЕМ ОГОНЬ ВОЗЛЕ ДЖЕКПОТА -->
     <div class="fire-glow fire-left"></div> <div class="fire-glow fire-right"></div>
-    
     <div class="mushroom-glow mush-left"></div> <div class="mushroom-glow mush-right"></div>
     <div class="firefly f1"></div><div class="firefly f2"></div><div class="firefly f3"></div>
     <div class="firefly f4"></div><div class="firefly f5"></div><div class="firefly f6"></div>
@@ -360,7 +358,8 @@ const PAYLINES = [
 const LINE_COLORS = ['#ff3b30','#ff9500','#ffcc00','#34c759','#00c7be','#30b0ff','#5856d6','#af52de','#ff2d95','#ff6b6b','#ffd93d','#6bcf7f','#4ecdc4','#95e1d3','#a8e6cf','#c7ceea','#e2a4d1','#f6d365','#b5eaea','#e0aaff','#ffb4a2'];
 const POOL=[];Object.entries(WEIGHTS).forEach(([s,w])=>{for(let i=0;i<w;i++)POOL.push(s)});
 
-let state = { balance: 0, betPerLine: 1, lines: 15, sound: true, lang: 'ru', jackpot: 50000 };
+// СТАРТОВЫЙ БАЛАНС 100 ДЛЯ ТЕСТОВ
+let state = { balance: 100, betPerLine: 1, lines: 15, sound: true, lang: 'ru', jackpot: 50000 };
 let isSpinning = false, stopRequested = false;
 let freeSpins = 0, isFreeSpin = false;
 let pendingRisk = 0;
@@ -451,7 +450,8 @@ async function loadUserData() {
             updateUI();
         }
     } catch(e) {
-        state.balance = 1000; updateUI();
+        // Если сервер не отвечает, оставляем 100 монет для теста
+        state.balance = 100; updateUI();
     }
 }
 
