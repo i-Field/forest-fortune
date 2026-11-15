@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Forest Fortune 5x5 - Las Vegas Edition</title>
-<!-- ОБЯЗАТЕЛЬНЫЙ СКРИПТ ДЛЯ РАБОТЫ В TELEGRAM -->
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 :root {
@@ -36,9 +35,30 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 .game-board { position: relative; aspect-ratio: 768 / 1370; width: 100vw; max-height: 100dvh; background: url('bg.png?v=55555555') no-repeat center center; background-size: 100% 100%; overflow: hidden; transition: background 0.5s; }
 .game-board.free-spins-mode { background-color: rgba(0, 50, 0, 0.8); background-blend-mode: overlay; }
 
-/* ДЖЕКПОТ UI */
-#jackpotValue { color: #ffd966; text-shadow: 0 0 10px #ffd966, 0 0 20px #ff0000; animation: jackpotPulse 2s infinite alternate; }
-@keyframes jackpotPulse { 0% { transform: scale(1); } 100% { transform: scale(1.05); text-shadow: 0 0 20px #ffd966, 0 0 40px #ff0000; } }
+/* ============================================================
+   ЖИВОЙ ДЖЕКПОТ (ТОЛЬКО ЦИФРЫ ПОВЕРХ ФОНА)
+   ============================================================ */
+#jackpotValue { 
+    position: absolute; 
+    top: 12.5%; /* Идеальная позиция под надписью ДЖЕК ПОТ на твоем фоне */
+    left: 50%; 
+    transform: translateX(-50%); 
+    color: #ffd966; 
+    font-family: 'Arial Black', Impact, sans-serif; 
+    font-size: 5.5vw; 
+    letter-spacing: 2px;
+    z-index: 50; 
+    text-shadow: 0 0 10px #ffd966, 0 0 20px #ff0000, 2px 2px 4px #000;
+    transition: transform 0.1s, color 0.1s;
+}
+#jackpotValue.bump { 
+    animation: jackpotBump 0.3s ease-out;
+}
+@keyframes jackpotBump {
+    0% { transform: translateX(-50%) scale(1); }
+    50% { transform: translateX(-50%) scale(1.15); filter: brightness(1.5); text-shadow: 0 0 20px #ffd966, 0 0 40px #ff0000, 2px 2px 4px #000; }
+    100% { transform: translateX(-50%) scale(1); }
+}
 
 /* ДЕКОРАЦИИ И ОГОНЬ */
 .fire-glow { position: absolute; top: 12.5%; width: 12%; height: 4%; background: radial-gradient(circle, rgba(255, 140, 0, 0.8) 0%, transparent 70%); mix-blend-mode: screen; pointer-events: none; z-index: 5; animation: fireFlicker 1.5s infinite alternate; }
@@ -234,11 +254,8 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
     <div class="firefly f1"></div><div class="firefly f2"></div><div class="firefly f3"></div>
     <div class="firefly f4"></div><div class="firefly f5"></div><div class="firefly f6"></div>
 
-    <!-- ДЖЕКПОТ -->
-    <div style="position: absolute; top: 7.5%; left: 50%; transform: translateX(-50%); width: 60%; text-align: center; font-family: Georgia, serif; font-weight: 900; font-size: 4.5vw; color: #ffd966; z-index: 50; text-shadow: 1px 1px 3px #000;">
-        ДЖЕК ПОТ<br>
-        <span id="jackpotValue">500 000</span>
-    </div>
+    <!-- ТОЛЬКО ЦИФРЫ ДЖЕКПОТА -->
+    <div id="jackpotValue">500 000</div>
 
     <div class="ui-val ui-balance" id="balanceVal">0</div>
     <div class="ui-val ui-win" id="winVal">0</div>
@@ -406,7 +423,8 @@ let spinTimeout = null;
 let riskUsed = false;
 let turboMode = false;
 let autoSpins = 0;
-let stickyWilds = []; // Для фриспинов
+let stickyWilds = []; 
+let totalWinThisRound = 0;
 
 const MAX_BET_LIMIT = 1000;
 
@@ -504,7 +522,7 @@ async function syncSpinWithServer(betAmount, winAmount) {
         });
         if (res.ok) {
             const data = await res.json();
-            state.jackpot = data.jackpot; // Обновляем джекпот с сервера
+            state.jackpot = data.jackpot; 
             if (data.jackpotWon) {
                 state.balance = data.newBalance;
                 showBigWin(data.winAmount);
@@ -624,7 +642,14 @@ function updateUI() {
     $('betVal').textContent = fmt(state.betPerLine); 
     $('linesVal').textContent = state.lines + '/21';
     $('totalBetVal').textContent = fmt(totalBet());
-    $('jackpotValue').textContent = fmt(state.jackpot);
+    
+    // Обновляем живой джекпот
+    const jpEl = $('jackpotValue');
+    if (jpEl) {
+        jpEl.textContent = fmt(state.jackpot);
+        jpEl.classList.add('bump');
+        setTimeout(() => jpEl.classList.remove('bump'), 300);
+    }
     
     if (isFreeSpin) {
         $('freeSpinsCounter').style.display = 'block';
@@ -679,7 +704,6 @@ function stopReelAnim(r, final5) {
             
             setTimeout(() => { 
                 track.style.transition = 'none'; track.style.transform = 'translate3d(0,0,0)'; 
-                // Рендерим финальную сетку
                 track.innerHTML = final5.map(s => `<div class="cell"><img src="${s}${IMG_VER}" onerror="this.style.opacity=0"></div>`).join(''); 
                 haptic('light'); sfx.reelStop();
                 resolve(); 
@@ -700,11 +724,14 @@ async function startSpin() {
     
     state.balance -= totalBet(); 
     isSpinning = true; stopRequested = false; riskUsed = false;
-    stickyWilds = []; // Сбрасываем липкие вилды перед новым спином
+    stickyWilds = []; 
     
     $('winVal').textContent = '0'; $('winVal').classList.remove('has-win');
     $('btnRiskUI').classList.remove('pulse-risk');
     $('stopVisual').style.display = 'flex';
+    
+    // ДЖЕКПОТ РАСТЕТ ПРИ СТАВКЕ
+    state.jackpot += Math.floor(totalBet() * 0.02);
     
     updateUI(); overlay.innerHTML = '';
     document.querySelectorAll('.cell').forEach(c => c.classList.remove('win')); 
@@ -731,7 +758,6 @@ async function requestStop(pregeneratedGrid) {
     let currentGrid = pregeneratedGrid || genGrid(); 
     await Promise.all(tracks.map((tr, i) => stopReelAnim(i, currentGrid[i])));
     
-    // ЗАПУСК КАСКАДОВ
     await runCascades(currentGrid);
     
     isSpinning = false; 
@@ -750,8 +776,6 @@ async function requestStop(pregeneratedGrid) {
     }
 }
 
-let totalWinThisRound = 0;
-
 async function runCascades(grid) {
     let cascadeCount = 0;
     totalWinThisRound = 0;
@@ -760,12 +784,10 @@ async function runCascades(grid) {
         let total = 0, scatterCount = 0;
         const winCells = []; 
         
-        // Считаем скаттеры (только на первом каскаде)
         if (cascadeCount === 0) {
             for(let r=0; r<REELS; r++) for(let c=0; c<ROWS; c++) if(grid[r][c] === 'mushroom.png') scatterCount++;
         }
 
-        // Проверяем линии
         PAYLINES.slice(0, state.lines).forEach(line => {
             const syms = line.map(([r,row])=>grid[r][row]); 
             const firstSym = syms[0]; if(firstSym === 'mushroom.png') return;
@@ -801,7 +823,6 @@ async function runCascades(grid) {
             state.balance += total; 
             $('winVal').textContent = fmt(totalWinThisRound); $('winVal').classList.add('has-win');
             
-            // Подсвечиваем и трясем
             winCells.forEach(cell => { const el = tracks[cell.r].children[cell.c]; if(el) el.classList.add('win'); });
             haptic('success'); sfx.win(); 
             
@@ -811,7 +832,6 @@ async function runCascades(grid) {
                 spawnConfetti();
             }
 
-            // Обработка Sticky Wilds во фриспинах
             if (isFreeSpin) {
                 for(let r=0; r<REELS; r++) {
                     for(let c=0; c<ROWS; c++) {
@@ -822,44 +842,32 @@ async function runCascades(grid) {
                 }
             }
             
-            // Ждем анимацию, затем взрываем и роняем новые
             await new Promise(r => setTimeout(r, turboMode ? 500 : 1200));
             sfx.cascade();
             
-            // Очищаем выигрышные символы
             winCells.forEach(cell => { grid[cell.r][cell.c] = null; });
-            
-            // Применяем Sticky Wilds (возвращаем их обратно)
             stickyWilds.forEach(sw => { grid[sw.r][sw.c] = 'gem.png'; });
             
-            // Падение новых символов
             for(let r=0; r<REELS; r++) {
                 let col = grid[r];
-                // Сдвигаем все не-null вниз
                 let newCol = col.filter(s => s !== null);
                 while (newCol.length < ROWS) { newCol.unshift(randSym()); }
-                // Если есть sticky, принудительно ставим их на место (они не падают)
                 stickyWilds.forEach(sw => { if(sw.r === r) newCol[sw.c] = 'gem.png'; });
                 grid[r] = newCol;
             }
             
-            // Обновляем визуал
             for(let r=0; r<REELS; r++) {
                 const track = tracks[r];
                 track.innerHTML = grid[r].map(s => `<div class="cell"><img src="${s}${IMG_VER}" onerror="this.style.opacity=0"></div>`).join('');
             }
-            
-            // Убираем класс win
             document.querySelectorAll('.cell').forEach(c => c.classList.remove('win'));
             
             cascadeCount++;
         } else {
-            // Нет больше выигрышей, завершаем
             break;
         }
     }
     
-    // Обработка Скаттеров (Колесо / Фриспины) - только если это был первый каскад
     let scatterCount = 0;
     for(let r=0; r<REELS; r++) for(let c=0; c<ROWS; c++) if(grid[r][c] === 'mushroom.png') scatterCount++;
     
@@ -876,7 +884,6 @@ async function runCascades(grid) {
         notif('Повезет в следующий раз!', 'error'); sfx.lose();
     }
 }
-
 
 function genGrid() {
     const g = [];
@@ -925,10 +932,9 @@ function spinFortuneWheel() {
         } else if (prize.type === 'fs') {
             freeSpins = prize.val; notif(`🎉 Колесо: ${prize.val} ФРИСПИНОВ!`, 'gold'); setTimeout(startSpin, 1000);
         } else if (prize.type === 'jackpot') {
-            // Выдаем джекпот локально (сервер синхронизирует)
             state.balance += state.jackpot; notif(`🏆 СУПЕР ПРИЗ! ДЖЕКПОТ +${fmt(state.jackpot)}!`, 'gold');
             showBigWin(state.jackpot);
-            state.jackpot = 50000; // Сброс локально
+            state.jackpot = 50000;
         }
         updateUI(); closeModal('wheelModal'); syncSpinWithServer(0, state.balance);
     }, 5200);
