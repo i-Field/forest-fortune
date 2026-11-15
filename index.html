@@ -56,7 +56,7 @@ html, body {
     aspect-ratio: 768 / 1370; 
     width: 100vw;
     max-height: 100dvh; 
-    background: url('bg.png?v=5555') no-repeat center center;
+    background: url('bg.png?v=6666') no-repeat center center;
     background-size: 100% 100%; 
     overflow: hidden;
 }
@@ -95,7 +95,7 @@ html, body {
 }
 
 /* ============================================================
-   ДИНАМИЧЕСКИЕ ЦИФРЫ (УВЕЛИЧЕНЫ НА 10%, ЖИРНЫЕ)
+   ДИНАМИЧЕСКИЕ ЦИФРЫ (ЖИРНЫЕ, С ОБВОДКОЙ, СДВИНУТЫ)
    ============================================================ */
 .ui-val {
     position: absolute;
@@ -103,25 +103,32 @@ html, body {
     background: var(--mask); 
     color: var(--gold);
     font-weight: 900; 
-    font-size: 2.8vw; /* Увеличено на 10% и сделано жирным */
-    text-shadow: 1px 1px 3px #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000; /* Обводка для читаемости */
+    font-size: 2.8vw;
+    -webkit-text-stroke: 0.5px #000; /* Жирная обводка */
+    text-shadow: 1px 1px 2px #000;
     border-radius: 4px; z-index: 60; overflow: hidden;
     height: 2.7%; 
 }
 
-.ui-balance { top: 18.3%; left: 31.0%; width: 9%; }
-.ui-win { top: 18.6%; right: 16.5%; width: 6%; } /* Опущен на 0.5мм */
-.ui-lines { top: 69.2%; left: 21.5%; width: 7%; }
-.ui-bet { top: 69.2%; left: 45.5%; width: 7%; }
-.ui-total { top: 69.5%; right: 20%; width: 7%; } /* Опущен на 0.5мм */
+/* Баланс +3мм вправо */
+.ui-balance { top: 18.3%; left: 32.5%; width: 9%; }
+/* Выигрыш +2мм вправо, вниз 0.5мм */
+.ui-win { top: 18.8%; right: 15.5%; width: 6%; }
+
+/* Линии и Ставка +2мм вправо */
+.ui-lines { top: 69.2%; left: 23.5%; width: 7%; }
+.ui-bet { top: 69.2%; left: 47.5%; width: 7%; }
+/* Всего на 2мм влево, вниз 0.5мм */
+.ui-total { top: 69.7%; right: 22%; width: 7%; }
 
 /* ============================================================
-   СЕТКА 5x5 (КВАДРАТЫ УМЕНЬШЕНЫ НА 0.25ММ)
+   СЕТКА 5x5 (УМЕНЬШЕНА НА 0.1ММ СО ВСЕХ СТОРОН)
    ============================================================ */
 .reels-frame {
     position: absolute;
-    top: 26.1%; left: 13.6%; right: 13.6%; /* Чуть опустили и подрезали */
-    height: 41.8%; /* Уменьшили высоту, чтобы убрать зазоры сверху и снизу */
+    /* Сдвинули внутрь, чтобы не вылезала за дерево */
+    top: 26.4%; left: 14.0%; right: 14.0%; 
+    height: 41.0%; /* Уменьшили высоту */
     background: #0d2112;
     border-radius: 4px;
     overflow: hidden; 
@@ -186,10 +193,10 @@ html, body {
 .btn-sound { top: 1.5%; right: 2.5%; width: 9%; height: 4.5%; border-radius: 50%; }
 .btn-spin { top: 70%; left: 34%; width: 32%; height: 6.5%; border-radius: 20px; }
 .btn-auto { top: 70.5%; right: 10.5%; width: 14%; height: 5.5%; }
-.btn-lines-dec { top: 69.2%; left: 16%; width: 4%; height: 3.3%; }
-.btn-lines-inc { top: 69.2%; left: 31%; width: 4%; height: 3.3%; }
-.btn-bet-dec { top: 69.2%; left: 41.5%; width: 4%; height: 3.3%; }
-.btn-bet-inc { top: 69.2%; left: 56%; width: 4%; height: 3.3%; }
+.btn-lines-dec { top: 69.2%; left: 17.5%; width: 4%; height: 3.3%; }
+.btn-lines-inc { top: 69.2%; left: 32.5%; width: 4%; height: 3.3%; }
+.btn-bet-dec { top: 69.2%; left: 43%; width: 4%; height: 3.3%; }
+.btn-bet-inc { top: 69.2%; left: 57.5%; width: 4%; height: 3.3%; }
 .btn-l1 { top: 70%; left: 10.5%; width: 4.5%; height: 3.5%; }
 .btn-l3 { top: 70%; left: 16%; width: 4.5%; height: 3.5%; }
 .btn-l5 { top: 70%; left: 21.5%; width: 4.5%; height: 3.5%; }
@@ -288,7 +295,7 @@ html, body {
 
 <script>
 const REELS = 5, ROWS = 5; 
-const IMG_VER = '?v=5555';
+const IMG_VER = '?v=6666';
 const SYMBOLS = ['gem.png', 'mushroom.png', 'hedgehog.png', 'acorn.png', 'leaf.png', 'coin.png'];
 const WEIGHTS = {'gem.png':5, 'mushroom.png':10, 'hedgehog.png':15, 'acorn.png':25, 'leaf.png':25, 'coin.png':30};
 const PAYTABLE = { 'gem.png': [15, 60, 250], 'mushroom.png': [10, 40, 150], 'hedgehog.png': [8, 25, 80], 'acorn.png': [5, 15, 50], 'leaf.png': [5, 15, 50], 'coin.png': [2, 5, 15] };
@@ -313,7 +320,6 @@ let spinTimeout = null;
    🔊 АУДИО И ТАКТИЛЬНАЯ ОТДАЧА (HAPTICS)
    ============================================================ */
 let audioCtx = null;
-let bgmOsc = null, bgmGain = null;
 let isAudioInit = false;
 
 function haptic(type) {
@@ -339,7 +345,7 @@ function initAudio() {
     if (AudioContext) {
         audioCtx = new AudioContext();
         isAudioInit = true;
-        startBGM();
+        // Музыка отключена по твоему запросу
     }
 }
 
@@ -369,36 +375,11 @@ const sfx = {
     lose: () => playSound(150, 'sawtooth', 0.4, 0.1)
 };
 
-function startBGM() {
-    if (!audioCtx) return;
-    try {
-        bgmOsc = audioCtx.createOscillator();
-        bgmGain = audioCtx.createGain();
-        const lfo = audioCtx.createOscillator();
-        const lfoGain = audioCtx.createGain();
-
-        bgmOsc.type = 'sine';
-        bgmOsc.frequency.value = 110;
-
-        lfo.frequency.value = 0.1;
-        lfoGain.gain.value = 5;
-
-        lfo.connect(lfoGain);
-        lfoGain.connect(bgmOsc.frequency);
-
-        bgmOsc.connect(bgmGain);
-        bgmGain.connect(audioCtx.destination);
-
-        bgmGain.gain.value = 0.02;
-        bgmOsc.start();
-        lfo.start();
-    } catch(e) {}
-}
-
-function toggleBGM() {
-    if (bgmGain) {
-        bgmGain.gain.setTargetAtTime(state.sound ? 0.02 : 0, audioCtx.currentTime, 0.1);
-    }
+function toggleSound() { 
+    state.sound = !state.sound; 
+    haptic('light'); 
+    if(state.sound) sfx.click();
+    notif(state.sound ? '🔊 Звук ВКЛ' : '🔇 Звук ВЫКЛ'); 
 }
 
 /* ============================================================
@@ -417,13 +398,6 @@ const openModal = (id) => { $(id).classList.add('active'); haptic('light'); sfx.
 const closeModal = (id) => { $(id).classList.remove('active'); };
 
 function cycleLang() { haptic('light'); sfx.click(); notif('Language: RU'); }
-function toggleSound() { 
-    state.sound = !state.sound; 
-    toggleBGM();
-    haptic('light'); 
-    if(state.sound) sfx.click();
-    notif(state.sound ? '🔊 Звук ВКЛ' : '🔇 Звук ВЫКЛ'); 
-}
 
 function showActiveLines() {
     overlay.innerHTML = '';
