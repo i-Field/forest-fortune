@@ -61,8 +61,8 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 /* Линии, Ставка, Всего */
 .ui-lines { top: calc(68.95% - 1px); left: 20.5%; width: 9.5%; font-size: 4.2vw; }
 .ui-bet { top: calc(68.95% - 1px); left: 45%; width: 9%; font-size: 4.2vw; }
-/* «Всего» сдвинуто вправо */
-.ui-total { top: calc(68.8% - 1px); right: 19.5%; width: 9%; font-size: 4.2vw; } 
+/* «Всего» вернули чуть влево */
+.ui-total { top: calc(68.8% - 1px); right: 20.5%; width: 9%; font-size: 4.2vw; } 
 
 /* СЕТКА 5x5 */
 .reels-frame { position: absolute; top: 26.7%; left: 14.5%; right: 14.5%; height: 40.8%; background: #0d2112; border-radius: 4px; overflow: hidden; z-index: 10; }
@@ -88,15 +88,24 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 
 .btn-auto { top: 73.8%; right: 9%; width: 13%; height: 5.5%; }
 
-/* Кнопка МАКС БЕТ (Внизу по центру) */
+/* Кнопка МАКС БЕТ (Стиль Apple, опущена ниже ряда иконок) */
 .btn-maxbet { 
-    top: 87.5%; left: 50%; transform: translateX(-50%); width: 35%; height: 5%; 
-    background: linear-gradient(180deg, #2ecc71, #1a7d43); border: 2px solid #ffd966; border-radius: 8px;
-    color: #ffd966; font-size: 14px; font-weight: 900; display: flex; align-items: center; justify-content: center; text-align: center;
-    text-shadow: 1px 1px 2px #000; box-shadow: 0 4px 0 #0f3d22; position: absolute; z-index: 999999; cursor: pointer;
-    letter-spacing: 1px;
+    top: 88.5%; left: 50%; transform: translateX(-50%); width: 42%; height: 4.8%; 
+    background: linear-gradient(180deg, #2ecc71, #1a7d43); 
+    border: 1px solid rgba(255,255,255,0.3); 
+    border-radius: 25px; 
+    color: #fff; 
+    font-size: 14px; font-weight: 900; font-family: 'Arial', sans-serif;
+    display: flex; align-items: center; justify-content: center; text-align: center;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5); 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3), inset 0 2px 0 rgba(255,255,255,0.2); 
+    position: absolute; z-index: 999999; cursor: pointer;
+    letter-spacing: 1.5px;
 }
-.btn-maxbet:active { transform: translateX(-50%) translateY(2px); box-shadow: none; }
+.btn-maxbet:active { 
+    transform: translateX(-50%) translateY(2px) scale(0.98); 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1); 
+}
 
 /* УВЕЛИЧЕННЫЕ ПЛЮС И МИНУС */
 .btn-lines-dec { top: 68%; left: 17.5%; width: 8.5%; height: 6.5%; }
@@ -232,7 +241,7 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
     <div class="btn-overlay btn-action btn-bonus" onclick="claimDaily()"></div>
     <div class="btn-overlay btn-action btn-rules" onclick="openModal('paytableModal')"></div>
 
-    <!-- Кнопка МАКС БЕТ (Внизу по центру) -->
+    <!-- Кнопка МАКС БЕТ -->
     <div class="btn-maxbet" onclick="setMaxBet()">МАКС. СТАВКА</div>
 </div>
 
@@ -440,7 +449,6 @@ function buildReels() {
     updateUI();
 }
 
-// ИСПРАВЛЕНО: убрано принудительное обнуление выигрыша
 function updateUI() {
     $('balanceVal').textContent = fmt(state.balance); 
     $('betVal').textContent = fmt(state.betPerLine); 
@@ -512,7 +520,6 @@ async function startSpin() {
     isSpinning = true; 
     stopRequested = false; 
     
-    // Сбрасываем выигрыш только при старте нового спина
     $('winVal').textContent = '0';
     $('winVal').classList.remove('has-win');
     $('btnRiskUI').classList.remove('pulse-risk');
@@ -555,7 +562,6 @@ async function requestStop(pregeneratedGrid) {
         const firstSym = syms[0];
         if(firstSym === 'mushroom.png') return;
         
-        // ИСПРАВЛЕНО: Правильная работа Wild (кристалл заменяет любой символ)
         let targetSym = firstSym;
         if (targetSym === 'gem.png') {
             for (let i = 1; i < REELS; i++) {
@@ -613,7 +619,7 @@ async function requestStop(pregeneratedGrid) {
     }
     
     isSpinning = false; 
-    updateUI(); // Теперь это безопасно, выигрыш не сбросится
+    updateUI(); 
 
     if (freeSpins > 0) { 
         freeSpins--; 
