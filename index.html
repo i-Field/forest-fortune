@@ -25,25 +25,21 @@ html, body {
     height: 100%;
     overflow: hidden;
     background: #000;
-}
-
-body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    color: var(--text);
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100dvh;
 }
 
 /* ============================================================
-   ГЛАВНЫЙ КОНТЕЙНЕР
+   ГЛАВНЫЙ КОНТЕЙНЕР (ЖЕСТКИЕ ПРОПОРЦИИ)
    ============================================================ */
 .game-board {
     position: relative;
+    /* Соотношение сторон твоей картинки (ширина 768, высота 1370) */
+    aspect-ratio: 768 / 1370; 
     width: 100vw;
-    height: 100dvh;
-    background: url('bg.png?v=5000') no-repeat center center;
+    max-height: 100dvh; 
+    background: url('bg.png?v=9999') no-repeat center center;
     background-size: 100% 100%; 
     overflow: hidden;
 }
@@ -54,7 +50,7 @@ body {
 .ui-val {
     position: absolute;
     display: flex; align-items: center; justify-content: center;
-    background: #1c0d03; /* Темное дерево, перекрывает старые цифры */
+    background: #1c0d03; /* Темное дерево */
     color: #ffd966;
     font-weight: 900;
     font-size: 2.8vw;
@@ -64,29 +60,40 @@ body {
     box-shadow: inset 0 0 8px rgba(0,0,0,1);
 }
 
-/* Верхние цифры (сдвинуты ровно в плашки) */
-.ui-balance { top: 18.6%; left: 23.5%; width: 11%; height: 3.2%; }
-.ui-win { top: 18.6%; right: 26%; width: 6.5%; height: 3.2%; }
+/* Верхние цифры (сдвинуты идеально в окошки) */
+.ui-balance { top: 18.5%; left: 23.2%; width: 11%; height: 3.2%; }
+.ui-win { top: 18.5%; right: 26%; width: 6.5%; height: 3.2%; }
 
-/* Нижние цифры (опущены в окошки) */
+/* Нижние цифры */
 .ui-lines { top: 65.8%; left: 19.5%; width: 7.5%; height: 3.2%; }
 .ui-bet { top: 65.8%; left: 45.5%; width: 7.5%; height: 3.2%; }
 .ui-total { top: 65.8%; right: 17.8%; width: 7.5%; height: 3.2%; }
 
 /* ============================================================
-   СЕТКА 5x5 (ОПУЩЕНА И ОБРЕЗАНА СНИЗУ)
+   СЕТКА 5x5 (ПЕРЕКРЫВАЕТ 6-й РЯД)
    ============================================================ */
 .reels-frame {
     position: absolute;
-    top: 25.2%; left: 13.8%; right: 13.8%; height: 35.8%; /* Высоту уменьшил еще сильнее */
+    top: 24.2%; left: 13.8%; right: 13.8%; 
+    height: 41%; /* Высота увеличена, чтобы закрыть нарисованный 6-й ряд */
     background: #0d2112;
     border-radius: 4px;
-    overflow: hidden; /* Жестко обрезает 6-й ряд */
+    overflow: hidden; 
     z-index: 10;
     box-shadow: inset 0 0 20px #000;
 }
 
-/* Сетка */
+/* ЗАГЛУШКА СНИЗУ (гарантия, что ничего не вылезет) */
+.reels-frame::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 5px;
+    background: #0d2112;
+    z-index: 15;
+    pointer-events: none;
+}
+
 .reels { 
     display: grid; 
     grid-template-columns: repeat(5, 1fr); 
@@ -117,7 +124,7 @@ body {
     position: relative; 
     flex-shrink: 0; 
     width: 100%; 
-    height: 20%; /* Жестко 20% = 5 рядов */
+    height: 20%; /* Строго 5 рядов */
 } 
 .cell img { width: 90%; height: 90%; object-fit: contain; filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.5)) drop-shadow(0 2px 2px rgba(0,0,0,0.8)); }
 
@@ -125,7 +132,7 @@ body {
 .lines-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 20; }
 
 /* ============================================================
-   НЕВИДИМЫЕ КНОПКИ (РАБОТАЮТ НА IPHONE)
+   НЕВИДИМЫЕ КНОПКИ
    ============================================================ */
 .btn-overlay { 
     position: absolute; 
@@ -160,7 +167,7 @@ body {
 .btn-l15 { top: 69.5%; left: 32.5%; width: 4.5%; height: 3.5%; }
 .btn-l21 { top: 69.5%; left: 38%; width: 4.5%; height: 3.5%; }
 
-/* НИЖНИЕ КНОПКИ */
+/* НИЖНИЕ КНОПКИ (Подняты, работают) */
 .btn-action { top: 79.5%; width: 11%; height: 5.5%; z-index: 99999; }
 .btn-wheel { left: 2.5%; }
 .btn-shop { left: 14.5%; }
@@ -254,7 +261,7 @@ body {
 
 <script>
 const REELS = 5, ROWS = 5; 
-const IMG_VER = '?v=5000';
+const IMG_VER = '?v=9999';
 const SYMBOLS = ['gem.png', 'mushroom.png', 'hedgehog.png', 'acorn.png', 'leaf.png', 'coin.png'];
 const WEIGHTS = {'gem.png':5, 'mushroom.png':10, 'hedgehog.png':15, 'acorn.png':25, 'leaf.png':25, 'coin.png':30};
 const PAYTABLE = { 'gem.png': [15, 60, 250], 'mushroom.png': [10, 40, 150], 'hedgehog.png': [8, 25, 80], 'acorn.png': [5, 15, 50], 'leaf.png': [5, 15, 50], 'coin.png': [2, 5, 15] };
