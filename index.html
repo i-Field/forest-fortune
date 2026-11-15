@@ -33,7 +33,7 @@ html, body {
 }
 
 /* ============================================================
-   СТАРТОВЫЙ ЭКРАН (ДЛЯ АКТИВАЦИИ ЗВУКА)
+   СТАРТОВЫЙ ЭКРАН
    ============================================================ */
 #startScreen {
     position: fixed; inset: 0; background: radial-gradient(circle, #112211, #000);
@@ -57,7 +57,7 @@ html, body {
     aspect-ratio: 768 / 1370; 
     width: 100vw;
     max-height: 100dvh; 
-    background: url('bg.png?v=11111111') no-repeat center center;
+    background: url('bg.png?v=22222222') no-repeat center center;
     background-size: 100% 100%; 
     overflow: hidden;
 }
@@ -98,12 +98,11 @@ html, body {
 }
 
 /* ============================================================
-   ДИНАМИЧЕСКИЕ ЦИФРЫ (АККУРАТНОЕ ЗАТЕМНЕНИЕ, СДВИГ ВНИЗ)
+   ДИНАМИЧЕСКИЕ ЦИФРЫ
    ============================================================ */
 .ui-val {
     position: absolute;
     display: flex; align-items: center; justify-content: center;
-    /* Мягкий градиент по контуру вместо грубого квадрата */
     background: radial-gradient(ellipse at center, var(--wood) 30%, transparent 100%); 
     color: var(--gold);
     font-family: Georgia, serif; 
@@ -112,17 +111,17 @@ html, body {
     line-height: 1; 
     text-shadow: 1px 1px 3px #000;
     z-index: 60; 
-    height: 3.2%; /* Увеличена высота, чтобы цифры не обрезались */
-    /* Убраны рамки и обрезка */
+    height: 3.2%; 
     overflow: visible; 
 }
 
-/* Точные позиции (опущены на 0.05% = ~0.25 мм) */
+/* Точные позиции */
 .ui-balance { top: 18.40%; left: 31.8%; width: 10.5%; }
 .ui-win { top: 18.40%; right: 15.5%; width: 7%; }
 .ui-lines { top: 69.30%; left: 20.8%; width: 9%; }
 .ui-bet { top: 69.30%; left: 45.5%; width: 8%; }
-.ui-total { top: 69.30%; right: 19.6%; width: 8.5%; }
+/* Всего: поднято на 0.1мм (top уменьшен) и влево на 1мм (right увеличен) */
+.ui-total { top: 69.25%; right: 20.6%; width: 8.5%; } 
 
 /* ============================================================
    СЕТКА 5x5
@@ -327,7 +326,7 @@ html, body {
 for (let i = 1; i < 9999; i++) clearTimeout(i);
 
 const REELS = 5, ROWS = 5; 
-const IMG_VER = '?v=11111111';
+const IMG_VER = '?v=22222222';
 const SYMBOLS = ['gem.png', 'mushroom.png', 'hedgehog.png', 'acorn.png', 'leaf.png', 'coin.png'];
 const WEIGHTS = {'gem.png':5, 'mushroom.png':10, 'hedgehog.png':15, 'acorn.png':25, 'leaf.png':25, 'coin.png':30};
 const PAYTABLE = { 'gem.png': [15, 60, 250], 'mushroom.png': [10, 40, 150], 'hedgehog.png': [8, 25, 80], 'acorn.png': [5, 15, 50], 'leaf.png': [5, 15, 50], 'coin.png': [2, 5, 15] };
