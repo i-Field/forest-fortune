@@ -54,15 +54,15 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 
 /* Баланс и Выигрыш */
 .ui-balance { top: calc(18.05% - 1px); left: 29%; width: 16%; font-size: 5.2vw; }
-.ui-win { top: calc(18.05% - 1px); right: 13%; width: 12%; font-size: 5.2vw; color: #fff; transition: color 0.3s; }
+.ui-win { top: calc(18.05% - 1px); right: 13%; width: 12%; font-size: 5.2vw; color: var(--gold); transition: color 0.3s; }
 .ui-win.has-win { color: #00ffff; text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; animation: winPulseText 0.5s infinite alternate; }
 @keyframes winPulseText { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
 
 /* Линии, Ставка, Всего */
 .ui-lines { top: calc(68.95% - 1px); left: 20.5%; width: 9.5%; font-size: 4.2vw; }
 .ui-bet { top: calc(68.95% - 1px); left: 45%; width: 9%; font-size: 4.2vw; }
-/* «Всего» сдвинуто влево на 3.5% */
-.ui-total { top: calc(68.8% - 1px); right: 23.5%; width: 9%; font-size: 4.2vw; } 
+/* «Всего» сдвинуто влево на 2 мм */
+.ui-total { top: calc(68.8% - 1px); right: 25.5%; width: 9%; font-size: 4.2vw; } 
 
 /* СЕТКА 5x5 */
 .reels-frame { position: absolute; top: 26.7%; left: 14.5%; right: 14.5%; height: 40.8%; background: #0d2112; border-radius: 4px; overflow: hidden; z-index: 10; }
@@ -83,9 +83,19 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 .btn-sound { top: 1.5%; right: 2.5%; width: 9%; height: 4.5%; border-radius: 50%; }
 
 /* Кнопка SPIN */
-.btn-spin { top: 73.5%; left: 34%; width: 32%; height: 7%; border-radius: 20px; }
+.btn-spin { top: 73.5%; left: 35%; width: 30%; height: 7%; border-radius: 20px; }
 .stop-visual { position: absolute; inset: 0; background: rgba(20, 10, 0, 0.85); border: 2px solid #ffd966; border-radius: 20px; color: #ffd966; font-family: Georgia, serif; font-weight: 900; font-size: 20px; display: none; align-items: center; justify-content: center; box-shadow: 0 0 15px #ffd966; text-shadow: 0 0 5px #ffd966; }
-.btn-auto { top: 73.8%; right: 11%; width: 13%; height: 5.5%; }
+
+.btn-auto { top: 73.8%; right: 9%; width: 13%; height: 5.5%; }
+
+/* Кнопка МАКС БЕТ */
+.btn-maxbet { 
+    top: 73.8%; left: 9%; width: 15%; height: 5.5%; 
+    background: linear-gradient(180deg, #2ecc71, #1a7d43); border: 2px solid #ffd966; border-radius: 8px;
+    color: #ffd966; font-size: 11px; font-weight: 900; display: flex; align-items: center; justify-content: center; text-align: center;
+    text-shadow: 1px 1px 2px #000; box-shadow: 0 4px 0 #0f3d22;
+}
+.btn-maxbet:active { transform: translateY(2px); box-shadow: none; }
 
 /* УВЕЛИЧЕННЫЕ ПЛЮС И МИНУС */
 .btn-lines-dec { top: 68%; left: 17.5%; width: 8.5%; height: 6.5%; }
@@ -93,13 +103,13 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 .btn-bet-dec { top: 68%; left: 42.5%; width: 8.5%; height: 6.5%; }
 .btn-bet-inc { top: 68%; left: 54%; width: 8.5%; height: 6.5%; }
 
-/* НЕВИДИМЫЕ КНОПКИ ЛИНИЙ */
-.btn-line-1  { top: 69.2%; left: 9.5%;  width: 5%; height: 4%; z-index: 900000; }
-.btn-line-3  { top: 69.2%; left: 15.5%; width: 5%; height: 4%; z-index: 900000; }
-.btn-line-5  { top: 69.2%; left: 21.5%; width: 5%; height: 4%; z-index: 900000; }
-.btn-line-9  { top: 69.2%; left: 27.5%; width: 5%; height: 4%; z-index: 900000; }
-.btn-line-15 { top: 69.2%; left: 33.5%; width: 5%; height: 4%; z-index: 900000; }
-.btn-line-21 { top: 69.2%; left: 39.5%; width: 5%; height: 4%; z-index: 900000; }
+/* НЕВИДИМЫЕ КНОПКИ ЛИНИЙ (Сузил, чтобы не залезали на + и -) */
+.btn-line-1  { top: 69.2%; left: 9.5%;  width: 4.5%; height: 4%; z-index: 900000; }
+.btn-line-3  { top: 69.2%; left: 15.5%; width: 4.5%; height: 4%; z-index: 900000; }
+.btn-line-5  { top: 69.2%; left: 21.5%; width: 4.5%; height: 4%; z-index: 900000; }
+.btn-line-9  { top: 69.2%; left: 27.5%; width: 4.5%; height: 4%; z-index: 900000; }
+.btn-line-15 { top: 69.2%; left: 33.5%; width: 4.5%; height: 4%; z-index: 900000; }
+.btn-line-21 { top: 69.2%; left: 39.5%; width: 4.5%; height: 4%; z-index: 900000; }
 
 /* Нижнее меню */
 .btn-action { top: 80%; width: 11%; height: 5.5%; z-index: 999999; transition: all 0.3s; }
@@ -113,10 +123,7 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
     border: 3px solid #ff0000;
     box-shadow: 0 0 20px #ff0000, inset 0 0 15px #ff0000;
 }
-@keyframes riskGlow {
-    0% { transform: scale(1); opacity: 0.8; }
-    100% { transform: scale(1.15); opacity: 1; }
-}
+@keyframes riskGlow { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(1.15); opacity: 1; } }
 
 /* Модалки */
 .modal { position: fixed; inset: 0; background: rgba(0,0,0,.9); display: flex; align-items: center; justify-content: center; z-index: 1000000; opacity: 0; pointer-events: none; transition: opacity .2s; padding: 15px; }
@@ -134,46 +141,28 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 .notif { position: fixed; top: -80px; left: 50%; transform: translateX(-50%); background: #2ecc71; color: #fff; padding: 10px 20px; border-radius: 20px; font-size: 13px; font-weight: 800; transition: top .3s; z-index: 9999999; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,.5); }
 .notif.show { top: 15px; } .notif.error { background: #e74c3c; } .notif.gold { background: linear-gradient(180deg, #ffd966, #b8860b); color: #1a1200; }
 
-/* ============================================================
-   КОЛЕСО ФОРТУНЫ (Визуал)
-   ============================================================ */
-.wheel-container {
-    position: relative; width: 280px; height: 280px; margin: 0 auto 20px auto;
-}
+/* КОЛЕСО ФОРТУНЫ */
+.wheel-container { position: relative; width: 260px; height: 260px; margin: 0 auto 20px auto; }
 .wheel {
-    width: 100%; height: 100%; border-radius: 50%;
-    border: 8px solid #ffd966;
+    width: 100%; height: 100%; border-radius: 50%; border: 6px solid #ffd966;
     box-shadow: 0 0 20px rgba(255, 217, 102, 0.5), inset 0 0 20px rgba(0,0,0,0.8);
-    background: conic-gradient(
-        #e74c3c 0deg 45deg, 
-        #f1c40f 45deg 90deg, 
-        #2ecc71 90deg 135deg, 
-        #3498db 135deg 180deg, 
-        #9b59b6 180deg 225deg, 
-        #e67e22 225deg 270deg, 
-        #1abc9c 270deg 315deg, 
-        #c0392b 315deg 360deg
-    );
-    transition: transform 5s cubic-bezier(0.1, 0.8, 0.1, 1);
-    position: relative;
+    background: conic-gradient(#e74c3c 0deg 45deg, #f1c40f 45deg 90deg, #2ecc71 90deg 135deg, #3498db 135deg 180deg, #9b59b6 180deg 225deg, #e67e22 225deg 270deg, #1abc9c 270deg 315deg, #c0392b 315deg 360deg);
+    transition: transform 5s cubic-bezier(0.1, 0.8, 0.1, 1); position: relative;
 }
 .wheel-text {
-    position: absolute; top: 50%; left: 50%; transform-origin: 0 0; font-size: 12px; font-weight: bold; color: white; text-shadow: 1px 1px 2px black;
+    position: absolute; top: 50%; left: 50%; transform-origin: 0 0; 
+    font-size: 11px; font-weight: 900; color: white; text-shadow: 1px 1px 2px black, 0 0 3px black;
+    white-space: nowrap;
 }
 .wheel-pointer {
-    position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
     width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 25px solid #ffd966;
     z-index: 10; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
 }
 
 /* Конфетти */
-.confetti {
-    position: fixed; width: 10px; height: 10px; background: #f00; opacity: 0; z-index: 9999998; pointer-events: none;
-}
-@keyframes fall {
-    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-}
+.confetti { position: fixed; width: 8px; height: 14px; background: #f00; opacity: 0; z-index: 9999998; pointer-events: none; }
+@keyframes fall { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
 </style>
 </head>
 <body>
@@ -208,6 +197,10 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
     <div class="btn-overlay btn-lang" onclick="cycleLang()"></div>
     <div class="btn-overlay btn-sound" onclick="toggleSound()"></div>
     
+    <!-- Кнопка МАКС БЕТ -->
+    <div class="btn-maxbet" onclick="setMaxBet()">МАКС<br>БЕТ</div>
+
+    <!-- Кнопка SPIN -->
     <div class="btn-overlay btn-spin" id="spinBtn">
         <div class="stop-visual" id="stopVisual">СТОП</div>
     </div>
@@ -237,20 +230,19 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 
 <!-- МОДАЛКИ -->
 <div class="modal" id="wheelModal">
-    <div class="modal-box" style="max-width: 360px;">
+    <div class="modal-box" style="max-width: 320px;">
         <div class="modal-title">🎡 КОЛЕСО ФОРТУНЫ</div>
         <div class="wheel-container">
             <div class="wheel-pointer"></div>
             <div class="wheel" id="fortuneWheel">
-                <!-- Текст секторов -->
-                <span class="wheel-text" style="transform: rotate(22deg) translate(80px, -10px);">x2</span>
-                <span class="wheel-text" style="transform: rotate(67deg) translate(80px, -10px);">x5</span>
-                <span class="wheel-text" style="transform: rotate(112deg) translate(80px, -10px);">10 FS</span>
-                <span class="wheel-text" style="transform: rotate(157deg) translate(80px, -10px);">x10</span>
-                <span class="wheel-text" style="transform: rotate(202deg) translate(80px, -10px);">x2</span>
-                <span class="wheel-text" style="transform: rotate(247deg) translate(80px, -10px);">JACKPOT</span>
-                <span class="wheel-text" style="transform: rotate(292deg) translate(80px, -10px);">20 FS</span>
-                <span class="wheel-text" style="transform: rotate(337deg) translate(80px, -10px);">x50</span>
+                <span class="wheel-text" style="transform: rotate(22.5deg) translate(65px, -5px);">x2</span>
+                <span class="wheel-text" style="transform: rotate(67.5deg) translate(65px, -5px);">x5</span>
+                <span class="wheel-text" style="transform: rotate(112.5deg) translate(60px, -5px);">10 FS</span>
+                <span class="wheel-text" style="transform: rotate(157.5deg) translate(65px, -5px);">x10</span>
+                <span class="wheel-text" style="transform: rotate(202.5deg) translate(65px, -5px);">x2</span>
+                <span class="wheel-text" style="transform: rotate(247.5deg) translate(55px, -5px);">JACKPOT</span>
+                <span class="wheel-text" style="transform: rotate(292.5deg) translate(60px, -5px);">20 FS</span>
+                <span class="wheel-text" style="transform: rotate(337.5deg) translate(65px, -5px);">x50</span>
             </div>
         </div>
         <button class="modal-btn green" id="spinWheelBtn" onclick="spinFortuneWheel()">КРУТИТЬ КОЛЕСО</button>
@@ -289,6 +281,8 @@ let isSpinning = false, stopRequested = false;
 let freeSpins = 0, isFreeSpin = false;
 let pendingRisk = 0;
 let spinTimeout = null; 
+
+const MAX_BET_LIMIT = 1000;
 
 /* ============================================================
    🔊 АУДИО И ТАКТИЛЬНАЯ ОТДАЧА
@@ -380,7 +374,6 @@ function notif(msg, type='') { const n=$('notif'); n.textContent=msg; n.classNam
 const openModal = (id) => { $(id).classList.add('active'); haptic('light'); sfx.click(); };
 const closeModal = (id) => { $(id).classList.remove('active'); };
 
-/* ФЕЕРВЕРКИ / КОНФЕТТИ */
 function spawnConfetti() {
     const colors = ['#ff3b30', '#ffcc00', '#2ecc71', '#3498db', '#9b59b6', '#ffd966'];
     for (let i = 0; i < 40; i++) {
@@ -425,7 +418,6 @@ function updateUI() {
     $('linesVal').textContent = state.lines + '/21';
     $('totalBetVal').textContent = fmt(totalBet());
     
-    // Логика подсветки выигрыша и кнопки РИСК
     if (!isSpinning) {
         $('winVal').textContent = '0';
         $('winVal').classList.remove('has-win');
@@ -559,18 +551,17 @@ async function requestStop(pregeneratedGrid) {
 
         haptic('success');
         sfx.win();
-        spawnConfetti(); // Взрыв конфетти
+        spawnConfetti(); 
         
         if (total >= totalBet() * 2 && !isFreeSpin) {
             pendingRisk = total;
-            $('btnRiskUI').classList.add('pulse-risk'); // Пульсация кнопки Риск
+            $('btnRiskUI').classList.add('pulse-risk'); 
         }
     } else { 
         notif('Повезет в следующий раз!', 'error'); 
         sfx.lose();
     }
 
-    // Если 3+ гриба - открываем Колесо Фортуны
     if (scatterCount >= 3 && !isFreeSpin) { 
         notif('🎉 3 ГРИБА! КОЛЕСО ФОРТУНЫ!', 'gold'); 
         haptic('heavy');
@@ -596,7 +587,7 @@ function genGrid() {
 }
 
 /* ============================================================
-   КОЛЕСО ФОРТУНЫ ЛОГИКА
+   КОЛЕСО ФОРТУНЫ
    ============================================================ */
 let isWheelSpinning = false;
 let currentWheelAngle = 0;
@@ -619,14 +610,10 @@ function spinFortuneWheel() {
     haptic('medium');
     sfx.spinStart();
 
-    // Выбираем случайный индекс (0-7)
     const winIndex = Math.floor(Math.random() * 8);
-    
-    // Угол для выигрышного сектора: (360 / 8) = 45 градусов на сектор.
-    // Сектор 0 находится сверху (от 0 до 45 град, центр 22.5).
-    // Чтобы он остановился ровно под указателем (сверху), нужно повернуть на 360 - (winIndex * 45) - 22.5
     const segmentAngle = 45;
-    const targetAngle = (360 - (winIndex * segmentAngle) - (segmentAngle / 2)) + 3600; // +10 полных оборотов для красоты
+    // Чтобы остановить ровно на секторе сверху (под указателем)
+    const targetAngle = (360 - (winIndex * segmentAngle) - (segmentAngle / 2)) + 3600; 
     
     currentWheelAngle += targetAngle;
     $('fortuneWheel').style.transform = `rotate(${currentWheelAngle}deg)`;
@@ -653,7 +640,7 @@ function spinFortuneWheel() {
         }
         updateUI();
         closeModal('wheelModal');
-    }, 5200); // Ждем окончания анимации (5 сек + запас)
+    }, 5200);
 }
 
 /* ============================================================
@@ -696,6 +683,17 @@ function setLines(num) {
     sfx.click();
     notif('Линий: ' + num);
     showActiveLines(); 
+}
+
+function setMaxBet() {
+    if(isSpinning) return;
+    // Считаем максимально возможную ставку, но не больше 1000 и не меньше 1
+    let maxPossible = Math.floor(state.balance / state.lines);
+    state.betPerLine = Math.min(MAX_BET_LIMIT, Math.max(1, maxPossible));
+    updateUI();
+    haptic('heavy');
+    sfx.click();
+    notif('Ставка: ' + fmt(state.betPerLine));
 }
 
 function cycleLang() {
@@ -765,7 +763,7 @@ $('spinBtn').onclick = (e) => {
 $('linesDec').onclick = () => { if(!isSpinning) setLines(Math.max(1, state.lines-1)); };
 $('linesInc').onclick = () => { if(!isSpinning) setLines(Math.min(21, state.lines+1)); };
 $('betDec').onclick = () => { if(!isSpinning){ state.betPerLine = Math.max(1, state.betPerLine-1); updateUI(); haptic('select'); sfx.click(); } };
-$('betInc').onclick = () => { if(!isSpinning){ state.betPerLine += 1; updateUI(); haptic('select'); sfx.click(); } };
+$('betInc').onclick = () => { if(!isSpinning){ state.betPerLine = Math.min(MAX_BET_LIMIT, state.betPerLine+1); updateUI(); haptic('select'); sfx.click(); } };
 
 window.addEventListener('resize', () => { if(!isSpinning) buildReels(); });
 
