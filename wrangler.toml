@@ -10,4 +10,4 @@ run_worker_first = ["/api/*"]
 
 [[kv_namespaces]]
 binding = "FOREST_DB"
-id = "ВСТАВЬ_СЮДА_СВОЙ_ID_ИЗ_ШАГА_2"
+id = "425637833fdf4941b7986be538bd93e0"
