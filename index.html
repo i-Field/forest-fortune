@@ -36,7 +36,7 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 .start-btn:active { transform: scale(0.95); }
 
 /* АРХИТЕКТУРА */
-.game-board { position: relative; aspect-ratio: 768 / 1370; width: 100vw; max-height: 100dvh; background: url('bg.png?v=88888888') no-repeat center center; background-size: 100% 100%; overflow: hidden; transition: background 0.5s; }
+.game-board { position: relative; aspect-ratio: 768 / 1370; width: 100vw; max-height: 100dvh; background: url('bg.png?v=9999999') no-repeat center center; background-size: 100% 100%; overflow: hidden; transition: background 0.5s; }
 .game-board.free-spins-mode { background-color: rgba(0, 50, 0, 0.8); background-blend-mode: overlay; }
 
 /* ЖИВОЙ ДЖЕКПОТ */
@@ -369,12 +369,20 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
                 <div class="pay-row"><img src="rabbit.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 10 | 4: 40 | 5: 200</span></div>
                 <div class="pay-row"><img src="real_hedgehog.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 8 | 4: 30 | 5: 150</span></div>
                 <div class="pay-row"><img src="bear.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 8 | 4: 25 | 5: 100</span></div>
+                <div class="pay-row"><img src="deer.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 5 | 4: 20 | 5: 80</span></div>
                 <div class="pay-row"><img src="fox.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 5 | 4: 15 | 5: 80</span></div>
                 <div class="pay-row"><img src="owl.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 4 | 4: 12 | 5: 60</span></div>
-                <div class="pay-row"><img src="squirrel.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 2 | 4: 8 | 5: 40</span></div>
+                <div class="pay-row"><img src="squirrel.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 3 | 4: 10 | 5: 50</span></div>
+                <div class="pay-row"><img src="squirrel1.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 3 | 4: 10 | 5: 50</span></div>
+                <div class="pay-row"><img src="raccoon.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 2 | 4: 8 | 5: 40</span></div>
+                <div class="pay-row"><img src="hedgehog.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 2 | 4: 8 | 5: 40</span></div>
+                <div class="pay-row"><img src="pinecone.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 2 | 4: 5 | 5: 30</span></div>
+                <div class="pay-row"><img src="acorn.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 2 | 4: 5 | 5: 30</span></div>
+                <div class="pay-row"><img src="leaf.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 2 | 4: 5 | 5: 30</span></div>
+                <div class="pay-row"><img src="coin.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 1 | 4: 3 | 5: 20</span></div>
             </div>
-            <p style="color:#ffd966; margin-bottom:5px;">💎 WILD (Кристалл):</p>
-            <p style="margin-bottom:10px;">Заменяет любой символ и дает множитель x2 к выигрышу (x4 за два, x8 за три).</p>
+            <p style="color:#ffd966; margin-bottom:5px;">💎 WILD (Кристаллы):</p>
+            <p style="margin-bottom:10px;">Оба кристалла заменяют любой символ. Но <b>новый (wild.png)</b> еще и дает множитель x2 к выигрышу (x4 за два, x8 за три)!</p>
             <p style="color:#ffd966; margin-bottom:5px;">🍄 Грибы (Скаттеры):</p>
             <p style="margin-bottom:10px;">3 и более гриба запускают <b>Колесо Фортуны</b>!</p>
         </div>
@@ -391,24 +399,30 @@ const initData = tg?.initData || "";
 for (let i = 1; i < 9999; i++) clearTimeout(i);
 
 const REELS = 5, ROWS = 5; 
-const IMG_VER = '?v=88888888'; // СБРОС КЭША
+const IMG_VER = '?v=9999999'; // СБРОС КЭША
 
+// ВСЕ 24 СИМВОЛА
 const SYMBOLS = [
-    'wild.png', 'mushroom.png', // Заменили gem.png на wild.png
+    'gem.png', 'wild.png', 'mushroom.png', 
     'ufo.png', 'weed_cross.png', 'tech_face.png', 'man.png', 'man2.png', 'hutor.png', 'firebird.png', 'rabbit.png', 'real_hedgehog.png',
-    'bear.png', 'fox.png', 'owl.png', 'squirrel.png'
+    'bear.png', 'fox.png', 'deer.png', 'owl.png', 'squirrel.png', 'squirrel1.png', 'raccoon.png', 'hedgehog.png',
+    'pinecone.png', 'acorn.png', 'leaf.png', 'coin.png'
 ];
 
+// ВЕСА СИМВОЛОВ
 const WEIGHTS = {
-    'wild.png': 6, 'mushroom.png': 10, 
-    'ufo.png': 2, 'weed_cross.png': 3, 'tech_face.png': 4, 'man.png': 5, 'man2.png': 6, 'hutor.png': 8, 'firebird.png': 10, 'rabbit.png': 12, 'real_hedgehog.png': 15,
-    'bear.png': 18, 'fox.png': 20, 'owl.png': 22, 'squirrel.png': 25
+    'gem.png': 8, 'wild.png': 4, 'mushroom.png': 10, 
+    'ufo.png': 2, 'weed_cross.png': 2, 'tech_face.png': 4, 'man.png': 4, 'man2.png': 5, 'hutor.png': 6, 'firebird.png': 8, 'rabbit.png': 10, 'real_hedgehog.png': 12,
+    'bear.png': 15, 'fox.png': 18, 'deer.png': 18, 'owl.png': 20, 'squirrel.png': 22, 'squirrel1.png': 22, 'raccoon.png': 25, 'hedgehog.png': 25,
+    'pinecone.png': 30, 'acorn.png': 30, 'leaf.png': 30, 'coin.png': 35
 };
 
+// ТАБЛИЦА ВЫПЛАТ
 const PAYTABLE = { 
-    'wild.png': [15, 60, 250], 'mushroom.png': [10, 40, 150], // Заменили gem.png
+    'gem.png': [10, 40, 150], 'wild.png': [20, 80, 300], 'mushroom.png': [10, 40, 150], 
     'ufo.png': [25, 150, 1000], 'weed_cross.png': [25, 125, 800], 'tech_face.png': [20, 100, 600], 'man.png': [20, 90, 500], 'man2.png': [15, 80, 400], 'hutor.png': [15, 70, 300], 'firebird.png': [12, 50, 250], 'rabbit.png': [10, 40, 200], 'real_hedgehog.png': [8, 30, 150],
-    'bear.png': [8, 25, 100], 'fox.png': [5, 15, 80], 'owl.png': [4, 12, 60], 'squirrel.png': [2, 8, 40]
+    'bear.png': [8, 25, 100], 'fox.png': [5, 15, 80], 'deer.png': [5, 20, 80], 'owl.png': [4, 12, 60], 'squirrel.png': [3, 10, 50], 'squirrel1.png': [3, 10, 50], 'raccoon.png': [2, 8, 40], 'hedgehog.png': [2, 8, 40],
+    'pinecone.png': [2, 5, 30], 'acorn.png': [2, 5, 30], 'leaf.png': [2, 5, 30], 'coin.png': [1, 3, 20]
 };
 
 const PAYLINES = [
@@ -824,19 +838,27 @@ async function runCascades(grid) {
             const syms = line.map(([r,row])=>grid[r][row]); 
             const firstSym = syms[0]; if(firstSym === 'mushroom.png') return;
             
+            // Ищем первый не-Wild символ, чтобы определить базовый
             let targetSym = firstSym;
-            if (targetSym === 'wild.png') { for (let i = 1; i < REELS; i++) { if (syms[i] !== 'wild.png' && syms[i] !== 'mushroom.png') { targetSym = syms[i]; break; } } }
+            if (targetSym === 'wild.png' || targetSym === 'gem.png') { 
+                for (let i = 1; i < REELS; i++) { 
+                    if (syms[i] !== 'wild.png' && syms[i] !== 'gem.png' && syms[i] !== 'mushroom.png') { 
+                        targetSym = syms[i]; 
+                        break; 
+                    } 
+                } 
+            }
 
             let count = 0, wildsCount = 0;
             for(let i=0; i<REELS; i++) { 
-                if(syms[i] === targetSym || syms[i] === 'wild.png') {
+                if(syms[i] === targetSym || syms[i] === 'wild.png' || syms[i] === 'gem.png') {
                     count++; 
-                    if (syms[i] === 'wild.png') wildsCount++;
+                    if (syms[i] === 'wild.png') wildsCount++; // Считаем множители только от нового кристалла
                 } else break; 
             }
             
             if(count >= 3) {
-                const paySym = targetSym === 'wild.png' ? 'wild.png' : targetSym;
+                const paySym = (targetSym === 'wild.png' || targetSym === 'gem.png') ? 'wild.png' : targetSym;
                 if (PAYTABLE[paySym]) {
                     let lineWin = PAYTABLE[paySym][count-3] * state.betPerLine;
                     if (wildsCount === 1) lineWin *= 2;
@@ -867,8 +889,8 @@ async function runCascades(grid) {
             if (isFreeSpin) {
                 for(let r=0; r<REELS; r++) {
                     for(let c=0; c<ROWS; c++) {
-                        if (grid[r][c] === 'wild.png' && !stickyWilds.some(sw => sw.r === r && sw.c === c)) {
-                            stickyWilds.push({r, c});
+                        if ((grid[r][c] === 'wild.png' || grid[r][c] === 'gem.png') && !stickyWilds.some(sw => sw.r === r && sw.c === c)) {
+                            stickyWilds.push({r, c, type: grid[r][c]});
                         }
                     }
                 }
@@ -878,13 +900,15 @@ async function runCascades(grid) {
             sfx.cascade();
             
             winCells.forEach(cell => { grid[cell.r][cell.c] = null; });
-            stickyWilds.forEach(sw => { grid[sw.r][sw.c] = 'wild.png'; });
+            
+            // Возвращаем липкие вилды
+            stickyWilds.forEach(sw => { grid[sw.r][sw.c] = sw.type; });
             
             for(let r=0; r<REELS; r++) {
                 let col = grid[r];
                 let newCol = col.filter(s => s !== null);
                 while (newCol.length < ROWS) { newCol.unshift(randSym()); }
-                stickyWilds.forEach(sw => { if(sw.r === r) newCol[sw.c] = 'wild.png'; });
+                stickyWilds.forEach(sw => { if(sw.r === r) newCol[sw.c] = sw.type; });
                 grid[r] = newCol;
             }
             
