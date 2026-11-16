@@ -76,7 +76,7 @@ export default {
     // 3. ОБРАБОТКА СПИНА (СИНХРОНИЗАЦИЯ)
     if (url.pathname === '/api/spin' && request.method === 'POST') {
       try {
-        const { initData, newBalance, betAmount } = await request.json();
+        let { initData, newBalance, betAmount } = await request.json();
         if (!await validateTelegramData(initData, env.BOT_TOKEN)) return new Response('Forbidden', { status: 403, headers: corsHeaders });
         const userId = JSON.parse(new URLSearchParams(initData).get('user')).id;
         
