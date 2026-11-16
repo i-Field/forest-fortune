@@ -35,32 +35,21 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 .game-board { position: relative; aspect-ratio: 768 / 1370; width: 100vw; max-height: 100dvh; background: url('bg.png?v=55555555') no-repeat center center; background-size: 100% 100%; overflow: hidden; transition: background 0.5s; }
 .game-board.free-spins-mode { background-color: rgba(0, 50, 0, 0.8); background-blend-mode: overlay; }
 
-/* ============================================================
-   ЖИВОЙ ДЖЕКПОТ (ТОЛЬКО ЦИФРЫ ПОВЕРХ ФОНА)
-   ============================================================ */
+/* ЖИВОЙ ДЖЕКПОТ */
 #jackpotValue { 
-    position: absolute; 
-    top: 12.5%; /* Идеальная позиция под надписью ДЖЕК ПОТ на твоем фоне */
-    left: 50%; 
-    transform: translateX(-50%); 
-    color: #ffd966; 
-    font-family: 'Arial Black', Impact, sans-serif; 
-    font-size: 5.5vw; 
-    letter-spacing: 2px;
-    z-index: 50; 
-    text-shadow: 0 0 10px #ffd966, 0 0 20px #ff0000, 2px 2px 4px #000;
+    position: absolute; top: 12.5%; left: 50%; transform: translateX(-50%); 
+    color: #ffd966; font-family: 'Arial Black', Impact, sans-serif; font-size: 5.5vw; letter-spacing: 2px;
+    z-index: 50; text-shadow: 0 0 10px #ffd966, 0 0 20px #ff0000, 2px 2px 4px #000;
     transition: transform 0.1s, color 0.1s;
 }
-#jackpotValue.bump { 
-    animation: jackpotBump 0.3s ease-out;
-}
+#jackpotValue.bump { animation: jackpotBump 0.3s ease-out; }
 @keyframes jackpotBump {
     0% { transform: translateX(-50%) scale(1); }
     50% { transform: translateX(-50%) scale(1.15); filter: brightness(1.5); text-shadow: 0 0 20px #ffd966, 0 0 40px #ff0000, 2px 2px 4px #000; }
     100% { transform: translateX(-50%) scale(1); }
 }
 
-/* ДЕКОРАЦИИ И ОГОНЬ */
+/* ДЕКОРАЦИИ */
 .fire-glow { position: absolute; top: 12.5%; width: 12%; height: 4%; background: radial-gradient(circle, rgba(255, 140, 0, 0.8) 0%, transparent 70%); mix-blend-mode: screen; pointer-events: none; z-index: 5; animation: fireFlicker 1.5s infinite alternate; }
 .fire-left { left: 12%; } .fire-right { right: 12%; }
 @keyframes fireFlicker { 0% { opacity: 0.4; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1.1); } }
@@ -84,7 +73,6 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 .ui-win.has-win { color: #00ffff; text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; animation: winPulseText 0.5s infinite alternate; }
 @keyframes winPulseText { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
 
-/* СЧЕТЧИК ФРИСПИНОВ */
 #freeSpinsCounter { position: absolute; top: 25%; left: 50%; transform: translateX(-50%); color: #ffd966; font-family: Georgia, serif; font-size: 6vw; font-weight: 900; text-shadow: 0 0 20px #ffd966, 0 0 10px #ff0000; z-index: 50; display: none; }
 
 .ui-lines { top: calc(68.95% - 1px); left: 20.5%; width: 9.5%; font-size: 4.2vw; }
@@ -99,39 +87,32 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 .cell { display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; width: 100%; height: 20%; background: #0d2112; } 
 .cell img { width: 90%; height: 90%; object-fit: contain; filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.5)) drop-shadow(0 2px 2px rgba(0,0,0,0.8)); }
 
-/* АНИМАЦИЯ ВЫИГРЫША (ТРЯСКА) */
+/* АНИМАЦИЯ ВЫИГРЫША */
 .cell.win { z-index: 30; }
 .cell.win img { animation: shake 0.4s infinite; filter: drop-shadow(0 0 15px #00ffff) brightness(1.5); }
 .cell.win::before { content: ""; position: absolute; inset: 2px; border: 3px solid #ffd966; border-radius: 8px; background: rgba(0, 255, 255, 0.3); box-shadow: 0 0 20px #00ffff, inset 0 0 15px #00ffff; }
 @keyframes shake {
-    0% { transform: translate(1px, 1px) rotate(0deg); }
-    10% { transform: translate(-1px, -2px) rotate(-1deg); }
-    20% { transform: translate(-3px, 0px) rotate(1deg); }
-    30% { transform: translate(3px, 2px) rotate(0deg); }
-    40% { transform: translate(1px, -1px) rotate(1deg); }
-    50% { transform: translate(-1px, 2px) rotate(-1deg); }
-    60% { transform: translate(-3px, 1px) rotate(0deg); }
-    70% { transform: translate(3px, 1px) rotate(-1deg); }
-    80% { transform: translate(-1px, -1px) rotate(1deg); }
-    90% { transform: translate(1px, 2px) rotate(0deg); }
+    0% { transform: translate(1px, 1px) rotate(0deg); } 10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); } 30% { transform: translate(3px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); } 50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); } 70% { transform: translate(3px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); } 90% { transform: translate(1px, 2px) rotate(0deg); }
     100% { transform: translate(1px, -2px) rotate(-1deg); }
 }
 
 .lines-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 20; }
 
-/* КНОПКИ И ОТКЛИК */
+/* КНОПКИ */
 .btn-overlay, .btn-maxbet, .btn-turbo { position: absolute; z-index: 999999; cursor: pointer; border-radius: 8px; pointer-events: auto; transition: transform 0.1s, filter 0.1s; }
 .btn-overlay:active, .btn-maxbet:active, .btn-turbo:active { transform: scale(0.9); filter: brightness(1.5); }
 
 .btn-lang { top: 1.5%; left: 2.5%; width: 9%; height: 4.5%; border-radius: 50%; }
 .btn-sound { top: 1.5%; right: 2.5%; width: 9%; height: 4.5%; border-radius: 50%; }
 
-/* Кнопка SPIN */
 .btn-spin { top: 73.5%; left: 35%; width: 30%; height: 7%; border-radius: 20px; }
 .stop-visual { position: absolute; inset: 0; background: rgba(20, 10, 0, 0.85); border: 2px solid #ffd966; border-radius: 20px; color: #ffd966; font-family: Georgia, serif; font-weight: 900; font-size: 20px; display: none; align-items: center; justify-content: center; box-shadow: 0 0 15px #ffd966; text-shadow: 0 0 5px #ffd966; }
 .btn-auto { top: 73.8%; right: 9%; width: 13%; height: 5.5%; }
 
-/* Кнопка МАКС БЕТ */
 .btn-maxbet { 
     top: 92.5%; right: 38%; width: 25%; height: 3.8%; 
     background: linear-gradient(270deg, #2ecc71, #00ffff, #2ecc71, #00ffff); background-size: 300% 300%; animation: holoGradient 3s ease infinite;
@@ -145,7 +126,6 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 @keyframes waveShine { 0% { left: -100%; } 100% { left: 200%; } }
 .btn-maxbet:active { transform: translateY(2px) scale(0.95); box-shadow: 0 2px 5px rgba(0,0,0,0.4), 0 0 20px rgba(0, 255, 255, 0.8); }
 
-/* Кнопка ТУРБО */
 .btn-turbo { 
     top: 92.5%; right: 25%; width: 11%; height: 3.8%; 
     background: rgba(0,0,0,0.6); border: 2px solid #ffd966; border-radius: 20px; 
@@ -174,17 +154,15 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 .btn-risk.pulse-risk { animation: riskGlow 1s infinite alternate; border: 3px solid #ff0000; box-shadow: 0 0 20px #ff0000, inset 0 0 15px #ff0000; }
 @keyframes riskGlow { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(1.15); opacity: 1; } }
 
-/* БОЛЬШОЙ ВЫИГРЫШ (BIG WIN) */
 #bigWinOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2000000; opacity: 0; pointer-events: none; transition: opacity 0.5s; backdrop-filter: blur(5px); }
 #bigWinOverlay.active { opacity: 1; pointer-events: auto; }
 .bigwin-title { font-size: 55px; color: #ffd966; font-family: 'Arial Black', sans-serif; text-transform: uppercase; text-align: center; text-shadow: 0 0 20px #ff0000, 0 0 40px #ffd966; animation: bigWinPulse 0.5s infinite alternate; margin-bottom: 20px; }
 .bigwin-amount { font-size: 45px; color: #fff; font-family: 'Arial Black', sans-serif; text-shadow: 0 0 15px #00ffff; }
 @keyframes bigWinPulse { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
 
-/* Модалки */
 .modal { position: fixed; inset: 0; background: rgba(0,0,0,.9); display: flex; align-items: center; justify-content: center; z-index: 1000000; opacity: 0; pointer-events: none; transition: opacity .2s; padding: 15px; }
 .modal.active { opacity: 1; pointer-events: auto; }
-.modal-box { background: linear-gradient(180deg, #1a2e1a, #0a1208); border: 2px solid var(--gold); border-radius: 14px; padding: 20px; max-width: 340px; width: 100%; text-align: center; color: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.8); position: relative; overflow: hidden; }
+.modal-box { background: linear-gradient(180deg, #1a2e1a, #0a1208); border: 2px solid var(--gold); border-radius: 14px; padding: 20px; max-width: 340px; width: 100%; text-align: center; color: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.8); position: relative; overflow-y: auto; max-height: 85vh; }
 .modal-title { font-size: 20px; font-weight: 900; color: var(--gold); margin-bottom: 15px; font-family: Georgia, serif; }
 .modal-text { font-size: 14px; color: #ccc; margin-bottom: 15px; line-height: 1.4; }
 .modal-close { background: #576574; color: #fff; border: none; padding: 12px; border-radius: 8px; font-weight: 800; margin-top: 15px; width: 100%; font-size: 14px; cursor: pointer; transition: transform 0.1s; }
@@ -197,11 +175,10 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 .modal-btn.gold { background: linear-gradient(180deg, #ffd966, #b8860b); color: #1a1200; box-shadow: 0 4px 0 #5c4300; }
 
 .paytable { display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; text-align: left; }
-.pay-row { display: flex; justify-content: space-between; align-items: center; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; }
+.pay-row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; }
 .pay-row img { width: 30px; height: 30px; object-fit: contain; }
 .pay-row span { color: var(--gold); font-weight: bold; }
 
-/* СТИЛЬНЫЕ УВЕДОМЛЕНИЯ */
 .notif { 
     position: fixed; top: -100px; left: 50%; transform: translateX(-50%); 
     background: rgba(20, 10, 0, 0.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
@@ -220,7 +197,6 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 .notif.success { border-color: #2ecc71; box-shadow: 0 10px 25px rgba(0,0,0,0.8), 0 0 20px rgba(46, 204, 113, 0.6); }
 .notif.success::before { content: '✅'; font-size: 18px; }
 
-/* КОЛЕСО ФОРТУНЫ */
 .wheel-container { position: relative; width: 280px; height: 280px; margin: 0 auto 20px auto; border-radius: 50%; padding: 10px; background: radial-gradient(circle, #4a3b1a 0%, #1a1200 100%); box-shadow: 0 10px 30px rgba(0,0,0,0.8), inset 0 5px 15px rgba(255, 217, 102, 0.2); border: 3px solid #ffd966; }
 .wheel { width: 100%; height: 100%; border-radius: 50%; box-shadow: inset 0 0 30px rgba(0,0,0,0.9); background: conic-gradient(#c0392b 0deg 45deg, #d4af37 45deg 90deg, #27ae60 90deg 135deg, #2980b9 135deg 180deg, #8e44ad 180deg 225deg, #d35400 225deg 270deg, #16a085 270deg 315deg, #c0392b 315deg 360deg); transition: transform 5s cubic-bezier(0.1, 0.8, 0.1, 1); position: relative; overflow: hidden; }
 .wheel::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: repeating-conic-gradient(from 0deg, transparent 0deg 44deg, rgba(0,0,0,0.3) 44deg 45deg); pointer-events: none; }
@@ -229,7 +205,6 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 .wheel-pointer { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 18px solid transparent; border-right: 18px solid transparent; border-top: 30px solid #ff3b30; z-index: 20; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.8)); }
 .wheel-pointer::after { content: ''; position: absolute; top: -30px; left: -10px; width: 20px; height: 20px; background: radial-gradient(circle, #ffd966, #b8860b); border-radius: 50%; }
 
-/* КАРТЫ ДЛЯ РИСКА */
 .cards-container { display: flex; justify-content: center; gap: 20px; margin-bottom: 20px; perspective: 1000px; }
 .play-card { width: 80px; height: 120px; border-radius: 10px; background: #fff; border: 2px solid #ccc; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 30px; font-weight: bold; box-shadow: 0 5px 15px rgba(0,0,0,0.5); transition: transform 0.6s; }
 .play-card.red { color: #e74c3c; }
@@ -254,7 +229,6 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
     <div class="firefly f1"></div><div class="firefly f2"></div><div class="firefly f3"></div>
     <div class="firefly f4"></div><div class="firefly f5"></div><div class="firefly f6"></div>
 
-    <!-- ТОЛЬКО ЦИФРЫ ДЖЕКПОТА -->
     <div id="jackpotValue">500 000</div>
 
     <div class="ui-val ui-balance" id="balanceVal">0</div>
@@ -302,13 +276,11 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
     <div class="btn-turbo" id="btnTurbo" onclick="toggleTurbo()">⚡</div>
 </div>
 
-<!-- BIG WIN OVERLAY -->
 <div id="bigWinOverlay">
     <div class="bigwin-title" id="bigWinText">BIG WIN!</div>
     <div class="bigwin-amount" id="bigWinAmount">0</div>
 </div>
 
-<!-- МОДАЛКИ -->
 <div class="modal" id="autoModal">
     <div class="modal-box">
         <div class="modal-title">🤖 АВТОСПИН</div>
@@ -375,17 +347,30 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 <div class="modal" id="paytableModal">
     <div class="modal-box">
         <div class="modal-title">📋 ПРАВИЛА И ВЫПЛАТЫ</div>
-        <div class="modal-text" style="text-align:left; font-size: 13px;">
-            <p style="margin-bottom:10px;">Собери <b>3, 4 или 5</b> одинаковых символа на активной линии. Выигрышные символы взрываются, и на их место падают новые (Каскадные барабаны)!</p>
+        <div class="modal-text" style="text-align:left; font-size: 12px;">
+            <p style="margin-bottom:10px;">Собери <b>3, 4 или 5</b> одинаковых символа на активной линии.</p>
             <div class="paytable">
-                <div class="pay-row"><img src="gem.png"><span>3: 15 | 4: 60 | 5: 250 (Кристалл = Wild x2)</span></div>
-                <div class="pay-row"><img src="hedgehog.png"><span>3: 8 | 4: 25 | 5: 80</span></div>
-                <div class="pay-row"><img src="acorn.png"><span>3: 5 | 4: 15 | 5: 50</span></div>
-                <div class="pay-row"><img src="leaf.png"><span>3: 5 | 4: 15 | 5: 50</span></div>
-                <div class="pay-row"><img src="coin.png"><span>3: 2 | 4: 5 | 5: 15</span></div>
+                <!-- НОВЫЕ СУПЕР-СИМВОЛЫ -->
+                <div class="pay-row"><img src="ufo.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 25 | 4: 150 | 5: 1000</span></div>
+                <div class="pay-row"><img src="weed_cross.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 25 | 4: 125 | 5: 800</span></div>
+                <div class="pay-row"><img src="tech_face.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 20 | 4: 100 | 5: 600</span></div>
+                <div class="pay-row"><img src="man.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 20 | 4: 90 | 5: 500</span></div>
+                <div class="pay-row"><img src="man2.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 15 | 4: 80 | 5: 400</span></div>
+                <div class="pay-row"><img src="hutor.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 15 | 4: 70 | 5: 300</span></div>
+                <div class="pay-row"><img src="firebird.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 12 | 4: 50 | 5: 250</span></div>
+                <div class="pay-row"><img src="rabbit.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 10 | 4: 40 | 5: 200</span></div>
+                <div class="pay-row"><img src="real_hedgehog.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 8 | 4: 30 | 5: 150</span></div>
+                
+                <!-- СТАРЫЕ ЛЕСНЫЕ СИМВОЛЫ (ОСТАВИЛ ЧАСТЬ ДЛЯ БАЛАНСА) -->
+                <div class="pay-row"><img src="bear.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 8 | 4: 25 | 5: 100</span></div>
+                <div class="pay-row"><img src="fox.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 5 | 4: 15 | 5: 80</span></div>
+                <div class="pay-row"><img src="owl.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 4 | 4: 12 | 5: 60</span></div>
+                <div class="pay-row"><img src="squirrel.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 2 | 4: 8 | 5: 40</span></div>
             </div>
+            <p style="color:#ffd966; margin-bottom:5px;">💎 Кристалл (Wild):</p>
+            <p style="margin-bottom:10px;">Заменяет любой символ и дает множитель x2 к выигрышу (x4 за два, x8 за три).</p>
             <p style="color:#ffd966; margin-bottom:5px;">🍄 Грибы (Скаттеры):</p>
-            <p style="margin-bottom:10px;">3 и более гриба запускают <b>Колесо Фортуны</b> или Фриспины!</p>
+            <p style="margin-bottom:10px;">3 и более гриба запускают <b>Колесо Фортуны</b>!</p>
         </div>
         <button class="modal-close" onclick="closeModal('paytableModal')">Закрыть</button>
     </div>
@@ -401,9 +386,53 @@ for (let i = 1; i < 9999; i++) clearTimeout(i);
 
 const REELS = 5, ROWS = 5; 
 const IMG_VER = '?v=55555555';
-const SYMBOLS = ['gem.png', 'mushroom.png', 'hedgehog.png', 'acorn.png', 'leaf.png', 'coin.png'];
-const WEIGHTS = {'gem.png':5, 'mushroom.png':10, 'hedgehog.png':15, 'acorn.png':25, 'leaf.png':25, 'coin.png':30};
-const PAYTABLE = { 'gem.png': [15, 60, 250], 'mushroom.png': [10, 40, 150], 'hedgehog.png': [8, 25, 80], 'acorn.png': [5, 15, 50], 'leaf.png': [5, 15, 50], 'coin.png': [2, 5, 15] };
+
+// ОГРОМНЫЙ СПИСОК СИМВОЛОВ ТЕПЕРЬ
+const SYMBOLS = [
+    'gem.png', 'mushroom.png', 
+    'ufo.png', 'weed_cross.png', 'tech_face.png', 'man.png', 'man2.png', 'hutor.png', 'firebird.png', 'rabbit.png', 'real_hedgehog.png',
+    'bear.png', 'fox.png', 'owl.png', 'squirrel.png'
+];
+
+// НАСТРОЙКА ВЕСОВ (Чем меньше, тем реже)
+const WEIGHTS = {
+    'gem.png': 6,           // Wild
+    'mushroom.png': 10,     // Scatter
+    'ufo.png': 2,           // Супер редкий
+    'weed_cross.png': 3,    // Очень редкий
+    'tech_face.png': 4,     // Редкий
+    'man.png': 5,           // Редкий
+    'man2.png': 6,          
+    'hutor.png': 8,
+    'firebird.png': 10,
+    'rabbit.png': 12,
+    'real_hedgehog.png': 15,
+    
+    'bear.png': 18,
+    'fox.png': 20,
+    'owl.png': 22,
+    'squirrel.png': 25
+};
+
+// ТАБЛИЦА ВЫПЛАТ (3, 4, 5 символов)
+const PAYTABLE = { 
+    'gem.png': [15, 60, 250], 
+    'mushroom.png': [10, 40, 150], 
+    'ufo.png': [25, 150, 1000],
+    'weed_cross.png': [25, 125, 800],
+    'tech_face.png': [20, 100, 600],
+    'man.png': [20, 90, 500],
+    'man2.png': [15, 80, 400],
+    'hutor.png': [15, 70, 300],
+    'firebird.png': [12, 50, 250],
+    'rabbit.png': [10, 40, 200],
+    'real_hedgehog.png': [8, 30, 150],
+    
+    'bear.png': [8, 25, 100],
+    'fox.png': [5, 15, 80],
+    'owl.png': [4, 12, 60],
+    'squirrel.png': [2, 8, 40]
+};
 
 const PAYLINES = [
     [[0,0],[1,0],[2,0],[3,0],[4,0]], [[0,1],[1,1],[2,1],[3,1],[4,1]], [[0,2],[1,2],[2,2],[3,2],[4,2]], [[0,3],[1,3],[2,3],[3,3],[4,3]], [[0,4],[1,4],[2,4],[3,4],[4,4]],
@@ -413,7 +442,9 @@ const PAYLINES = [
     [[0,1],[1,1],[2,2],[3,3],[4,3]], [[0,3],[1,3],[2,2],[3,1],[4,1]], [[0,0],[1,2],[2,4],[3,2],[4,0]], [[0,4],[1,2],[2,0],[3,2],[4,4]]
 ];
 const LINE_COLORS = ['#ff3b30','#ff9500','#ffcc00','#34c759','#00c7be','#30b0ff','#5856d6','#af52de','#ff2d95','#ff6b6b','#ffd93d','#6bcf7f','#4ecdc4','#95e1d3','#a8e6cf','#c7ceea','#e2a4d1','#f6d365','#b5eaea','#e0aaff','#ffb4a2'];
-const POOL=[];Object.entries(WEIGHTS).forEach(([s,w])=>{for(let i=0;i<w;i++)POOL.push(s)});
+
+const POOL=[];
+Object.entries(WEIGHTS).forEach(([s,w])=>{for(let i=0;i<w;i++)POOL.push(s)});
 
 let state = { balance: 100, betPerLine: 1, lines: 15, sound: true, lang: 'ru', jackpot: 500000 };
 let isSpinning = false, stopRequested = false;
@@ -631,7 +662,7 @@ function buildReels() {
         const track = document.createElement('div'); track.className = 'track';
         track.style.height = '100%'; 
         let html = '';
-        for (let row = 0; row < ROWS; row++) html += `<div class="cell"><img src="${randSym()}${IMG_VER}" onerror="this.style.opacity=0"></div>`;
+        for (let row = 0; row < ROWS; row++) html += `<div class="cell"><img src="${randSym()}${IMG_VER}" onerror="this.src='https://via.placeholder.com/100/000000/FFFFFF?text=?'" style="width:90%; height:90%; object-fit:contain;"></div>`;
         track.innerHTML = html; reel.appendChild(track); reelsEl.appendChild(reel); tracks.push(track);
     }
     updateUI();
@@ -643,7 +674,6 @@ function updateUI() {
     $('linesVal').textContent = state.lines + '/21';
     $('totalBetVal').textContent = fmt(totalBet());
     
-    // Обновляем живой джекпот
     const jpEl = $('jackpotValue');
     if (jpEl) {
         jpEl.textContent = fmt(state.jackpot);
@@ -666,7 +696,7 @@ function updateUI() {
    ============================================================ */
 function startReelSpin(r) {
     const track = tracks[r]; let html = ''; 
-    for (let i = 0; i < 40; i++) html += `<div class="cell"><img src="${randSym()}${IMG_VER}" onerror="this.style.opacity=0"></div>`;
+    for (let i = 0; i < 40; i++) html += `<div class="cell"><img src="${randSym()}${IMG_VER}" onerror="this.src='https://via.placeholder.com/100/000000/FFFFFF?text=?'" style="width:90%; height:90%; object-fit:contain;"></div>`;
     track.innerHTML = html; 
     let lastTime = performance.now(); const speed = turboMode ? 4000 : 2000; const frameHeight = track.clientHeight / 5; 
     
@@ -689,9 +719,9 @@ function stopReelAnim(r, final5) {
             const track = tracks[r]; const currentY = reelPositions[r]; const frameHeight = track.clientHeight / 5; 
             
             let html = ''; 
-            for (let i = 0; i < 15; i++) html += `<div class="cell"><img src="${randSym()}${IMG_VER}" onerror="this.style.opacity=0"></div>`;
-            final5.forEach(s => html += `<div class="cell"><img src="${s}${IMG_VER}" onerror="this.style.opacity=0"></div>`);
-            for (let i = 0; i < 5; i++) html += `<div class="cell"><img src="${randSym()}${IMG_VER}" onerror="this.style.opacity=0"></div>`;
+            for (let i = 0; i < 15; i++) html += `<div class="cell"><img src="${randSym()}${IMG_VER}" onerror="this.src='https://via.placeholder.com/100/000000/FFFFFF?text=?'" style="width:90%; height:90%; object-fit:contain;"></div>`;
+            final5.forEach(s => html += `<div class="cell"><img src="${s}${IMG_VER}" onerror="this.src='https://via.placeholder.com/100/000000/FFFFFF?text=?'" style="width:90%; height:90%; object-fit:contain;"></div>`);
+            for (let i = 0; i < 5; i++) html += `<div class="cell"><img src="${randSym()}${IMG_VER}" onerror="this.src='https://via.placeholder.com/100/000000/FFFFFF?text=?'" style="width:90%; height:90%; object-fit:contain;"></div>`;
             
             track.innerHTML = html; 
             let startY = currentY % (15 * frameHeight); 
@@ -704,7 +734,7 @@ function stopReelAnim(r, final5) {
             
             setTimeout(() => { 
                 track.style.transition = 'none'; track.style.transform = 'translate3d(0,0,0)'; 
-                track.innerHTML = final5.map(s => `<div class="cell"><img src="${s}${IMG_VER}" onerror="this.style.opacity=0"></div>`).join(''); 
+                track.innerHTML = final5.map(s => `<div class="cell"><img src="${s}${IMG_VER}" onerror="this.src='https://via.placeholder.com/100/000000/FFFFFF?text=?'" style="width:90%; height:90%; object-fit:contain;"></div>`).join(''); 
                 haptic('light'); sfx.reelStop();
                 resolve(); 
             }, animTime + 50);
@@ -730,7 +760,6 @@ async function startSpin() {
     $('btnRiskUI').classList.remove('pulse-risk');
     $('stopVisual').style.display = 'flex';
     
-    // ДЖЕКПОТ РАСТЕТ ПРИ СТАВКЕ
     state.jackpot += Math.floor(totalBet() * 0.02);
     
     updateUI(); overlay.innerHTML = '';
@@ -858,7 +887,7 @@ async function runCascades(grid) {
             
             for(let r=0; r<REELS; r++) {
                 const track = tracks[r];
-                track.innerHTML = grid[r].map(s => `<div class="cell"><img src="${s}${IMG_VER}" onerror="this.style.opacity=0"></div>`).join('');
+                track.innerHTML = grid[r].map(s => `<div class="cell"><img src="${s}${IMG_VER}" onerror="this.src='https://via.placeholder.com/100/000000/FFFFFF?text=?'" style="width:90%; height:90%; object-fit:contain;"></div>`).join('');
             }
             document.querySelectorAll('.cell').forEach(c => c.classList.remove('win'));
             
