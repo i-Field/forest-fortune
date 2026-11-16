@@ -1,5 +1,5 @@
 async function validateTelegramData(initData, botToken) {
-  try {
+  try { 
     const urlParams = new URLSearchParams(initData);
     const hash = urlParams.get('hash');
     if (!hash) return false;
