@@ -17,10 +17,14 @@
 
 html, body { height: 100%; overflow: hidden; background: #000; display: flex; align-items: center; justify-content: center; font-family: Arial, sans-serif; }
 
+/* ЭКРАН ЗАГРУЗКИ */
+#preloader { position: fixed; inset: 0; background: #000; z-index: 2147483647; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #ffd966; font-family: Georgia, serif; font-size: 24px; font-weight: 900; transition: opacity 0.5s; }
+#preloader.hidden { opacity: 0; pointer-events: none; }
+
 /* СТАРТОВЫЙ ЭКРАН */
 #startScreen {
     position: fixed; inset: 0; background: radial-gradient(circle, #112211, #000);
-    z-index: 2147483647; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s;
+    z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s;
 }
 #startScreen.hidden { opacity: 0; pointer-events: none; }
 .start-title { font-size: 34px; color: #a8ff78; font-family: Georgia, serif; font-weight: 900; text-shadow: 0 0 20px #2ecc71; margin-bottom: 25px; text-align: center; }
@@ -32,7 +36,7 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 .start-btn:active { transform: scale(0.95); }
 
 /* АРХИТЕКТУРА */
-.game-board { position: relative; aspect-ratio: 768 / 1370; width: 100vw; max-height: 100dvh; background: url('bg.png?v=55555555') no-repeat center center; background-size: 100% 100%; overflow: hidden; transition: background 0.5s; }
+.game-board { position: relative; aspect-ratio: 768 / 1370; width: 100vw; max-height: 100dvh; background: url('bg.png?v=88888888') no-repeat center center; background-size: 100% 100%; overflow: hidden; transition: background 0.5s; }
 .game-board.free-spins-mode { background-color: rgba(0, 50, 0, 0.8); background-blend-mode: overlay; }
 
 /* ЖИВОЙ ДЖЕКПОТ */
@@ -216,6 +220,11 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 </head>
 <body>
 
+<div id="preloader">
+    <div>Загрузка леса...</div>
+    <div style="font-size:16px;margin-top:10px;color:#fff;" id="loadPercent">0%</div>
+</div>
+
 <audio id="bgMusic" loop><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg"></audio>
 
 <div id="startScreen">
@@ -350,7 +359,6 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
         <div class="modal-text" style="text-align:left; font-size: 12px;">
             <p style="margin-bottom:10px;">Собери <b>3, 4 или 5</b> одинаковых символа на активной линии.</p>
             <div class="paytable">
-                <!-- НОВЫЕ СУПЕР-СИМВОЛЫ -->
                 <div class="pay-row"><img src="ufo.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 25 | 4: 150 | 5: 1000</span></div>
                 <div class="pay-row"><img src="weed_cross.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 25 | 4: 125 | 5: 800</span></div>
                 <div class="pay-row"><img src="tech_face.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 20 | 4: 100 | 5: 600</span></div>
@@ -360,14 +368,12 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
                 <div class="pay-row"><img src="firebird.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 12 | 4: 50 | 5: 250</span></div>
                 <div class="pay-row"><img src="rabbit.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 10 | 4: 40 | 5: 200</span></div>
                 <div class="pay-row"><img src="real_hedgehog.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 8 | 4: 30 | 5: 150</span></div>
-                
-                <!-- СТАРЫЕ ЛЕСНЫЕ СИМВОЛЫ (ОСТАВИЛ ЧАСТЬ ДЛЯ БАЛАНСА) -->
                 <div class="pay-row"><img src="bear.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 8 | 4: 25 | 5: 100</span></div>
                 <div class="pay-row"><img src="fox.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 5 | 4: 15 | 5: 80</span></div>
                 <div class="pay-row"><img src="owl.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 4 | 4: 12 | 5: 60</span></div>
                 <div class="pay-row"><img src="squirrel.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 2 | 4: 8 | 5: 40</span></div>
             </div>
-            <p style="color:#ffd966; margin-bottom:5px;">💎 Кристалл (Wild):</p>
+            <p style="color:#ffd966; margin-bottom:5px;">💎 WILD (Кристалл):</p>
             <p style="margin-bottom:10px;">Заменяет любой символ и дает множитель x2 к выигрышу (x4 за два, x8 за три).</p>
             <p style="color:#ffd966; margin-bottom:5px;">🍄 Грибы (Скаттеры):</p>
             <p style="margin-bottom:10px;">3 и более гриба запускают <b>Колесо Фортуны</b>!</p>
@@ -385,53 +391,24 @@ const initData = tg?.initData || "";
 for (let i = 1; i < 9999; i++) clearTimeout(i);
 
 const REELS = 5, ROWS = 5; 
-const IMG_VER = '?v=55555555';
+const IMG_VER = '?v=88888888'; // СБРОС КЭША
 
-// ОГРОМНЫЙ СПИСОК СИМВОЛОВ ТЕПЕРЬ
 const SYMBOLS = [
-    'gem.png', 'mushroom.png', 
+    'wild.png', 'mushroom.png', // Заменили gem.png на wild.png
     'ufo.png', 'weed_cross.png', 'tech_face.png', 'man.png', 'man2.png', 'hutor.png', 'firebird.png', 'rabbit.png', 'real_hedgehog.png',
     'bear.png', 'fox.png', 'owl.png', 'squirrel.png'
 ];
 
-// НАСТРОЙКА ВЕСОВ (Чем меньше, тем реже)
 const WEIGHTS = {
-    'gem.png': 6,           // Wild
-    'mushroom.png': 10,     // Scatter
-    'ufo.png': 2,           // Супер редкий
-    'weed_cross.png': 3,    // Очень редкий
-    'tech_face.png': 4,     // Редкий
-    'man.png': 5,           // Редкий
-    'man2.png': 6,          
-    'hutor.png': 8,
-    'firebird.png': 10,
-    'rabbit.png': 12,
-    'real_hedgehog.png': 15,
-    
-    'bear.png': 18,
-    'fox.png': 20,
-    'owl.png': 22,
-    'squirrel.png': 25
+    'wild.png': 6, 'mushroom.png': 10, 
+    'ufo.png': 2, 'weed_cross.png': 3, 'tech_face.png': 4, 'man.png': 5, 'man2.png': 6, 'hutor.png': 8, 'firebird.png': 10, 'rabbit.png': 12, 'real_hedgehog.png': 15,
+    'bear.png': 18, 'fox.png': 20, 'owl.png': 22, 'squirrel.png': 25
 };
 
-// ТАБЛИЦА ВЫПЛАТ (3, 4, 5 символов)
 const PAYTABLE = { 
-    'gem.png': [15, 60, 250], 
-    'mushroom.png': [10, 40, 150], 
-    'ufo.png': [25, 150, 1000],
-    'weed_cross.png': [25, 125, 800],
-    'tech_face.png': [20, 100, 600],
-    'man.png': [20, 90, 500],
-    'man2.png': [15, 80, 400],
-    'hutor.png': [15, 70, 300],
-    'firebird.png': [12, 50, 250],
-    'rabbit.png': [10, 40, 200],
-    'real_hedgehog.png': [8, 30, 150],
-    
-    'bear.png': [8, 25, 100],
-    'fox.png': [5, 15, 80],
-    'owl.png': [4, 12, 60],
-    'squirrel.png': [2, 8, 40]
+    'wild.png': [15, 60, 250], 'mushroom.png': [10, 40, 150], // Заменили gem.png
+    'ufo.png': [25, 150, 1000], 'weed_cross.png': [25, 125, 800], 'tech_face.png': [20, 100, 600], 'man.png': [20, 90, 500], 'man2.png': [15, 80, 400], 'hutor.png': [15, 70, 300], 'firebird.png': [12, 50, 250], 'rabbit.png': [10, 40, 200], 'real_hedgehog.png': [8, 30, 150],
+    'bear.png': [8, 25, 100], 'fox.png': [5, 15, 80], 'owl.png': [4, 12, 60], 'squirrel.png': [2, 8, 40]
 };
 
 const PAYLINES = [
@@ -522,6 +499,32 @@ function toggleTurbo() {
     haptic('medium'); sfx.click();
     notif(turboMode ? '⚡ Турбо-режим ВКЛ' : 'Турбо-режим ВЫКЛ', 'success');
 }
+
+/* ============================================================
+   ПРЕДЗАГРУЗКА КАРТИНОК
+   ============================================================ */
+function preloadImages() {
+    const allImages = [...SYMBOLS, 'bg.png'];
+    let loadedCount = 0;
+    allImages.forEach(src => {
+        const img = new Image();
+        img.src = src + IMG_VER;
+        img.onload = () => {
+            loadedCount++;
+            document.getElementById('loadPercent').textContent = Math.round((loadedCount / allImages.length) * 100) + '%';
+            if (loadedCount === allImages.length) {
+                document.getElementById('preloader').classList.add('hidden');
+            }
+        };
+        img.onerror = () => {
+            loadedCount++;
+            if (loadedCount === allImages.length) {
+                document.getElementById('preloader').classList.add('hidden');
+            }
+        };
+    });
+}
+preloadImages();
 
 /* ============================================================
    API И СЕТЬ
@@ -822,18 +825,18 @@ async function runCascades(grid) {
             const firstSym = syms[0]; if(firstSym === 'mushroom.png') return;
             
             let targetSym = firstSym;
-            if (targetSym === 'gem.png') { for (let i = 1; i < REELS; i++) { if (syms[i] !== 'gem.png' && syms[i] !== 'mushroom.png') { targetSym = syms[i]; break; } } }
+            if (targetSym === 'wild.png') { for (let i = 1; i < REELS; i++) { if (syms[i] !== 'wild.png' && syms[i] !== 'mushroom.png') { targetSym = syms[i]; break; } } }
 
             let count = 0, wildsCount = 0;
             for(let i=0; i<REELS; i++) { 
-                if(syms[i] === targetSym || syms[i] === 'gem.png') {
+                if(syms[i] === targetSym || syms[i] === 'wild.png') {
                     count++; 
-                    if (syms[i] === 'gem.png') wildsCount++;
+                    if (syms[i] === 'wild.png') wildsCount++;
                 } else break; 
             }
             
             if(count >= 3) {
-                const paySym = targetSym === 'gem.png' ? 'gem.png' : targetSym;
+                const paySym = targetSym === 'wild.png' ? 'wild.png' : targetSym;
                 if (PAYTABLE[paySym]) {
                     let lineWin = PAYTABLE[paySym][count-3] * state.betPerLine;
                     if (wildsCount === 1) lineWin *= 2;
@@ -864,7 +867,7 @@ async function runCascades(grid) {
             if (isFreeSpin) {
                 for(let r=0; r<REELS; r++) {
                     for(let c=0; c<ROWS; c++) {
-                        if (grid[r][c] === 'gem.png' && !stickyWilds.some(sw => sw.r === r && sw.c === c)) {
+                        if (grid[r][c] === 'wild.png' && !stickyWilds.some(sw => sw.r === r && sw.c === c)) {
                             stickyWilds.push({r, c});
                         }
                     }
@@ -875,13 +878,13 @@ async function runCascades(grid) {
             sfx.cascade();
             
             winCells.forEach(cell => { grid[cell.r][cell.c] = null; });
-            stickyWilds.forEach(sw => { grid[sw.r][sw.c] = 'gem.png'; });
+            stickyWilds.forEach(sw => { grid[sw.r][sw.c] = 'wild.png'; });
             
             for(let r=0; r<REELS; r++) {
                 let col = grid[r];
                 let newCol = col.filter(s => s !== null);
                 while (newCol.length < ROWS) { newCol.unshift(randSym()); }
-                stickyWilds.forEach(sw => { if(sw.r === r) newCol[sw.c] = 'gem.png'; });
+                stickyWilds.forEach(sw => { if(sw.r === r) newCol[sw.c] = 'wild.png'; });
                 grid[r] = newCol;
             }
             
