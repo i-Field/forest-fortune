@@ -15,7 +15,7 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
 
-/* ИСПРАВЛЕНИЕ ЧЕРНОЙ ПОЛОСЫ: align-items: flex-start прижимает игру к верху */
+/* ИСПРАВЛЕНИЕ ЧЕРНОЙ ПОЛОСЫ */
 html, body { height: 100%; overflow: hidden; background: #000; display: flex; align-items: flex-start; justify-content: center; font-family: Arial, sans-serif; }
 
 /* ЭКРАН ЗАГРУЗКИ */
@@ -278,7 +278,7 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
     <div class="btn-overlay btn-action btn-risk" id="btnRiskUI" onclick="openRiskModal()"></div>
     <div class="btn-overlay btn-action btn-friends" onclick="openModal('friendsModal')"></div>
     <div class="btn-overlay btn-action btn-tasks" onclick="openModal('tasksModal')"></div>
-    <div class="btn-overlay btn-action btn-top" onclick="openModal('topModal')"></div>
+    <div class="btn-overlay btn-action btn-top" onclick="openModal('topModal'); loadLeaderboard();"></div>
     <div class="btn-overlay btn-action btn-bonus" id="btnDaily" onclick="claimDaily()"></div>
     <div class="btn-overlay btn-action btn-rules" onclick="openModal('paytableModal')"></div>
 
@@ -350,9 +350,18 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
         <button class="modal-close" onclick="takeRiskMoney()">ЗАБРАТЬ ВСЁ</button>
     </div>
 </div>
-<div class="modal" id="friendsModal"><div class="modal-box"><div class="modal-title">🤝 ДРУЗЬЯ</div><div class="modal-text">Приглашайте и получайте 5000 монет!</div><button class="modal-close" onclick="closeModal('friendsModal')">Закрыть</button></div></div>
 
-<!-- НОВОЕ МОДАЛЬНОЕ ОКНО ЗАДАНИЙ -->
+<!-- РЕФЕРАЛЬНАЯ СИСТЕМА -->
+<div class="modal" id="friendsModal">
+    <div class="modal-box">
+        <div class="modal-title">🤝 ПРИГЛАСИ ДРУГА</div>
+        <div class="modal-text">За каждого друга, который зайдет в игру, ты получишь <b>5000 монет</b> на свой баланс!</div>
+        <button class="modal-btn green" onclick="shareReferral()">Поделиться ссылкой</button>
+        <button class="modal-close" onclick="closeModal('friendsModal')">Закрыть</button>
+    </div>
+</div>
+
+<!-- ЗАДАНИЯ -->
 <div class="modal" id="tasksModal">
     <div class="modal-box">
         <div class="modal-title">📜 ЕЖЕДНЕВНЫЕ ЗАДАНИЯ</div>
@@ -430,8 +439,8 @@ const tg = window.Telegram?.WebApp;
 if (tg) { 
     tg.ready(); 
     tg.expand();
-    tg.setHeaderColor('#000000'); // Красит шапку в черный
-    tg.setBackgroundColor('#000000'); // Красит фон за игрой в черный
+    tg.setHeaderColor('#000000'); 
+    tg.setBackgroundColor('#000000'); 
 }
 const initData = tg?.initData || "";
 
@@ -447,7 +456,6 @@ const SYMBOLS = [
     'pinecone.png', 'acorn.png', 'leaf.png', 'coin.png'
 ];
 
-// УЛУЧШЕННЫЕ ВЕСА (Выигрыши падают чаще)
 const WEIGHTS = {
     'gem.png': 10, 'wild.png': 8, 'mushroom.png': 12, 
     'ufo.png': 4, 'weed_cross.png': 4, 'tech_face.png': 6, 'man.png': 6, 'man2.png': 8, 'hutor.png': 10, 'firebird.png': 12, 'rabbit.png': 15, 'real_hedgehog.png': 18,
@@ -455,7 +463,6 @@ const WEIGHTS = {
     'pinecone.png': 35, 'acorn.png': 35, 'leaf.png': 35, 'coin.png': 40
 };
 
-// УЛУЧШЕННЫЕ ВЫПЛАТЫ
 const PAYTABLE = { 
     'gem.png': [15, 60, 250], 'wild.png': [30, 100, 500], 'mushroom.png': [15, 50, 200], 
     'ufo.png': [30, 200, 1500], 'weed_cross.png': [30, 150, 1000], 'tech_face.png': [25, 120, 800], 'man.png': [25, 100, 600], 'man2.png': [20, 100, 500], 'hutor.png': [20, 90, 400], 'firebird.png': [15, 70, 300], 'rabbit.png': [15, 60, 250], 'real_hedgehog.png': [10, 40, 200],
@@ -487,9 +494,6 @@ let stickyWilds = [];
 let totalWinThisRound = 0;
 const MAX_BET_LIMIT = 1000;
 
-/* ============================================================
-   🔊 АУДИО
-   ============================================================ */
 let audioCtx = null;
 let isAudioInit = false;
 
@@ -551,9 +555,6 @@ function toggleTurbo() {
     notif(turboMode ? '⚡ Турбо-режим ВКЛ' : 'Турбо-режим ВЫКЛ', 'success');
 }
 
-/* ============================================================
-   ПРЕДЗАГРУЗКА КАРТИНОК
-   ============================================================ */
 function preloadImages() {
     const allImages = [...SYMBOLS, 'bg.png'];
     let loadedCount = 0;
@@ -573,9 +574,6 @@ function preloadImages() {
 }
 preloadImages();
 
-/* ============================================================
-   API И СЕТЬ
-   ============================================================ */
 async function loadUserData() {
     try {
         const res = await fetch('/api/balance', {
@@ -642,9 +640,38 @@ async function claimDaily() {
     } catch(e) { notif('Ошибка сети', 'error'); }
 }
 
-/* ============================================================
-   UI ФУНКЦИИ
-   ============================================================ */
+async function loadLeaderboard() {
+    try {
+        const res = await fetch('/api/leaderboard');
+        const users = await res.json();
+        let html = '';
+        users.forEach((u, i) => {
+            const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '👤';
+            html += `<div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:14px; border-bottom:1px solid #333; padding-bottom:5px;">
+                <span>${medal} ${u.name || 'Игрок'}</span>
+                <span style="color:#ffd966; font-weight:bold;">${fmt(u.balance)} 🪙</span>
+            </div>`;
+        });
+        if (users.length === 0) html = '<div style="text-align:center;">Пока нет игроков</div>';
+        document.getElementById('topList').innerHTML = html;
+    } catch(e) {
+        document.getElementById('topList').innerHTML = 'Ошибка загрузки';
+    }
+}
+
+function shareReferral() {
+    const myId = tg?.initDataUnsafe?.user?.id || 'unknown';
+    const botUsername = 'Forest_Fortune_Bot'; // Укажи юзернейм своего бота
+    const refLink = `https://t.me/${botUsername}?startapp=ref_${myId}`;
+    
+    if (tg) {
+        tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(refLink)}&text=${encodeURIComponent('Залетай в Forest Fortune! Забирай свои 5000 монет 🦔💰')}`);
+    } else {
+        navigator.clipboard.writeText(refLink);
+        notif('Ссылка скопирована!', 'success');
+    }
+}
+
 const $ = (id) => document.getElementById(id);
 const fmt = (n) => Math.round(n).toLocaleString('ru-RU');
 function notif(msg, type='') { 
@@ -692,6 +719,24 @@ function showBigWin(amount) {
     }, 40);
     
     spawnConfetti();
+
+    // Кнопка "Похвастаться в Stories"
+    if (tg && tg.shareToStory) {
+        const shareBtn = document.createElement('button');
+        shareBtn.className = 'modal-btn gold';
+        shareBtn.style.marginTop = '20px';
+        shareBtn.style.width = '80%';
+        shareBtn.style.position = 'relative';
+        shareBtn.style.zIndex = '100';
+        shareBtn.textContent = '📸 Похвастаться в Stories';
+        shareBtn.onclick = () => {
+            tg.shareToStory('https://i-field.github.io/forest-fortune/bg.png', {
+                text: `Я выиграл ${fmt(amount)} монет в Forest Fortune! 🎰🔥`,
+                widget_link: { url: 'https://t.me/Forest_Fortune_Bot', name: 'Играть в Forest Fortune' }
+            });
+        };
+        overlay.appendChild(shareBtn);
+    }
 }
 
 const reelsEl = $('reels');
@@ -739,9 +784,6 @@ function updateUI() {
     }
 }
 
-/* ============================================================
-   АНИМАЦИЯ БАРАБАНОВ
-   ============================================================ */
 function startReelSpin(r) {
     const track = tracks[r]; let html = ''; 
     for (let i = 0; i < 40; i++) html += `<div class="cell"><img src="${randSym()}${IMG_VER}" onerror="this.src='https://via.placeholder.com/100/000000/FFFFFF?text=?'" style="width:90%; height:90%; object-fit:contain;"></div>`;
@@ -790,9 +832,6 @@ function stopReelAnim(r, final5) {
     });
 }
 
-/* ============================================================
-   КАСКАДНЫЕ БАРАБАНЫ И ИГРОВОЙ ПРОЦЕСС
-   ============================================================ */
 async function startSpin() {
     if (isSpinning) return;
     if (state.balance < totalBet()) { 
@@ -982,9 +1021,6 @@ function startAuto(count) {
     startSpin();
 }
 
-/* ============================================================
-   КОЛЕСО ФОРТУНЫ
-   ============================================================ */
 let isWheelSpinning = false;
 let currentWheelAngle = 0;
 const wheelPrizes = [
@@ -1024,9 +1060,6 @@ function spinFortuneWheel() {
     }, 5200);
 }
 
-/* ============================================================
-   РИСК-ИГРА
-   ============================================================ */
 function openRiskModal() {
     haptic('light'); sfx.click();
     if (pendingRisk <= 0 || riskUsed) { notif('Риск недоступен!', 'error'); return; }
@@ -1077,9 +1110,6 @@ function takeRiskMoney() {
     notif('Вы забрали выигрыш!', 'success'); haptic('success'); sfx.click(); 
 }
 
-/* ============================================================
-   ОСТАЛЬНЫЕ ФУНКЦИИ
-   ============================================================ */
 function setLines(num) { if(isSpinning) return; state.lines = num; updateUI(); haptic('select'); sfx.click(); notif('Линий: ' + num, 'success'); }
 function setMaxBet() { if(isSpinning) return; let maxPossible = Math.floor(state.balance / state.lines); state.betPerLine = Math.min(MAX_BET_LIMIT, Math.max(1, maxPossible)); updateUI(); haptic('heavy'); sfx.click(); notif('Ставка: ' + fmt(state.betPerLine), 'success'); }
 function cycleLang() { haptic('light'); sfx.click(); notif('Язык: RU', 'success'); }
@@ -1100,7 +1130,13 @@ window.addEventListener('resize', () => { if(!isSpinning) buildReels(); });
 /* ============================================================
    СИСТЕМА ЗАДАНИЙ
    ============================================================ */
-let taskData = JSON.parse(localStorage.getItem('ff_tasks')) || { spins: 0, wins: 0, wheel: 0, claimedSpin: false, claimedWin: false, claimedWheel: false };
+let taskData = JSON.parse(localStorage.getItem('ff_tasks'));
+const today = new Date().toDateString();
+
+if (!taskData || taskData.lastDate !== today) {
+    taskData = { spins: 0, wins: 0, wheel: 0, claimedSpin: false, claimedWin: false, claimedWheel: false, lastDate: today };
+    localStorage.setItem('ff_tasks', JSON.stringify(taskData));
+}
 
 function updateTasksUI() {
     const spinProg = Math.min(taskData.spins, 20);
@@ -1126,6 +1162,7 @@ function updateTasksUI() {
 }
 
 function saveTasks() {
+    taskData.lastDate = new Date().toDateString();
     localStorage.setItem('ff_tasks', JSON.stringify(taskData));
     updateTasksUI();
 }
@@ -1146,33 +1183,18 @@ function claimTask(type) {
     }
 }
 
-// Обновляем прогресс при старте спина
 const originalStartSpin = startSpin;
-startSpin = async function() {
-    taskData.spins++;
-    saveTasks();
-    await originalStartSpin();
-};
+startSpin = async function() { taskData.spins++; saveTasks(); await originalStartSpin(); };
 
-// Обновляем прогресс при выигрыше
 const originalRunCascades = runCascades;
-runCascades = async function(grid) {
-    await originalRunCascades(grid);
-    if (totalWinThisRound > 0) {
-        taskData.wins++;
-        saveTasks();
-    }
+runCascades = async function(grid) { 
+    await originalRunCascades(grid); 
+    if (totalWinThisRound > 0) { taskData.wins++; saveTasks(); } 
 };
 
-// Обновляем прогресс при прокрутке колеса
 const originalSpinFortuneWheel = spinFortuneWheel;
-spinFortuneWheel = function() {
-    taskData.wheel++;
-    saveTasks();
-    originalSpinFortuneWheel();
-};
+spinFortuneWheel = function() { taskData.wheel++; saveTasks(); originalSpinFortuneWheel(); };
 
-// Инициализация при загрузке
 updateTasksUI();
 setLines(15);
 </script>
