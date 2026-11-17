@@ -18,7 +18,7 @@
 /* ИСПРАВЛЕНИЕ ЧЕРНОЙ ПОЛОСЫ */
 html, body { height: 100%; overflow: hidden; background: #000; display: flex; align-items: flex-start; justify-content: center; font-family: Arial, sans-serif; }
 
-/* НОВЫЙ ЭКРАН ЗАГРУЗКИ */
+/* ЭКРАН ЗАГРУЗКИ */
 #preloader { position: fixed; inset: 0; background: url('start_screen.png?v=1') no-repeat center center / cover, #000; z-index: 2147483647; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 20%; transition: opacity 0.5s; }
 #preloader.hidden { opacity: 0; pointer-events: none; }
 .loading-text { color: #fff; font-family: Georgia, serif; font-size: 20px; font-weight: 900; text-shadow: 2px 2px 4px #000; margin-bottom: 10px; }
@@ -31,14 +31,28 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
     z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 15%; transition: opacity 0.5s;
 }
 #startScreen.hidden { opacity: 0; pointer-events: none; }
-.start-btn { background: linear-gradient(180deg, #2ecc71, #1a7d43); border: 2px solid #a8ff78; color: #fff; padding: 18px 45px; border-radius: 12px; font-size: 22px; font-weight: 900; box-shadow: 0 6px 20px rgba(46, 204, 113, 0.6); cursor: pointer; font-family: Georgia, serif; animation: startPulse 1.5s infinite alternate; }
+
+/* Кнопка Играть (сильнее закруглена) */
+.start-btn { 
+    background: linear-gradient(180deg, #2ecc71, #1a7d43); border: 2px solid #a8ff78; color: #fff; 
+    padding: 18px 45px; border-radius: 50px; font-size: 22px; font-weight: 900; 
+    box-shadow: 0 6px 20px rgba(46, 204, 113, 0.6); cursor: pointer; font-family: Georgia, serif; 
+    animation: startPulse 1.5s infinite alternate; 
+}
 @keyframes startPulse { 0% { transform: scale(1); box-shadow: 0 0 10px #2ecc71; } 100% { transform: scale(1.05); box-shadow: 0 0 30px #a8ff78; } }
 .start-btn:active { transform: scale(0.95); }
+
+/* СКРЫТИЕ КНОПОК НА СТАРТОВОМ ЭКРАНЕ */
+#startScreen:not(.hidden) ~ .game-board .btn-maxbet,
+#startScreen:not(.hidden) ~ .game-board .btn-turbo {
+    opacity: 0;
+    pointer-events: none;
+}
 
 /* АРХИТЕКТУРА */
 .game-board { position: relative; aspect-ratio: 768 / 1370; width: 100vw; max-height: 100dvh; background: url('bg.png?v=9999999') no-repeat center center; background-size: 100% 100%; overflow: hidden; transition: background 0.5s; }
 
-/* ЭФФЕКТ ФРИСПИНОВ (ЗЕЛЕНЫЙ ФОН + ТРЯСКА) */
+/* ЭФФЕКТ ФРИСПИНОВ */
 .game-board.free-spins-mode { 
     background-color: rgba(0, 150, 50, 0.4); 
     background-blend-mode: multiply;
@@ -120,7 +134,7 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 .lines-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 20; }
 
 /* КНОПКИ */
-.btn-overlay, .btn-maxbet, .btn-turbo { position: absolute; z-index: 999999; cursor: pointer; border-radius: 8px; pointer-events: auto; transition: transform 0.1s, filter 0.1s; }
+.btn-overlay, .btn-maxbet, .btn-turbo { position: absolute; z-index: 999999; cursor: pointer; border-radius: 8px; pointer-events: auto; transition: transform 0.1s, filter 0.1s, opacity 0.3s; }
 .btn-overlay:active, .btn-maxbet:active, .btn-turbo:active { transform: scale(0.9); filter: brightness(1.5); }
 
 .btn-lang { top: 1.5%; left: 2.5%; width: 9%; height: 4.5%; border-radius: 50%; }
@@ -197,9 +211,18 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 .modal-btn.gold { background: linear-gradient(180deg, #ffd966, #b8860b); color: #1a1200; box-shadow: 0 4px 0 #5c4300; }
 
 /* СТИЛИ ДЛЯ ФОНОВЫХ КАРТИНОК В МОДАЛКАХ */
-.bg-tasks { background: url('bg_tasks.png?v=1') no-repeat center center / cover, linear-gradient(180deg, #1a2e1a, #0a1208); }
-.bg-shop { background: url('bg_shop.png?v=1') no-repeat center center / cover, linear-gradient(180deg, #1a2e1a, #0a1208); }
-.bg-tasks::before, .bg-shop::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.6); z-index: -1; border-radius: 14px; }
+.bg-tasks { background: url('bg_tasks.png?v=1') no-repeat center center / cover; border: none; box-shadow: none; }
+.bg-shop { background: url('bg_shop.png?v=1') no-repeat center center / cover; border: none; box-shadow: none; }
+
+/* НЕВИДИМЫЕ КНОПКИ ПОВЕРХ КАРТИНОК */
+.invisible-btn {
+    background: transparent !important;
+    border: 1px solid transparent !important;
+    color: transparent !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+.invisible-btn:active { background: rgba(255,255,255,0.1) !important; }
 
 .paytable { display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; text-align: left; }
 .pay-row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; }
@@ -323,14 +346,12 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
     </div>
 </div>
 
-<!-- НОВОЕ КОЛЕСО -->
 <div class="modal" id="wheelModal">
     <div class="modal-box" style="max-width: 320px;">
         <div class="modal-title">🎡 КОЛЕСО ФОРТУНЫ</div>
         <div class="wheel-container">
             <div class="wheel-pointer"></div>
             <div class="wheel" id="fortuneWheel">
-                <!-- Текст секторов -->
                 <span class="wheel-text" style="transform: rotate(22.5deg) translate(85px, -10px);">x2</span>
                 <span class="wheel-text" style="transform: rotate(67.5deg) translate(85px, -10px);">x5</span>
                 <span class="wheel-text" style="transform: rotate(112.5deg) translate(85px, -10px);">10 FS</span>
@@ -346,18 +367,17 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
     </div>
 </div>
 
-<!-- МАГАЗИН С НОВЫМ ФОНОМ -->
+<!-- НОВЫЙ МАГАЗИН (БЕЗ СТАРОГО ТЕКСТА) -->
 <div class="modal" id="shopModal">
-    <div class="modal-box bg-shop">
-        <div class="modal-title">⭐ МАГАЗИН ЗВЕЗД</div>
-        <div class="modal-text" style="color:#fff; text-shadow: 1px 1px 2px #000;">Покупка монет за Telegram Stars (XTR)</div>
-        <div class="modal-btns">
-            <button class="modal-btn gold" onclick="buyPackage('p100')">100 ⭐ = 1 000 монет</button>
-            <button class="modal-btn gold" onclick="buyPackage('p500')">500 ⭐ = 6 000 монет</button>
-            <button class="modal-btn gold" onclick="buyPackage('p2000')">2000 ⭐ = 30 000 монет</button>
-            <button class="modal-btn gold" onclick="buyPackage('p10000')">10000 ⭐ = 200 000 монет</button>
+    <div class="modal-box bg-shop" style="padding: 0; background-color: transparent; border: none; box-shadow: none;">
+        <div style="position: relative; width: 100%; height: 70vh; max-height: 700px;">
+            <!-- Невидимые кнопки поверх нарисованных -->
+            <button class="invisible-btn" style="position: absolute; top: 28%; left: 10%; width: 80%; height: 10%;" onclick="buyPackage('p100')">1</button>
+            <button class="invisible-btn" style="position: absolute; top: 42%; left: 10%; width: 80%; height: 10%;" onclick="buyPackage('p500')">2</button>
+            <button class="invisible-btn" style="position: absolute; top: 56%; left: 10%; width: 80%; height: 10%;" onclick="buyPackage('p2000')">3</button>
+            <button class="invisible-btn" style="position: absolute; top: 70%; left: 10%; width: 80%; height: 10%;" onclick="buyPackage('p10000')">4</button>
         </div>
-        <button class="modal-close" onclick="closeModal('shopModal')">Закрыть</button>
+        <button class="modal-close" style="position: absolute; bottom: 3%; left: 50%; transform: translateX(-50%); width: 80%;" onclick="closeModal('shopModal')">Закрыть</button>
     </div>
 </div>
 
@@ -383,47 +403,29 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
     </div>
 </div>
 
-<!-- ЗАДАНИЯ С НОВЫМ ФОНОМ -->
+<!-- НОВЫЕ ЗАДАНИЯ (БЕЗ СТАРОГО ТЕКСТА) -->
 <div class="modal" id="tasksModal">
-    <div class="modal-box bg-tasks">
-        <div class="modal-title">📜 ЕЖЕДНЕВНЫЕ ЗАДАНИЯ</div>
-        <div class="modal-text" style="text-align: left;">
-            <div style="margin-bottom: 15px; background: rgba(0,0,0,0.6); padding: 10px; border-radius: 8px; border: 1px solid #ffd966;">
-                <div style="display:flex; justify-content:space-between;">
-                    <span style="color:#fff;">Сделать 20 спинов</span>
-                    <span id="taskSpinProg" style="color:#ffd966; font-weight:bold;">0/20</span>
-                </div>
-                <button id="btnTaskSpin" class="modal-btn green" style="margin-top: 10px; font-size: 12px; padding: 8px;" onclick="claimTask('spin')">Забрать 500 🪙</button>
-            </div>
-            
-            <div style="margin-bottom: 15px; background: rgba(0,0,0,0.6); padding: 10px; border-radius: 8px; border: 1px solid #ffd966;">
-                <div style="display:flex; justify-content:space-between;">
-                    <span style="color:#fff;">Поймать 5 выигрышей</span>
-                    <span id="taskWinProg" style="color:#ffd966; font-weight:bold;">0/5</span>
-                </div>
-                <button id="btnTaskWin" class="modal-btn green" style="margin-top: 10px; font-size: 12px; padding: 8px;" onclick="claimTask('win')">Забрать 1000 🪙</button>
-            </div>
-            
-            <div style="margin-bottom: 15px; background: rgba(0,0,0,0.6); padding: 10px; border-radius: 8px; border: 1px solid #ffd966;">
-                <div style="display:flex; justify-content:space-between;">
-                    <span style="color:#fff;">Прокрутить Колесо Фортуны</span>
-                    <span id="taskWheelProg" style="color:#ffd966; font-weight:bold;">0/1</span>
-                </div>
-                <button id="btnTaskWheel" class="modal-btn green" style="margin-top: 10px; font-size: 12px; padding: 8px;" onclick="claimTask('wheel')">Забрать 2000 🪙</button>
-            </div>
+    <div class="modal-box bg-tasks" style="padding: 0; background-color: transparent; border: none; box-shadow: none;">
+        <div style="position: relative; width: 100%; height: 70vh; max-height: 700px;">
+            <!-- Невидимые кнопки поверх нарисованных -->
+            <button class="invisible-btn" style="position: absolute; top: 30%; left: 10%; width: 80%; height: 8%;" onclick="claimTask('spin')">1</button>
+            <button class="invisible-btn" style="position: absolute; top: 47%; left: 10%; width: 80%; height: 8%;" onclick="claimTask('win')">2</button>
+            <button class="invisible-btn" style="position: absolute; top: 64%; left: 10%; width: 80%; height: 8%;" onclick="claimTask('wheel')">3</button>
         </div>
-        <button class="modal-close" onclick="closeModal('tasksModal')">Закрыть</button>
+        <button class="modal-close" style="position: absolute; bottom: 3%; left: 50%; transform: translateX(-50%); width: 80%;" onclick="closeModal('tasksModal')">Закрыть</button>
     </div>
 </div>
 
 <div class="modal" id="topModal"><div class="modal-box"><div class="modal-title">🏆 ТОП ИГРОКОВ</div><div class="modal-text" id="topList">Загрузка...</div><button class="modal-close" onclick="closeModal('topModal')">Закрыть</button></div></div>
 
+<!-- РАСШИРЕННЫЕ ПРАВИЛА -->
 <div class="modal" id="paytableModal">
     <div class="modal-box">
         <div class="modal-title">📋 ПРАВИЛА И ВЫПЛАТЫ</div>
         <div class="modal-text" style="text-align:left; font-size: 12px;">
             <p style="margin-bottom:10px;">Собери <b>3, 4 или 5</b> одинаковых символа на активной линии.</p>
             <div class="paytable">
+                <!-- Новые супер-символы -->
                 <div class="pay-row"><img src="ufo.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 30 | 4: 200 | 5: 1500</span></div>
                 <div class="pay-row"><img src="weed_cross.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 30 | 4: 150 | 5: 1000</span></div>
                 <div class="pay-row"><img src="tech_face.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 25 | 4: 120 | 5: 800</span></div>
@@ -433,11 +435,20 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
                 <div class="pay-row"><img src="firebird.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 15 | 4: 70 | 5: 300</span></div>
                 <div class="pay-row"><img src="rabbit.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 15 | 4: 60 | 5: 250</span></div>
                 <div class="pay-row"><img src="real_hedgehog.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 10 | 4: 40 | 5: 200</span></div>
+                <!-- Лесные символы -->
                 <div class="pay-row"><img src="bear.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 10 | 4: 30 | 5: 150</span></div>
                 <div class="pay-row"><img src="fox.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 8 | 4: 25 | 5: 100</span></div>
                 <div class="pay-row"><img src="deer.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 8 | 4: 25 | 5: 100</span></div>
                 <div class="pay-row"><img src="owl.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 5 | 4: 15 | 5: 80</span></div>
                 <div class="pay-row"><img src="squirrel.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 4 | 4: 12 | 5: 60</span></div>
+                <div class="pay-row"><img src="squirrel1.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 4 | 4: 12 | 5: 60</span></div>
+                <div class="pay-row"><img src="raccoon.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 3 | 4: 10 | 5: 50</span></div>
+                <div class="pay-row"><img src="hedgehog.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 3 | 4: 10 | 5: 50</span></div>
+                <!-- Частые символы -->
+                <div class="pay-row"><img src="pinecone.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 2 | 4: 8 | 5: 40</span></div>
+                <div class="pay-row"><img src="acorn.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 2 | 4: 8 | 5: 40</span></div>
+                <div class="pay-row"><img src="leaf.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 2 | 4: 8 | 5: 40</span></div>
+                <div class="pay-row"><img src="coin.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 2 | 4: 5 | 5: 30</span></div>
             </div>
             <p style="color:#ffd966; margin-bottom:5px;">💎 WILD (Кристаллы):</p>
             <p style="margin-bottom:10px;">Оба кристалла заменяют любой символ. Новый (wild.png) дает x2 (x4 за два, x8 за три).</p>
@@ -471,7 +482,6 @@ const SYMBOLS = [
     'pinecone.png', 'acorn.png', 'leaf.png', 'coin.png'
 ];
 
-// БАЗОВЫЕ ВЕСА
 const BASE_WEIGHTS = {
     'gem.png': 10, 'wild.png': 8, 'mushroom.png': 12, 
     'ufo.png': 4, 'weed_cross.png': 4, 'tech_face.png': 6, 'man.png': 6, 'man2.png': 8, 'hutor.png': 10, 'firebird.png': 12, 'rabbit.png': 15, 'real_hedgehog.png': 18,
@@ -497,18 +507,14 @@ const LINE_COLORS = ['#ff3b30','#ff9500','#ffcc00','#34c759','#00c7be','#30b0ff'
 
 let POOL = [];
 
-// ФУНКЦИЯ ДИНАМИЧЕСКОГО ПУЛА (Мелкие ставки - больше шансов, крупные - меньше)
 function generatePool(bet) {
     POOL = [];
     let modifier = 1;
-    
-    // Если ставка большая, уменьшаем шансы на дорогие символы
     if (bet > 100) modifier = 0.7;
     if (bet > 500) modifier = 0.4;
 
     Object.entries(BASE_WEIGHTS).forEach(([s,w]) => {
         let weight = w;
-        // Увеличиваем шанс выпадения дешевых символов на крупных ставках (чтобы собирались линии)
         if (['coin.png', 'leaf.png', 'acorn.png', 'pinecone.png'].includes(s)) {
             weight = Math.floor(w * (bet > 100 ? 1.5 : 1.2));
         } else {
@@ -600,11 +606,15 @@ function preloadImages() {
         img.onload = () => {
             loadedCount++;
             document.getElementById('loadFill').style.width = Math.round((loadedCount / allImages.length) * 100) + '%';
-            if (loadedCount === allImages.length) { document.getElementById('preloader').classList.add('hidden'); }
+            if (loadedCount === allImages.length) { 
+                setTimeout(() => { document.getElementById('preloader').classList.add('hidden'); }, 400);
+            }
         };
         img.onerror = () => {
             loadedCount++;
-            if (loadedCount === allImages.length) { document.getElementById('preloader').classList.add('hidden'); }
+            if (loadedCount === allImages.length) { 
+                setTimeout(() => { document.getElementById('preloader').classList.add('hidden'); }, 400);
+            }
         };
     });
 }
@@ -854,7 +864,6 @@ async function startSpin() {
         autoSpins = 0; return; 
     }
     
-    // Генерируем пул на основе текущей ставки (динамическая математика)
     generatePool(totalBet());
 
     state.balance -= totalBet(); 
@@ -865,7 +874,6 @@ async function startSpin() {
     $('btnRiskUI').classList.remove('pulse-risk');
     $('stopVisual').style.display = 'flex';
     
-    // Уменьшенный рост джекпота
     state.jackpot += Math.floor(totalBet() * 0.01);
     
     updateUI(); overlay.innerHTML = '';
@@ -1054,7 +1062,6 @@ function spinFortuneWheel() {
     isWheelSpinning = true; $('spinWheelBtn').disabled = true; $('spinWheelBtn').textContent = 'КРУТИТСЯ...';
     haptic('medium'); sfx.spinStart();
 
-    // УМЕНЬШЕН ШАНС ДЖЕКПОТА В КОЛЕСЕ
     let winIndex;
     if (Math.random() < 0.00001) {
         winIndex = 5; // JP
@@ -1137,7 +1144,6 @@ function takeRiskMoney() {
     notif('Вы забрали выигрыш!', 'success'); haptic('success'); sfx.click(); 
 }
 
-// КНОПКИ ЛИНИЙ ТЕПЕРЬ ПЛАВНЫЕ (ПО ОДНОЙ)
 function setLines(num) { if(isSpinning) return; state.lines = num; updateUI(); haptic('select'); sfx.click(); notif('Линий: ' + num, 'success'); }
 $('linesDec').onclick = () => { if(!isSpinning) setLines(Math.max(1, state.lines-1)); };
 $('linesInc').onclick = () => { if(!isSpinning) setLines(Math.min(21, state.lines+1)); };
