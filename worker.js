@@ -1,5 +1,5 @@
 async function validateTelegramData(initData, botToken) {
-  try { 
+  try {
     const urlParams = new URLSearchParams(initData);
     const hash = urlParams.get('hash');
     if (!hash) return false;
@@ -17,7 +17,6 @@ async function validateTelegramData(initData, botToken) {
 
 export default {
   async fetch(request, env, ctx) {
-    // CORS заголовки для работы с GitHub Pages
     const corsHeaders = {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET,HEAD,POST,OPTIONS",
@@ -30,14 +29,29 @@ export default {
 
     const url = new URL(request.url);
 
-    // 1. УСТАНОВКА ВЕБХУКА
+    // Установка вебхука
     if (url.pathname === '/api/setup-webhook') {
       const webhookUrl = `https://${url.host}/api/webhook`;
       const res = await fetch(`https://api.telegram.org/bot${env.BOT_TOKEN}/setWebhook?url=${webhookUrl}`);
       return new Response(JSON.stringify(await res.json()), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
-    // 2. БАЛАНС И ИНИЦИАЛИЗАЦИЯ ИГРОКА
+    // Лидерборд
+    if (url.pathname === '/api/leaderboard') {
+      try {
+        const list = await env.FOREST_DB.list({ prefix: 'user_' });
+        let users = [];
+        for (let key of list.keys) {
+          let bal = await env.FOREST_DB.get(key.name);
+          let name = await env.FOREST_DB.get(`name_${key.name.replace('user_', '')}`);
+          if (bal) users.push({ id: key.name.replace('user_', ''), balance: parseInt(bal), name: name || 'Игрок' });
+        }
+        users.sort((a, b) => b.balance - a.balance);
+        return new Response(JSON.stringify(users.slice(0, 10)), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+      } catch(e) { return new Response('[]', { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }); }
+    }
+
+    // Баланс
     if (url.pathname === '/api/balance' && request.method === 'POST') {
       try {
         const { initData, startParam } = await request.json();
@@ -50,10 +64,9 @@ export default {
         let balance = await env.FOREST_DB.get(`user_${userId}`);
         
         if (balance === null) {
-          balance = 1000; // Стартовый баланс (можешь поменять на 100)
+          balance = 1000;
           await env.FOREST_DB.put(`user_${userId}`, balance.toString());
           
-          // Реферальная система
           if (startParam && startParam.startsWith('ref_')) {
             const referrerId = startParam.replace('ref_', '');
             if (referrerId !== userId.toString()) {
@@ -73,25 +86,23 @@ export default {
       } catch(e) { return new Response(JSON.stringify({ error: e.message }), { status: 500, headers: corsHeaders }); }
     }
 
-    // 3. ОБРАБОТКА СПИНА (СИНХРОНИЗАЦИЯ)
+    // Спин
     if (url.pathname === '/api/spin' && request.method === 'POST') {
       try {
-        let { initData, newBalance, betAmount } = await request.json();
+        let { initData, newBalance, betAmount } = await request.json(); // ИСПОЛЬЗУЕМ let
         if (!await validateTelegramData(initData, env.BOT_TOKEN)) return new Response('Forbidden', { status: 403, headers: corsHeaders });
         const userId = JSON.parse(new URLSearchParams(initData).get('user')).id;
         
-        // Рост джекпота (2% от ставки)
         let jackpot = parseInt(await env.FOREST_DB.get('global_jackpot') || '500000');
         if (betAmount > 0) jackpot += Math.floor(betAmount * 0.02); 
         
-        // Шанс на джекпот 0.1%
         let jackpotWon = false;
         let winAmount = 0;
         if (Math.random() < 0.001) { 
           jackpotWon = true;
           winAmount = jackpot;
           newBalance += jackpot;
-          jackpot = 500000; // Сброс
+          jackpot = 500000; 
         }
         
         await env.FOREST_DB.put(`user_${userId}`, newBalance.toString());
@@ -101,7 +112,7 @@ export default {
       } catch(e) { return new Response(JSON.stringify({ error: e.message }), { status: 500, headers: corsHeaders }); }
     }
 
-    // 4. ЕЖЕДНЕВНЫЙ БОНУС (100 МОНЕТ)
+    // Ежедневный бонус
     if (url.pathname === '/api/daily-bonus' && request.method === 'POST') {
       try {
         const { initData } = await request.json();
@@ -124,7 +135,7 @@ export default {
       } catch(e) { return new Response(JSON.stringify({ error: e.message }), { status: 500, headers: corsHeaders }); }
     }
 
-    // 5. СОЗДАНИЕ ИНВОЙСА ДЛЯ ЗВЕЗД (Telegram Stars)
+    // Инвойс для Stars
     if (url.pathname === '/api/invoice' && request.method === 'POST') {
       try {
         const { initData, packageId } = await request.json();
@@ -144,15 +155,14 @@ export default {
       } catch(e) { return new Response(JSON.stringify({ error: e.message }), { status: 500, headers: corsHeaders }); }
     }
 
-    // 6. ВЕБХУК БОТА (Команда /start и Оплата)
+    // ВЕБХУК БОТА
     if (url.pathname === '/api/webhook' && request.method === 'POST') {
       try {
         const update = await request.json();
 
-        // Обработка /start
         if (update.message && update.message.text && update.message.text.startsWith('/start')) {
           const chatId = update.message.chat.id;
-          const gameUrl = `https://${url.host}/`; // Ссылка на игру
+          const gameUrl = `https://i-field.github.io/forest-fortune/`; 
           const replyMarkup = { inline_keyboard: [[{ text: "🦔 Открыть Forest Fortune", web_app: { url: gameUrl } }]] };
 
           await fetch(`https://api.telegram.org/bot${env.BOT_TOKEN}/sendMessage`, {
@@ -161,7 +171,6 @@ export default {
           });
         }
 
-        // Подтверждение перед оплатой (Обязательно для Telegram Stars)
         if (update.pre_checkout_query) {
           const pq = update.pre_checkout_query;
           await fetch(`https://api.telegram.org/bot${env.BOT_TOKEN}/answerPreCheckoutQuery`, {
@@ -170,7 +179,6 @@ export default {
           });
         }
 
-        // Успешная оплата
         if (update.message?.successful_payment) {
           const payload = JSON.parse(update.message.successful_payment.invoice_payload);
           let balance = parseInt(await env.FOREST_DB.get(`user_${payload.userId}`) || '0');
@@ -181,7 +189,6 @@ export default {
       } catch(e) { return new Response('ok', { headers: corsHeaders }); }
     }
 
-    // Если запрос не к API, отдаем статику (HTML, картинки)
     return env.ASSETS.fetch(request);
   }
 };
