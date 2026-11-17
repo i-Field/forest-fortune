@@ -18,29 +18,32 @@
 /* ИСПРАВЛЕНИЕ ЧЕРНОЙ ПОЛОСЫ */
 html, body { height: 100%; overflow: hidden; background: #000; display: flex; align-items: flex-start; justify-content: center; font-family: Arial, sans-serif; }
 
-/* ЭКРАН ЗАГРУЗКИ */
-#preloader { position: fixed; inset: 0; background: url('start_screen.png?v=1') no-repeat center center / cover, #000; z-index: 2147483647; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 20%; transition: opacity 0.5s; }
-#preloader.hidden { opacity: 0; pointer-events: none; }
-.loading-text { color: #fff; font-family: Georgia, serif; font-size: 20px; font-weight: 900; text-shadow: 2px 2px 4px #000; margin-bottom: 10px; }
-.progress-bar { width: 60%; height: 15px; background: rgba(0,0,0,0.7); border: 2px solid #ffd966; border-radius: 10px; overflow: hidden; }
-.progress-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #2ecc71, #a8ff78); transition: width 0.2s; }
-
-/* СТАРТОВЫЙ ЭКРАН */
+/* ЭКРАН ЗАГРУЗКИ (СРАЗУ ЗАСТАВКА) */
 #startScreen {
-    position: fixed; inset: 0; background: url('start_screen.png?v=1') no-repeat center center / cover, radial-gradient(circle, #112211, #000);
-    z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 15%; transition: opacity 0.5s;
+    position: fixed; inset: 0; background: url('start_screen.png?v=1') no-repeat center center / cover, #000;
+    z-index: 2147483647; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 12%; transition: opacity 0.5s;
 }
 #startScreen.hidden { opacity: 0; pointer-events: none; }
 
-/* Кнопка Играть (сильнее закруглена) */
-.start-btn { 
-    background: linear-gradient(180deg, #2ecc71, #1a7d43); border: 2px solid #a8ff78; color: #fff; 
-    padding: 18px 45px; border-radius: 50px; font-size: 22px; font-weight: 900; 
-    box-shadow: 0 6px 20px rgba(46, 204, 113, 0.6); cursor: pointer; font-family: Georgia, serif; 
-    animation: startPulse 1.5s infinite alternate; 
+/* Контейнер для полоски загрузки, чтобы наложить на нарисованную */
+.progress-container {
+    width: 60%; /* Ширина полоски */
+    height: 18px;
+    background: rgba(0,0,0,0.6);
+    border: 2px solid #5c3a21; /* Деревянная рамка */
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 0 10px rgba(0,0,0,0.8);
+    /* Если полоска не совпадает с картинкой, подгони margin-bottom */
+    margin-bottom: 50px; 
 }
-@keyframes startPulse { 0% { transform: scale(1); box-shadow: 0 0 10px #2ecc71; } 100% { transform: scale(1.05); box-shadow: 0 0 30px #a8ff78; } }
-.start-btn:active { transform: scale(0.95); }
+.progress-fill {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #2ecc71, #a8ff78);
+    transition: width 0.2s;
+}
 
 /* СКРЫТИЕ КНОПОК НА СТАРТОВОМ ЭКРАНЕ */
 #startScreen:not(.hidden) ~ .game-board .btn-maxbet,
@@ -264,16 +267,14 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 </head>
 <body>
 
-<div id="preloader">
-    <div class="loading-text">Загрузка леса...</div>
-    <div class="progress-bar"><div class="progress-fill" id="loadFill"></div></div>
+<!-- ЗАГРУЗКА СРАЗУ НА ЗАСТАВКЕ -->
+<div id="startScreen">
+    <div class="progress-container">
+        <div class="progress-fill" id="loadFill"></div>
+    </div>
 </div>
 
 <audio id="bgMusic" loop><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg"></audio>
-
-<div id="startScreen">
-    <button class="start-btn" id="startBtn">ИГРАТЬ 🔊</button>
-</div>
 
 <div class="game-board" id="gameBoard">
     <div class="fire-glow fire-left"></div> <div class="fire-glow fire-right"></div>
@@ -367,11 +368,9 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
     </div>
 </div>
 
-<!-- НОВЫЙ МАГАЗИН (БЕЗ СТАРОГО ТЕКСТА) -->
 <div class="modal" id="shopModal">
     <div class="modal-box bg-shop" style="padding: 0; background-color: transparent; border: none; box-shadow: none;">
         <div style="position: relative; width: 100%; height: 70vh; max-height: 700px;">
-            <!-- Невидимые кнопки поверх нарисованных -->
             <button class="invisible-btn" style="position: absolute; top: 28%; left: 10%; width: 80%; height: 10%;" onclick="buyPackage('p100')">1</button>
             <button class="invisible-btn" style="position: absolute; top: 42%; left: 10%; width: 80%; height: 10%;" onclick="buyPackage('p500')">2</button>
             <button class="invisible-btn" style="position: absolute; top: 56%; left: 10%; width: 80%; height: 10%;" onclick="buyPackage('p2000')">3</button>
@@ -403,11 +402,9 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
     </div>
 </div>
 
-<!-- НОВЫЕ ЗАДАНИЯ (БЕЗ СТАРОГО ТЕКСТА) -->
 <div class="modal" id="tasksModal">
     <div class="modal-box bg-tasks" style="padding: 0; background-color: transparent; border: none; box-shadow: none;">
         <div style="position: relative; width: 100%; height: 70vh; max-height: 700px;">
-            <!-- Невидимые кнопки поверх нарисованных -->
             <button class="invisible-btn" style="position: absolute; top: 30%; left: 10%; width: 80%; height: 8%;" onclick="claimTask('spin')">1</button>
             <button class="invisible-btn" style="position: absolute; top: 47%; left: 10%; width: 80%; height: 8%;" onclick="claimTask('win')">2</button>
             <button class="invisible-btn" style="position: absolute; top: 64%; left: 10%; width: 80%; height: 8%;" onclick="claimTask('wheel')">3</button>
@@ -418,14 +415,12 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 
 <div class="modal" id="topModal"><div class="modal-box"><div class="modal-title">🏆 ТОП ИГРОКОВ</div><div class="modal-text" id="topList">Загрузка...</div><button class="modal-close" onclick="closeModal('topModal')">Закрыть</button></div></div>
 
-<!-- РАСШИРЕННЫЕ ПРАВИЛА -->
 <div class="modal" id="paytableModal">
     <div class="modal-box">
         <div class="modal-title">📋 ПРАВИЛА И ВЫПЛАТЫ</div>
         <div class="modal-text" style="text-align:left; font-size: 12px;">
             <p style="margin-bottom:10px;">Собери <b>3, 4 или 5</b> одинаковых символа на активной линии.</p>
             <div class="paytable">
-                <!-- Новые супер-символы -->
                 <div class="pay-row"><img src="ufo.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 30 | 4: 200 | 5: 1500</span></div>
                 <div class="pay-row"><img src="weed_cross.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 30 | 4: 150 | 5: 1000</span></div>
                 <div class="pay-row"><img src="tech_face.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 25 | 4: 120 | 5: 800</span></div>
@@ -435,7 +430,6 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
                 <div class="pay-row"><img src="firebird.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 15 | 4: 70 | 5: 300</span></div>
                 <div class="pay-row"><img src="rabbit.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 15 | 4: 60 | 5: 250</span></div>
                 <div class="pay-row"><img src="real_hedgehog.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 10 | 4: 40 | 5: 200</span></div>
-                <!-- Лесные символы -->
                 <div class="pay-row"><img src="bear.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 10 | 4: 30 | 5: 150</span></div>
                 <div class="pay-row"><img src="fox.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 8 | 4: 25 | 5: 100</span></div>
                 <div class="pay-row"><img src="deer.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 8 | 4: 25 | 5: 100</span></div>
@@ -444,7 +438,6 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
                 <div class="pay-row"><img src="squirrel1.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 4 | 4: 12 | 5: 60</span></div>
                 <div class="pay-row"><img src="raccoon.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 3 | 4: 10 | 5: 50</span></div>
                 <div class="pay-row"><img src="hedgehog.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 3 | 4: 10 | 5: 50</span></div>
-                <!-- Частые символы -->
                 <div class="pay-row"><img src="pinecone.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 2 | 4: 8 | 5: 40</span></div>
                 <div class="pay-row"><img src="acorn.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 2 | 4: 8 | 5: 40</span></div>
                 <div class="pay-row"><img src="leaf.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 2 | 4: 8 | 5: 40</span></div>
@@ -523,6 +516,9 @@ function generatePool(bet) {
         for(let i=0; i<weight; i++) POOL.push(s);
     });
 }
+
+// Инициализируем пул сразу, чтобы барабаны не были пустыми
+generatePool(15);
 
 let state = { balance: 1000, betPerLine: 1, lines: 15, sound: true, lang: 'ru', jackpot: 500000 };
 let isSpinning = false, stopRequested = false;
@@ -607,13 +603,24 @@ function preloadImages() {
             loadedCount++;
             document.getElementById('loadFill').style.width = Math.round((loadedCount / allImages.length) * 100) + '%';
             if (loadedCount === allImages.length) { 
-                setTimeout(() => { document.getElementById('preloader').classList.add('hidden'); }, 400);
+                // Ждем 2 секунды после загрузки, затем убираем заставку
+                setTimeout(() => {
+                    document.getElementById('startScreen').classList.add('hidden');
+                    buildReels();
+                    initAudio();
+                    loadUserData();
+                }, 2000);
             }
         };
         img.onerror = () => {
             loadedCount++;
             if (loadedCount === allImages.length) { 
-                setTimeout(() => { document.getElementById('preloader').classList.add('hidden'); }, 400);
+                setTimeout(() => {
+                    document.getElementById('startScreen').classList.add('hidden');
+                    buildReels();
+                    initAudio();
+                    loadUserData();
+                }, 2000);
             }
         };
     });
@@ -770,7 +777,7 @@ const tracks = [];
 const reelAnimFrames = [null, null, null, null, null];
 let reelPositions = [0, 0, 0, 0, 0];
 
-const randSym = () => POOL[Math.floor(Math.random() * POOL.length)];
+const randSym = () => POOL.length > 0 ? POOL[Math.floor(Math.random() * POOL.length)] : 'coin.png';
 const totalBet = () => state.lines * state.betPerLine;
 
 function buildReels() {
@@ -1152,11 +1159,6 @@ function setMaxBet() { if(isSpinning) return; let maxPossible = Math.floor(state
 function cycleLang() { haptic('light'); sfx.click(); notif('Язык: RU', 'success'); }
 function toggleAuto() { if(isSpinning) return; openModal('autoModal'); }
 
-$('startBtn').onclick = () => {
-    initAudio(); $('startScreen').classList.add('hidden'); buildReels(); haptic('success'); sfx.click();
-    loadUserData();
-};
-
 $('spinBtn').onclick = (e) => { e.preventDefault(); e.stopPropagation(); if (isSpinning) requestStop(); else startSpin(); };
 $('betDec').onclick = () => { if(!isSpinning){ state.betPerLine = Math.max(1, state.betPerLine-1); updateUI(); haptic('select'); sfx.click(); } };
 $('betInc').onclick = () => { if(!isSpinning){ state.betPerLine = Math.min(MAX_BET_LIMIT, state.betPerLine+1); updateUI(); haptic('select'); sfx.click(); } };
@@ -1231,7 +1233,6 @@ const originalSpinFortuneWheel = spinFortuneWheel;
 spinFortuneWheel = function() { taskData.wheel++; saveTasks(); originalSpinFortuneWheel(); };
 
 updateTasksUI();
-setLines(15);
 </script>
 </body>
 </html>
