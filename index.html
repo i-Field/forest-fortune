@@ -18,34 +18,46 @@
 /* ИСПРАВЛЕНИЕ ЧЕРНОЙ ПОЛОСЫ */
 html, body { height: 100%; overflow: hidden; background: #000; display: flex; align-items: flex-start; justify-content: center; font-family: Arial, sans-serif; }
 
-/* ЭКРАН ЗАГРУЗКИ */
-#preloader { position: fixed; inset: 0; background: #000; z-index: 2147483647; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #ffd966; font-family: Georgia, serif; font-size: 24px; font-weight: 900; transition: opacity 0.5s; }
+/* НОВЫЙ ЭКРАН ЗАГРУЗКИ */
+#preloader { position: fixed; inset: 0; background: url('start_screen.png?v=1') no-repeat center center / cover, #000; z-index: 2147483647; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 20%; transition: opacity 0.5s; }
 #preloader.hidden { opacity: 0; pointer-events: none; }
+.loading-text { color: #fff; font-family: Georgia, serif; font-size: 20px; font-weight: 900; text-shadow: 2px 2px 4px #000; margin-bottom: 10px; }
+.progress-bar { width: 60%; height: 15px; background: rgba(0,0,0,0.7); border: 2px solid #ffd966; border-radius: 10px; overflow: hidden; }
+.progress-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #2ecc71, #a8ff78); transition: width 0.2s; }
 
 /* СТАРТОВЫЙ ЭКРАН */
 #startScreen {
-    position: fixed; inset: 0; background: radial-gradient(circle, #112211, #000);
-    z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s;
+    position: fixed; inset: 0; background: url('start_screen.png?v=1') no-repeat center center / cover, radial-gradient(circle, #112211, #000);
+    z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 15%; transition: opacity 0.5s;
 }
 #startScreen.hidden { opacity: 0; pointer-events: none; }
-.start-title { font-size: 34px; color: #a8ff78; font-family: Georgia, serif; font-weight: 900; text-shadow: 0 0 20px #2ecc71; margin-bottom: 25px; text-align: center; }
-.animals-container { display: flex; gap: 20px; margin-bottom: 40px; font-size: 60px; }
-.pulse-animal { animation: heartbeat 1.5s infinite ease-in-out; filter: drop-shadow(0 0 15px rgba(46, 204, 113, 0.8)); }
-.pulse-animal:nth-child(2) { animation-delay: 0.2s; }
-@keyframes heartbeat { 0% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(46, 204, 113, 0.5)); } 50% { transform: scale(1.2); filter: drop-shadow(0 0 25px rgba(168, 255, 120, 1)); } 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(46, 204, 113, 0.5)); } }
-.start-btn { background: linear-gradient(180deg, #2ecc71, #1a7d43); border: 2px solid #a8ff78; color: #fff; padding: 18px 45px; border-radius: 12px; font-size: 22px; font-weight: 900; box-shadow: 0 6px 20px rgba(46, 204, 113, 0.6); cursor: pointer; font-family: Georgia, serif; }
+.start-btn { background: linear-gradient(180deg, #2ecc71, #1a7d43); border: 2px solid #a8ff78; color: #fff; padding: 18px 45px; border-radius: 12px; font-size: 22px; font-weight: 900; box-shadow: 0 6px 20px rgba(46, 204, 113, 0.6); cursor: pointer; font-family: Georgia, serif; animation: startPulse 1.5s infinite alternate; }
+@keyframes startPulse { 0% { transform: scale(1); box-shadow: 0 0 10px #2ecc71; } 100% { transform: scale(1.05); box-shadow: 0 0 30px #a8ff78; } }
 .start-btn:active { transform: scale(0.95); }
 
 /* АРХИТЕКТУРА */
 .game-board { position: relative; aspect-ratio: 768 / 1370; width: 100vw; max-height: 100dvh; background: url('bg.png?v=9999999') no-repeat center center; background-size: 100% 100%; overflow: hidden; transition: background 0.5s; }
-.game-board.free-spins-mode { background-color: rgba(0, 50, 0, 0.8); background-blend-mode: overlay; }
+
+/* ЭФФЕКТ ФРИСПИНОВ (ЗЕЛЕНЫЙ ФОН + ТРЯСКА) */
+.game-board.free-spins-mode { 
+    background-color: rgba(0, 150, 50, 0.4); 
+    background-blend-mode: multiply;
+    animation: screenShake 0.4s infinite;
+}
+@keyframes screenShake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    20% { transform: translate(-2px, 0px) rotate(-0.5deg); }
+    40% { transform: translate(2px, -1px) rotate(0.5deg); }
+    60% { transform: translate(-1px, 2px) rotate(0deg); }
+    80% { transform: translate(1px, -1px) rotate(0.5deg); }
+    100% { transform: translate(1px, 1px) rotate(0deg); }
+}
 
 /* ЖИВОЙ ДЖЕКПОТ */
 #jackpotValue { 
     position: absolute; top: 12.5%; left: 50%; transform: translateX(-50%); 
     color: #ffd966; font-family: 'Arial Black', Impact, sans-serif; font-size: 5.5vw; letter-spacing: 2px;
     z-index: 50; text-shadow: 0 0 10px #ffd966, 0 0 20px #ff0000, 2px 2px 4px #000;
-    transition: transform 0.1s, color 0.1s;
 }
 #jackpotValue.bump { animation: jackpotBump 0.3s ease-out; }
 @keyframes jackpotBump {
@@ -78,7 +90,7 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 .ui-win.has-win { color: #00ffff; text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; animation: winPulseText 0.5s infinite alternate; }
 @keyframes winPulseText { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
 
-#freeSpinsCounter { position: absolute; top: 25%; left: 50%; transform: translateX(-50%); color: #ffd966; font-family: Georgia, serif; font-size: 6vw; font-weight: 900; text-shadow: 0 0 20px #ffd966, 0 0 10px #ff0000; z-index: 50; display: none; }
+#freeSpinsCounter { position: absolute; top: 25%; left: 50%; transform: translateX(-50%); color: #ffd966; font-family: Georgia, serif; font-size: 8vw; font-weight: 900; text-shadow: 0 0 20px #ffd966, 0 0 10px #ff0000; z-index: 50; display: none; }
 
 .ui-lines { top: calc(68.95% - 1px); left: 20.5%; width: 9.5%; font-size: 4.2vw; }
 .ui-bet { top: calc(68.95% - 1px); left: 45%; width: 9%; font-size: 4.2vw; }
@@ -156,8 +168,12 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 .btn-risk { left: 26.5%; border-radius: 50%; } 
 .btn-friends { left: 39%; } .btn-tasks { right: 39%; } .btn-top { right: 26.5%; } .btn-bonus { right: 14.5%; } .btn-rules { right: 2.5%; }
 
-.btn-risk.pulse-risk { animation: riskGlow 1s infinite alternate; border: 3px solid #ff0000; box-shadow: 0 0 20px #ff0000, inset 0 0 15px #ff0000; }
-@keyframes riskGlow { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(1.15); opacity: 1; } }
+/* МОЩНАЯ ПОДСВЕТКА РИСКА */
+.btn-risk.pulse-risk { animation: riskGlow 0.8s infinite alternate; border: 3px solid #ff0000; box-shadow: 0 0 30px #ff0000, inset 0 0 20px #ff0000; }
+@keyframes riskGlow { 
+    0% { transform: scale(1); opacity: 0.8; box-shadow: 0 0 10px #ff0000; } 
+    100% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 40px #ff0000, inset 0 0 20px #ff0000; } 
+}
 
 #bigWinOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2000000; opacity: 0; pointer-events: none; transition: opacity 0.5s; backdrop-filter: blur(5px); }
 #bigWinOverlay.active { opacity: 1; pointer-events: auto; }
@@ -165,6 +181,7 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 .bigwin-amount { font-size: 45px; color: #fff; font-family: 'Arial Black', sans-serif; text-shadow: 0 0 15px #00ffff; }
 @keyframes bigWinPulse { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
 
+/* Модалки */
 .modal { position: fixed; inset: 0; background: rgba(0,0,0,.9); display: flex; align-items: center; justify-content: center; z-index: 1000000; opacity: 0; pointer-events: none; transition: opacity .2s; padding: 15px; }
 .modal.active { opacity: 1; pointer-events: auto; }
 .modal-box { background: linear-gradient(180deg, #1a2e1a, #0a1208); border: 2px solid var(--gold); border-radius: 14px; padding: 20px; max-width: 340px; width: 100%; text-align: center; color: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.8); position: relative; overflow-y: auto; max-height: 85vh; }
@@ -178,6 +195,11 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 .modal-btn.green { background: linear-gradient(180deg, #2ecc71, #1a7d43); box-shadow: 0 4px 0 #0f3d22; }
 .modal-btn.red { background: linear-gradient(180deg, #e74c3c, #922b21); box-shadow: 0 4px 0 #4d0e07; }
 .modal-btn.gold { background: linear-gradient(180deg, #ffd966, #b8860b); color: #1a1200; box-shadow: 0 4px 0 #5c4300; }
+
+/* СТИЛИ ДЛЯ ФОНОВЫХ КАРТИНОК В МОДАЛКАХ */
+.bg-tasks { background: url('bg_tasks.png?v=1') no-repeat center center / cover, linear-gradient(180deg, #1a2e1a, #0a1208); }
+.bg-shop { background: url('bg_shop.png?v=1') no-repeat center center / cover, linear-gradient(180deg, #1a2e1a, #0a1208); }
+.bg-tasks::before, .bg-shop::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.6); z-index: -1; border-radius: 14px; }
 
 .paytable { display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; text-align: left; }
 .pay-row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; }
@@ -202,13 +224,11 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 .notif.success { border-color: #2ecc71; box-shadow: 0 10px 25px rgba(0,0,0,0.8), 0 0 20px rgba(46, 204, 113, 0.6); }
 .notif.success::before { content: '✅'; font-size: 18px; }
 
-.wheel-container { position: relative; width: 280px; height: 280px; margin: 0 auto 20px auto; border-radius: 50%; padding: 10px; background: radial-gradient(circle, #4a3b1a 0%, #1a1200 100%); box-shadow: 0 10px 30px rgba(0,0,0,0.8), inset 0 5px 15px rgba(255, 217, 102, 0.2); border: 3px solid #ffd966; }
-.wheel { width: 100%; height: 100%; border-radius: 50%; box-shadow: inset 0 0 30px rgba(0,0,0,0.9); background: conic-gradient(#c0392b 0deg 45deg, #d4af37 45deg 90deg, #27ae60 90deg 135deg, #2980b9 135deg 180deg, #8e44ad 180deg 225deg, #d35400 225deg 270deg, #16a085 270deg 315deg, #c0392b 315deg 360deg); transition: transform 5s cubic-bezier(0.1, 0.8, 0.1, 1); position: relative; overflow: hidden; }
-.wheel::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: repeating-conic-gradient(from 0deg, transparent 0deg 44deg, rgba(0,0,0,0.3) 44deg 45deg); pointer-events: none; }
-.wheel-hub { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 50px; height: 50px; border-radius: 50%; background: radial-gradient(circle, #ffd966, #b8860b); border: 3px solid #fff; box-shadow: 0 0 15px rgba(0,0,0,0.8), inset 0 0 10px rgba(0,0,0,0.5); z-index: 15; display: flex; align-items: center; justify-content: center; color: #1a1200; font-weight: 900; font-size: 14px; font-family: Georgia, serif; }
-.wheel-text { position: absolute; top: 50%; left: 50%; transform-origin: 0 0; font-size: 14px; font-weight: 900; color: white; text-shadow: 1px 1px 3px black, 0 0 5px black; white-space: nowrap; z-index: 10; }
+/* НОВОЕ КОЛЕСО */
+.wheel-container { position: relative; width: 280px; height: 280px; margin: 0 auto 20px auto; background: url('wheel_bg.png?v=1') no-repeat center center / contain; }
+.wheel { width: 100%; height: 100%; border-radius: 50%; transition: transform 5s cubic-bezier(0.1, 0.8, 0.1, 1); position: relative; overflow: hidden; }
+.wheel-text { position: absolute; top: 50%; left: 50%; transform-origin: 0 0; font-size: 14px; font-weight: 900; color: white; text-shadow: 2px 2px 4px black; white-space: nowrap; z-index: 10; }
 .wheel-pointer { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 18px solid transparent; border-right: 18px solid transparent; border-top: 30px solid #ff3b30; z-index: 20; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.8)); }
-.wheel-pointer::after { content: ''; position: absolute; top: -30px; left: -10px; width: 20px; height: 20px; background: radial-gradient(circle, #ffd966, #b8860b); border-radius: 50%; }
 
 .cards-container { display: flex; justify-content: center; gap: 20px; margin-bottom: 20px; perspective: 1000px; }
 .play-card { width: 80px; height: 120px; border-radius: 10px; background: #fff; border: 2px solid #ccc; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 30px; font-weight: bold; box-shadow: 0 5px 15px rgba(0,0,0,0.5); transition: transform 0.6s; }
@@ -222,15 +242,13 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 <body>
 
 <div id="preloader">
-    <div>Загрузка леса...</div>
-    <div style="font-size:16px;margin-top:10px;color:#fff;" id="loadPercent">0%</div>
+    <div class="loading-text">Загрузка леса...</div>
+    <div class="progress-bar"><div class="progress-fill" id="loadFill"></div></div>
 </div>
 
 <audio id="bgMusic" loop><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg"></audio>
 
 <div id="startScreen">
-    <div class="start-title">FOREST FORTUNE</div>
-    <div class="animals-container"><div class="pulse-animal">🦔</div><div class="pulse-animal">🐿️</div></div>
     <button class="start-btn" id="startBtn">ИГРАТЬ 🔊</button>
 </div>
 
@@ -304,12 +322,15 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
         <button class="modal-close" onclick="closeModal('autoModal')">Отмена</button>
     </div>
 </div>
+
+<!-- НОВОЕ КОЛЕСО -->
 <div class="modal" id="wheelModal">
     <div class="modal-box" style="max-width: 320px;">
         <div class="modal-title">🎡 КОЛЕСО ФОРТУНЫ</div>
         <div class="wheel-container">
             <div class="wheel-pointer"></div>
             <div class="wheel" id="fortuneWheel">
+                <!-- Текст секторов -->
                 <span class="wheel-text" style="transform: rotate(22.5deg) translate(85px, -10px);">x2</span>
                 <span class="wheel-text" style="transform: rotate(67.5deg) translate(85px, -10px);">x5</span>
                 <span class="wheel-text" style="transform: rotate(112.5deg) translate(85px, -10px);">10 FS</span>
@@ -318,17 +339,18 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
                 <span class="wheel-text" style="transform: rotate(247.5deg) translate(85px, -10px);">JP</span>
                 <span class="wheel-text" style="transform: rotate(292.5deg) translate(85px, -10px);">20 FS</span>
                 <span class="wheel-text" style="transform: rotate(337.5deg) translate(85px, -10px);">x50</span>
-                <div class="wheel-hub">FF</div>
             </div>
         </div>
         <button class="modal-btn green" id="spinWheelBtn" onclick="spinFortuneWheel()">КРУТИТЬ</button>
         <button class="modal-close" onclick="closeModal('wheelModal')">Закрыть</button>
     </div>
 </div>
+
+<!-- МАГАЗИН С НОВЫМ ФОНОМ -->
 <div class="modal" id="shopModal">
-    <div class="modal-box">
+    <div class="modal-box bg-shop">
         <div class="modal-title">⭐ МАГАЗИН ЗВЕЗД</div>
-        <div class="modal-text">Покупка монет за Telegram Stars (XTR)</div>
+        <div class="modal-text" style="color:#fff; text-shadow: 1px 1px 2px #000;">Покупка монет за Telegram Stars (XTR)</div>
         <div class="modal-btns">
             <button class="modal-btn gold" onclick="buyPackage('p100')">100 ⭐ = 1 000 монет</button>
             <button class="modal-btn gold" onclick="buyPackage('p500')">500 ⭐ = 6 000 монет</button>
@@ -338,6 +360,7 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
         <button class="modal-close" onclick="closeModal('shopModal')">Закрыть</button>
     </div>
 </div>
+
 <div class="modal" id="riskModal">
     <div class="modal-box" style="border-color:#f1c40f;">
         <div class="modal-title">🃏 РИСК-ИГРА</div>
@@ -351,7 +374,6 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
     </div>
 </div>
 
-<!-- РЕФЕРАЛЬНАЯ СИСТЕМА -->
 <div class="modal" id="friendsModal">
     <div class="modal-box">
         <div class="modal-title">🤝 ПРИГЛАСИ ДРУГА</div>
@@ -361,31 +383,31 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
     </div>
 </div>
 
-<!-- ЗАДАНИЯ -->
+<!-- ЗАДАНИЯ С НОВЫМ ФОНОМ -->
 <div class="modal" id="tasksModal">
-    <div class="modal-box">
+    <div class="modal-box bg-tasks">
         <div class="modal-title">📜 ЕЖЕДНЕВНЫЕ ЗАДАНИЯ</div>
         <div class="modal-text" style="text-align: left;">
-            <div style="margin-bottom: 15px; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;">
+            <div style="margin-bottom: 15px; background: rgba(0,0,0,0.6); padding: 10px; border-radius: 8px; border: 1px solid #ffd966;">
                 <div style="display:flex; justify-content:space-between;">
-                    <span>Сделать 20 спинов</span>
-                    <span id="taskSpinProg" style="color:#ffd966;">0/20</span>
+                    <span style="color:#fff;">Сделать 20 спинов</span>
+                    <span id="taskSpinProg" style="color:#ffd966; font-weight:bold;">0/20</span>
                 </div>
                 <button id="btnTaskSpin" class="modal-btn green" style="margin-top: 10px; font-size: 12px; padding: 8px;" onclick="claimTask('spin')">Забрать 500 🪙</button>
             </div>
             
-            <div style="margin-bottom: 15px; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;">
+            <div style="margin-bottom: 15px; background: rgba(0,0,0,0.6); padding: 10px; border-radius: 8px; border: 1px solid #ffd966;">
                 <div style="display:flex; justify-content:space-between;">
-                    <span>Поймать 5 выигрышей</span>
-                    <span id="taskWinProg" style="color:#ffd966;">0/5</span>
+                    <span style="color:#fff;">Поймать 5 выигрышей</span>
+                    <span id="taskWinProg" style="color:#ffd966; font-weight:bold;">0/5</span>
                 </div>
                 <button id="btnTaskWin" class="modal-btn green" style="margin-top: 10px; font-size: 12px; padding: 8px;" onclick="claimTask('win')">Забрать 1000 🪙</button>
             </div>
             
-            <div style="margin-bottom: 15px; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;">
+            <div style="margin-bottom: 15px; background: rgba(0,0,0,0.6); padding: 10px; border-radius: 8px; border: 1px solid #ffd966;">
                 <div style="display:flex; justify-content:space-between;">
-                    <span>Прокрутить Колесо Фортуны</span>
-                    <span id="taskWheelProg" style="color:#ffd966;">0/1</span>
+                    <span style="color:#fff;">Прокрутить Колесо Фортуны</span>
+                    <span id="taskWheelProg" style="color:#ffd966; font-weight:bold;">0/1</span>
                 </div>
                 <button id="btnTaskWheel" class="modal-btn green" style="margin-top: 10px; font-size: 12px; padding: 8px;" onclick="claimTask('wheel')">Забрать 2000 🪙</button>
             </div>
@@ -416,13 +438,6 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
                 <div class="pay-row"><img src="deer.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 8 | 4: 25 | 5: 100</span></div>
                 <div class="pay-row"><img src="owl.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 5 | 4: 15 | 5: 80</span></div>
                 <div class="pay-row"><img src="squirrel.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 4 | 4: 12 | 5: 60</span></div>
-                <div class="pay-row"><img src="squirrel1.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 4 | 4: 12 | 5: 60</span></div>
-                <div class="pay-row"><img src="raccoon.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 3 | 4: 10 | 5: 50</span></div>
-                <div class="pay-row"><img src="hedgehog.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 3 | 4: 10 | 5: 50</span></div>
-                <div class="pay-row"><img src="pinecone.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 2 | 4: 8 | 5: 40</span></div>
-                <div class="pay-row"><img src="acorn.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 2 | 4: 8 | 5: 40</span></div>
-                <div class="pay-row"><img src="leaf.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 2 | 4: 8 | 5: 40</span></div>
-                <div class="pay-row"><img src="coin.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 2 | 4: 5 | 5: 30</span></div>
             </div>
             <p style="color:#ffd966; margin-bottom:5px;">💎 WILD (Кристаллы):</p>
             <p style="margin-bottom:10px;">Оба кристалла заменяют любой символ. Новый (wild.png) дает x2 (x4 за два, x8 за три).</p>
@@ -456,7 +471,8 @@ const SYMBOLS = [
     'pinecone.png', 'acorn.png', 'leaf.png', 'coin.png'
 ];
 
-const WEIGHTS = {
+// БАЗОВЫЕ ВЕСА
+const BASE_WEIGHTS = {
     'gem.png': 10, 'wild.png': 8, 'mushroom.png': 12, 
     'ufo.png': 4, 'weed_cross.png': 4, 'tech_face.png': 6, 'man.png': 6, 'man2.png': 8, 'hutor.png': 10, 'firebird.png': 12, 'rabbit.png': 15, 'real_hedgehog.png': 18,
     'bear.png': 20, 'fox.png': 22, 'deer.png': 22, 'owl.png': 25, 'squirrel.png': 28, 'squirrel1.png': 28, 'raccoon.png': 30, 'hedgehog.png': 30,
@@ -479,8 +495,28 @@ const PAYLINES = [
 ];
 const LINE_COLORS = ['#ff3b30','#ff9500','#ffcc00','#34c759','#00c7be','#30b0ff','#5856d6','#af52de','#ff2d95','#ff6b6b','#ffd93d','#6bcf7f','#4ecdc4','#95e1d3','#a8e6cf','#c7ceea','#e2a4d1','#f6d365','#b5eaea','#e0aaff','#ffb4a2'];
 
-const POOL=[];
-Object.entries(WEIGHTS).forEach(([s,w])=>{for(let i=0;i<w;i++)POOL.push(s)});
+let POOL = [];
+
+// ФУНКЦИЯ ДИНАМИЧЕСКОГО ПУЛА (Мелкие ставки - больше шансов, крупные - меньше)
+function generatePool(bet) {
+    POOL = [];
+    let modifier = 1;
+    
+    // Если ставка большая, уменьшаем шансы на дорогие символы
+    if (bet > 100) modifier = 0.7;
+    if (bet > 500) modifier = 0.4;
+
+    Object.entries(BASE_WEIGHTS).forEach(([s,w]) => {
+        let weight = w;
+        // Увеличиваем шанс выпадения дешевых символов на крупных ставках (чтобы собирались линии)
+        if (['coin.png', 'leaf.png', 'acorn.png', 'pinecone.png'].includes(s)) {
+            weight = Math.floor(w * (bet > 100 ? 1.5 : 1.2));
+        } else {
+            weight = Math.max(1, Math.floor(w * modifier));
+        }
+        for(let i=0; i<weight; i++) POOL.push(s);
+    });
+}
 
 let state = { balance: 1000, betPerLine: 1, lines: 15, sound: true, lang: 'ru', jackpot: 500000 };
 let isSpinning = false, stopRequested = false;
@@ -556,14 +592,14 @@ function toggleTurbo() {
 }
 
 function preloadImages() {
-    const allImages = [...SYMBOLS, 'bg.png'];
+    const allImages = [...SYMBOLS, 'bg.png', 'start_screen.png', 'wheel_bg.png', 'bg_tasks.png', 'bg_shop.png'];
     let loadedCount = 0;
     allImages.forEach(src => {
         const img = new Image();
         img.src = src + IMG_VER;
         img.onload = () => {
             loadedCount++;
-            document.getElementById('loadPercent').textContent = Math.round((loadedCount / allImages.length) * 100) + '%';
+            document.getElementById('loadFill').style.width = Math.round((loadedCount / allImages.length) * 100) + '%';
             if (loadedCount === allImages.length) { document.getElementById('preloader').classList.add('hidden'); }
         };
         img.onerror = () => {
@@ -654,16 +690,13 @@ async function loadLeaderboard() {
         });
         if (users.length === 0) html = '<div style="text-align:center;">Пока нет игроков</div>';
         document.getElementById('topList').innerHTML = html;
-    } catch(e) {
-        document.getElementById('topList').innerHTML = 'Ошибка загрузки';
-    }
+    } catch(e) { document.getElementById('topList').innerHTML = 'Ошибка загрузки'; }
 }
 
 function shareReferral() {
     const myId = tg?.initDataUnsafe?.user?.id || 'unknown';
-    const botUsername = 'Forest_Fortune_Bot'; // Укажи юзернейм своего бота
+    const botUsername = 'Forest_Fortune_Bot'; 
     const refLink = `https://t.me/${botUsername}?startapp=ref_${myId}`;
-    
     if (tg) {
         tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(refLink)}&text=${encodeURIComponent('Залетай в Forest Fortune! Забирай свои 5000 монет 🦔💰')}`);
     } else {
@@ -719,24 +752,6 @@ function showBigWin(amount) {
     }, 40);
     
     spawnConfetti();
-
-    // Кнопка "Похвастаться в Stories"
-    if (tg && tg.shareToStory) {
-        const shareBtn = document.createElement('button');
-        shareBtn.className = 'modal-btn gold';
-        shareBtn.style.marginTop = '20px';
-        shareBtn.style.width = '80%';
-        shareBtn.style.position = 'relative';
-        shareBtn.style.zIndex = '100';
-        shareBtn.textContent = '📸 Похвастаться в Stories';
-        shareBtn.onclick = () => {
-            tg.shareToStory('https://i-field.github.io/forest-fortune/bg.png', {
-                text: `Я выиграл ${fmt(amount)} монет в Forest Fortune! 🎰🔥`,
-                widget_link: { url: 'https://t.me/Forest_Fortune_Bot', name: 'Играть в Forest Fortune' }
-            });
-        };
-        overlay.appendChild(shareBtn);
-    }
 }
 
 const reelsEl = $('reels');
@@ -839,6 +854,9 @@ async function startSpin() {
         autoSpins = 0; return; 
     }
     
+    // Генерируем пул на основе текущей ставки (динамическая математика)
+    generatePool(totalBet());
+
     state.balance -= totalBet(); 
     isSpinning = true; stopRequested = false; riskUsed = false;
     stickyWilds = []; 
@@ -847,7 +865,8 @@ async function startSpin() {
     $('btnRiskUI').classList.remove('pulse-risk');
     $('stopVisual').style.display = 'flex';
     
-    state.jackpot += Math.floor(totalBet() * 0.02);
+    // Уменьшенный рост джекпота
+    state.jackpot += Math.floor(totalBet() * 0.01);
     
     updateUI(); overlay.innerHTML = '';
     document.querySelectorAll('.cell').forEach(c => c.classList.remove('win')); 
@@ -1035,7 +1054,15 @@ function spinFortuneWheel() {
     isWheelSpinning = true; $('spinWheelBtn').disabled = true; $('spinWheelBtn').textContent = 'КРУТИТСЯ...';
     haptic('medium'); sfx.spinStart();
 
-    const winIndex = Math.floor(Math.random() * 8);
+    // УМЕНЬШЕН ШАНС ДЖЕКПОТА В КОЛЕСЕ
+    let winIndex;
+    if (Math.random() < 0.00001) {
+        winIndex = 5; // JP
+    } else {
+        const safeIndices = [0, 1, 2, 3, 4, 6, 7];
+        winIndex = safeIndices[Math.floor(Math.random() * safeIndices.length)];
+    }
+
     const targetAngle = (360 - (winIndex * 45) - 22.5) + 3600; 
     currentWheelAngle += targetAngle;
     $('fortuneWheel').style.transform = `rotate(${currentWheelAngle}deg)`;
@@ -1110,7 +1137,11 @@ function takeRiskMoney() {
     notif('Вы забрали выигрыш!', 'success'); haptic('success'); sfx.click(); 
 }
 
+// КНОПКИ ЛИНИЙ ТЕПЕРЬ ПЛАВНЫЕ (ПО ОДНОЙ)
 function setLines(num) { if(isSpinning) return; state.lines = num; updateUI(); haptic('select'); sfx.click(); notif('Линий: ' + num, 'success'); }
+$('linesDec').onclick = () => { if(!isSpinning) setLines(Math.max(1, state.lines-1)); };
+$('linesInc').onclick = () => { if(!isSpinning) setLines(Math.min(21, state.lines+1)); };
+
 function setMaxBet() { if(isSpinning) return; let maxPossible = Math.floor(state.balance / state.lines); state.betPerLine = Math.min(MAX_BET_LIMIT, Math.max(1, maxPossible)); updateUI(); haptic('heavy'); sfx.click(); notif('Ставка: ' + fmt(state.betPerLine), 'success'); }
 function cycleLang() { haptic('light'); sfx.click(); notif('Язык: RU', 'success'); }
 function toggleAuto() { if(isSpinning) return; openModal('autoModal'); }
@@ -1121,8 +1152,6 @@ $('startBtn').onclick = () => {
 };
 
 $('spinBtn').onclick = (e) => { e.preventDefault(); e.stopPropagation(); if (isSpinning) requestStop(); else startSpin(); };
-$('linesDec').onclick = () => { if(!isSpinning) setLines(Math.max(1, state.lines-1)); };
-$('linesInc').onclick = () => { if(!isSpinning) setLines(Math.min(21, state.lines+1)); };
 $('betDec').onclick = () => { if(!isSpinning){ state.betPerLine = Math.max(1, state.betPerLine-1); updateUI(); haptic('select'); sfx.click(); } };
 $('betInc').onclick = () => { if(!isSpinning){ state.betPerLine = Math.min(MAX_BET_LIMIT, state.betPerLine+1); updateUI(); haptic('select'); sfx.click(); } };
 window.addEventListener('resize', () => { if(!isSpinning) buildReels(); });
