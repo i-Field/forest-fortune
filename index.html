@@ -26,32 +26,41 @@ html, body {
     font-family: Arial, sans-serif;
 }
 
-/* ЭКРАН ЗАГРУЗКИ */
+/* ЭКРАН ЗАГРУЗКИ В ЕДИНОЙ ГЕОМЕТРИИ 768 / 1370 */
 #startScreen {
     position: fixed;
     inset: 0;
-    background: url('start_screen.png?v=1') no-repeat center center / cover, #000;
+    background: #000;
     z-index: 2147483647;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: flex-end;
-    padding-bottom: 9%;
-    transition: opacity 0.45s ease;
+    justify-content: center;
+    opacity: 1;
+    transition: opacity 0.55s ease;
 }
 #startScreen.hidden { opacity: 0; pointer-events: none; }
 
-/* ПОЛОСКА ЗАГРУЗКИ ОПУЩЕНА НИЖЕ */
+.splash-sheet {
+    position: relative;
+    aspect-ratio: 768 / 1370;
+    width: 100vw;
+    max-height: 100dvh;
+    background: url('start_screen.png?v=1') no-repeat center center / 100% 100%, #000;
+    overflow: hidden;
+}
+
+/* ПОЛОСКА ЗАГРУЗКИ НАЛОЖЕНА ПО КООРДИНАТАМ НАРИСОВАННОЙ ШКАЛЫ */
 .progress-container {
-    width: 82%;
-    height: 22px;
-    background: rgba(0, 0, 0, 0.65);
+    position: absolute;
+    top: 84.4%;
+    left: 14.5%;
+    width: 71%;
+    height: 3.1%;
+    background: rgba(0, 0, 0, 0.55);
     border: 2px solid #5c3a21;
     border-radius: 12px;
     overflow: hidden;
-    position: relative;
     box-shadow: 0 0 12px rgba(0, 0, 0, 0.85);
-    margin-bottom: 10mm;
 }
 .progress-fill {
     width: 0%;
@@ -155,7 +164,7 @@ html, body {
 .reels-frame {
     position: absolute; top: 26.7%; left: 14.5%; right: 14.5%; height: 40.8%;
     background: #0d2112; border-radius: 4px; overflow: hidden; z-index: 10;
-    opacity: 0; transition: opacity 0.5s ease;
+    opacity: 0; transition: opacity 0.65s ease;
 }
 .reels-frame.ready { opacity: 1; }
 .reels { display: grid; grid-template-columns: repeat(5, 1fr); height: 100%; width: 100%; background: #000; gap: 1px; }
@@ -470,8 +479,10 @@ html, body {
 <body>
 
 <div id="startScreen">
-    <div class="progress-container">
-        <div class="progress-fill" id="loadFill"></div>
+    <div class="splash-sheet">
+        <div class="progress-container">
+            <div class="progress-fill" id="loadFill"></div>
+        </div>
     </div>
 </div>
 
@@ -933,14 +944,16 @@ function toggleTurbo() {
     notif(turboMode ? '⚡ Турбо-режим ВКЛ' : 'Турбо-режим ВЫКЛ', 'success');
 }
 
-/* ЗАГРУЗКА С ЗАДЕРЖКОЙ 2 СЕК ДО ПОЯВЛЕНИЯ БАРАБАНОВ */
+/* ЗАГРУЗКА: ПОСЛЕ ЗАВЕРШЕНИЯ ШКАЛЫ ЗАСТАВКА ДЕРЖИТСЯ ЕЩЁ 2 СЕК, ЗАТЕМ ПОЯВЛЯЮТСЯ БАРАБАНЫ */
 function preloadImages() {
     const allImages = [...SYMBOLS, 'bg.png', 'start_screen.png', 'wheel_bg.png', 'wheel_disc.png', 'bg_tasks.png', 'bg_shop.png'];
     let loadedCount = 0;
     let loadingFinished = false;
+    let revealTimer = null;
 
     function revealReelsAfterDelay() {
-        setTimeout(() => {
+        clearTimeout(revealTimer);
+        revealTimer = setTimeout(() => {
             buildReels();
             $('reelsFrame')?.classList.add('ready');
             loadUserData();
@@ -951,9 +964,11 @@ function preloadImages() {
         if (loadingFinished) return;
         loadingFinished = true;
         if ($('loadFill')) $('loadFill').style.width = '100%';
-        $('startScreen').classList.add('hidden');
         updateUI();
-        revealReelsAfterDelay();
+        setTimeout(() => {
+            $('startScreen').classList.add('hidden');
+            revealReelsAfterDelay();
+        }, 2000);
     }
 
     const fallbackTimer = setTimeout(finishSplash, 2500);
@@ -968,7 +983,7 @@ function preloadImages() {
             }
             if (loadedCount >= allImages.length) {
                 clearTimeout(fallbackTimer);
-                setTimeout(finishSplash, 250);
+                finishSplash();
             }
         };
         img.onload = onDone;
