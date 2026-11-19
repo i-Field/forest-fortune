@@ -21,22 +21,21 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 /* ЭКРАН ЗАГРУЗКИ (СРАЗУ ЗАСТАВКА) */
 #startScreen {
     position: fixed; inset: 0; background: url('start_screen.png?v=1') no-repeat center center / cover, #000;
-    z-index: 2147483647; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 12%; transition: opacity 0.5s;
+    z-index: 2147483647; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 15%; transition: opacity 0.5s;
 }
 #startScreen.hidden { opacity: 0; pointer-events: none; }
 
-/* Контейнер для полоски загрузки, чтобы наложить на нарисованную */
+/* ПОЛОСКА ЗАГРУЗКИ (ШИРЕ И НИЖЕ) */
 .progress-container {
-    width: 60%; /* Ширина полоски */
-    height: 18px;
+    width: 80%; /* Сделали шире */
+    height: 24px;
     background: rgba(0,0,0,0.6);
-    border: 2px solid #5c3a21; /* Деревянная рамка */
-    border-radius: 10px;
+    border: 2px solid #5c3a21; 
+    border-radius: 12px;
     overflow: hidden;
     position: relative;
     box-shadow: 0 0 10px rgba(0,0,0,0.8);
-    /* Если полоска не совпадает с картинкой, подгони margin-bottom */
-    margin-bottom: 50px; 
+    margin-bottom: 12mm; /* Опустили вниз на 12 мм (примерно) */
 }
 .progress-fill {
     width: 0%;
@@ -55,7 +54,7 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 /* АРХИТЕКТУРА */
 .game-board { position: relative; aspect-ratio: 768 / 1370; width: 100vw; max-height: 100dvh; background: url('bg.png?v=9999999') no-repeat center center; background-size: 100% 100%; overflow: hidden; transition: background 0.5s; }
 
-/* ЭФФЕКТ ФРИСПИНОВ */
+/* ЭФФЕКТ ФРИСПИНОВ (ЗЕЛЕНЫЙ ФОН + ТРЯСКА) */
 .game-board.free-spins-mode { 
     background-color: rgba(0, 150, 50, 0.4); 
     background-blend-mode: multiply;
@@ -213,19 +212,27 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 .modal-btn.red { background: linear-gradient(180deg, #e74c3c, #922b21); box-shadow: 0 4px 0 #4d0e07; }
 .modal-btn.gold { background: linear-gradient(180deg, #ffd966, #b8860b); color: #1a1200; box-shadow: 0 4px 0 #5c4300; }
 
-/* СТИЛИ ДЛЯ ФОНОВЫХ КАРТИНОК В МОДАЛКАХ */
-.bg-tasks { background: url('bg_tasks.png?v=1') no-repeat center center / cover; border: none; box-shadow: none; }
-.bg-shop { background: url('bg_shop.png?v=1') no-repeat center center / cover; border: none; box-shadow: none; }
+/* СТИЛИ ДЛЯ НОВЫХ МОДАЛОК (ПОЛНОСТЬЮ ПРОЗРАЧНЫЕ С ФОНОМ) */
+.bg-tasks { background: url('bg_tasks.png?v=1') no-repeat center center / 100% 100% !important; border: none !important; box-shadow: none !important; padding: 0 !important; }
+.bg-shop { background: url('bg_shop.png?v=1') no-repeat center center / 100% 100% !important; border: none !important; box-shadow: none !important; padding: 0 !important; }
 
 /* НЕВИДИМЫЕ КНОПКИ ПОВЕРХ КАРТИНОК */
 .invisible-btn {
     background: transparent !important;
-    border: 1px solid transparent !important;
+    border: none !important;
     color: transparent !important;
     box-shadow: none !important;
     outline: none !important;
+    position: absolute;
+    z-index: 10;
 }
-.invisible-btn:active { background: rgba(255,255,255,0.1) !important; }
+.invisible-btn:active { background: rgba(255,255,255,0.2) !important; border-radius: 10px; }
+
+/* КОЛЕСО НА ВЕСЬ ЭКРАН */
+#wheelModal .modal-box { background: transparent !important; border: none !important; box-shadow: none !important; max-width: 100vw !important; width: 100vw !important; height: 100dvh !important; padding: 0 !important; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+.wheel-container { position: relative; width: 90vw; max-width: 400px; aspect-ratio: 1/1; background: url('wheel_bg.png?v=1') no-repeat center center / contain; }
+.wheel { width: 100%; height: 100%; border-radius: 50%; transition: transform 5s cubic-bezier(0.1, 0.8, 0.1, 1); position: relative; overflow: hidden; }
+.wheel-pointer { position: absolute; top: -5px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 20px solid transparent; border-right: 20px solid transparent; border-top: 35px solid #ff3b30; z-index: 20; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.8)); }
 
 .paytable { display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; text-align: left; }
 .pay-row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; }
@@ -249,12 +256,6 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 .notif.gold::before { content: '🏆'; font-size: 18px; }
 .notif.success { border-color: #2ecc71; box-shadow: 0 10px 25px rgba(0,0,0,0.8), 0 0 20px rgba(46, 204, 113, 0.6); }
 .notif.success::before { content: '✅'; font-size: 18px; }
-
-/* НОВОЕ КОЛЕСО */
-.wheel-container { position: relative; width: 280px; height: 280px; margin: 0 auto 20px auto; background: url('wheel_bg.png?v=1') no-repeat center center / contain; }
-.wheel { width: 100%; height: 100%; border-radius: 50%; transition: transform 5s cubic-bezier(0.1, 0.8, 0.1, 1); position: relative; overflow: hidden; }
-.wheel-text { position: absolute; top: 50%; left: 50%; transform-origin: 0 0; font-size: 14px; font-weight: 900; color: white; text-shadow: 2px 2px 4px black; white-space: nowrap; z-index: 10; }
-.wheel-pointer { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 18px solid transparent; border-right: 18px solid transparent; border-top: 30px solid #ff3b30; z-index: 20; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.8)); }
 
 .cards-container { display: flex; justify-content: center; gap: 20px; margin-bottom: 20px; perspective: 1000px; }
 .play-card { width: 80px; height: 120px; border-radius: 10px; background: #fff; border: 2px solid #ccc; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 30px; font-weight: bold; box-shadow: 0 5px 15px rgba(0,0,0,0.5); transition: transform 0.6s; }
@@ -347,36 +348,28 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
     </div>
 </div>
 
+<!-- КОЛЕСО НА ВЕСЬ ЭКРАН -->
 <div class="modal" id="wheelModal">
-    <div class="modal-box" style="max-width: 320px;">
-        <div class="modal-title">🎡 КОЛЕСО ФОРТУНЫ</div>
+    <div class="modal-box">
         <div class="wheel-container">
             <div class="wheel-pointer"></div>
-            <div class="wheel" id="fortuneWheel">
-                <span class="wheel-text" style="transform: rotate(22.5deg) translate(85px, -10px);">x2</span>
-                <span class="wheel-text" style="transform: rotate(67.5deg) translate(85px, -10px);">x5</span>
-                <span class="wheel-text" style="transform: rotate(112.5deg) translate(85px, -10px);">10 FS</span>
-                <span class="wheel-text" style="transform: rotate(157.5deg) translate(85px, -10px);">x10</span>
-                <span class="wheel-text" style="transform: rotate(202.5deg) translate(85px, -10px);">x2</span>
-                <span class="wheel-text" style="transform: rotate(247.5deg) translate(85px, -10px);">JP</span>
-                <span class="wheel-text" style="transform: rotate(292.5deg) translate(85px, -10px);">20 FS</span>
-                <span class="wheel-text" style="transform: rotate(337.5deg) translate(85px, -10px);">x50</span>
-            </div>
+            <div class="wheel" id="fortuneWheel"></div>
         </div>
-        <button class="modal-btn green" id="spinWheelBtn" onclick="spinFortuneWheel()">КРУТИТЬ</button>
-        <button class="modal-close" onclick="closeModal('wheelModal')">Закрыть</button>
+        <button class="invisible-btn" id="spinWheelBtn" style="width: 60%; height: 8%; bottom: 18%; border-radius: 12px;" onclick="spinFortuneWheel()"></button>
+        <button class="invisible-btn" style="width: 60%; height: 5%; bottom: 10%; border-radius: 12px;" onclick="closeModal('wheelModal')"></button>
     </div>
 </div>
 
+<!-- МАГАЗИН -->
 <div class="modal" id="shopModal">
-    <div class="modal-box bg-shop" style="padding: 0; background-color: transparent; border: none; box-shadow: none;">
-        <div style="position: relative; width: 100%; height: 70vh; max-height: 700px;">
-            <button class="invisible-btn" style="position: absolute; top: 28%; left: 10%; width: 80%; height: 10%;" onclick="buyPackage('p100')">1</button>
-            <button class="invisible-btn" style="position: absolute; top: 42%; left: 10%; width: 80%; height: 10%;" onclick="buyPackage('p500')">2</button>
-            <button class="invisible-btn" style="position: absolute; top: 56%; left: 10%; width: 80%; height: 10%;" onclick="buyPackage('p2000')">3</button>
-            <button class="invisible-btn" style="position: absolute; top: 70%; left: 10%; width: 80%; height: 10%;" onclick="buyPackage('p10000')">4</button>
+    <div class="modal-box bg-shop" style="padding: 0; background-color: transparent; border: none; box-shadow: none; width: 95vw; height: 80vh; max-width: 500px;">
+        <div style="position: relative; width: 100%; height: 100%;">
+            <button class="invisible-btn" style="top: 25%; left: 8%; width: 84%; height: 12%;" onclick="buyPackage('p100')">1</button>
+            <button class="invisible-btn" style="top: 39%; left: 8%; width: 84%; height: 12%;" onclick="buyPackage('p500')">2</button>
+            <button class="invisible-btn" style="top: 53%; left: 8%; width: 84%; height: 12%;" onclick="buyPackage('p2000')">3</button>
+            <button class="invisible-btn" style="top: 67%; left: 8%; width: 84%; height: 12%;" onclick="buyPackage('p10000')">4</button>
+            <button class="invisible-btn" style="bottom: 5%; left: 10%; width: 80%; height: 8%;" onclick="closeModal('shopModal')">Закрыть</button>
         </div>
-        <button class="modal-close" style="position: absolute; bottom: 3%; left: 50%; transform: translateX(-50%); width: 80%;" onclick="closeModal('shopModal')">Закрыть</button>
     </div>
 </div>
 
@@ -402,14 +395,15 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
     </div>
 </div>
 
+<!-- ЗАДАНИЯ -->
 <div class="modal" id="tasksModal">
-    <div class="modal-box bg-tasks" style="padding: 0; background-color: transparent; border: none; box-shadow: none;">
-        <div style="position: relative; width: 100%; height: 70vh; max-height: 700px;">
-            <button class="invisible-btn" style="position: absolute; top: 30%; left: 10%; width: 80%; height: 8%;" onclick="claimTask('spin')">1</button>
-            <button class="invisible-btn" style="position: absolute; top: 47%; left: 10%; width: 80%; height: 8%;" onclick="claimTask('win')">2</button>
-            <button class="invisible-btn" style="position: absolute; top: 64%; left: 10%; width: 80%; height: 8%;" onclick="claimTask('wheel')">3</button>
+    <div class="modal-box bg-tasks" style="padding: 0; background-color: transparent; border: none; box-shadow: none; width: 95vw; height: 80vh; max-width: 500px;">
+        <div style="position: relative; width: 100%; height: 100%;">
+            <button class="invisible-btn" style="top: 31%; left: 8%; width: 84%; height: 10%;" onclick="claimTask('spin')">1</button>
+            <button class="invisible-btn" style="top: 48%; left: 8%; width: 84%; height: 10%;" onclick="claimTask('win')">2</button>
+            <button class="invisible-btn" style="top: 65%; left: 8%; width: 84%; height: 10%;" onclick="claimTask('wheel')">3</button>
+            <button class="invisible-btn" style="bottom: 5%; left: 10%; width: 80%; height: 8%;" onclick="closeModal('tasksModal')">Закрыть</button>
         </div>
-        <button class="modal-close" style="position: absolute; bottom: 3%; left: 50%; transform: translateX(-50%); width: 80%;" onclick="closeModal('tasksModal')">Закрыть</button>
     </div>
 </div>
 
@@ -496,7 +490,6 @@ const PAYLINES = [
     [[0,1],[1,0],[2,0],[3,0],[4,1]], [[0,3],[1,4],[2,4],[3,4],[4,3]], [[0,0],[1,1],[2,1],[3,1],[4,0]], [[0,4],[1,3],[2,3],[3,3],[4,4]],
     [[0,1],[1,1],[2,2],[3,3],[4,3]], [[0,3],[1,3],[2,2],[3,1],[4,1]], [[0,0],[1,2],[2,4],[3,2],[4,0]], [[0,4],[1,2],[2,0],[3,2],[4,4]]
 ];
-const LINE_COLORS = ['#ff3b30','#ff9500','#ffcc00','#34c759','#00c7be','#30b0ff','#5856d6','#af52de','#ff2d95','#ff6b6b','#ffd93d','#6bcf7f','#4ecdc4','#95e1d3','#a8e6cf','#c7ceea','#e2a4d1','#f6d365','#b5eaea','#e0aaff','#ffb4a2'];
 
 let POOL = [];
 
@@ -517,7 +510,7 @@ function generatePool(bet) {
     });
 }
 
-// Инициализируем пул сразу, чтобы барабаны не были пустыми
+// Инициализируем пул сразу, чтобы не было пустых кубов
 generatePool(15);
 
 let state = { balance: 1000, betPerLine: 1, lines: 15, sound: true, lang: 'ru', jackpot: 500000 };
@@ -593,35 +586,35 @@ function toggleTurbo() {
     notif(turboMode ? '⚡ Турбо-режим ВКЛ' : 'Турбо-режим ВЫКЛ', 'success');
 }
 
+// УЛУЧШЕННАЯ ЗАГРУЗКА (НЕ БЛОКИРУЕТ ИГРУ)
 function preloadImages() {
     const allImages = [...SYMBOLS, 'bg.png', 'start_screen.png', 'wheel_bg.png', 'bg_tasks.png', 'bg_shop.png'];
     let loadedCount = 0;
+    let gameStarted = false;
+
+    function startGame() {
+        if (gameStarted) return;
+        gameStarted = true;
+        document.getElementById('startScreen').classList.add('hidden');
+        buildReels();
+        initAudio();
+        loadUserData();
+    }
+
+    // Fallback: запуск через 3 секунды в любом случае
+    setTimeout(startGame, 3000);
+
     allImages.forEach(src => {
         const img = new Image();
         img.src = src + IMG_VER;
         img.onload = () => {
             loadedCount++;
             document.getElementById('loadFill').style.width = Math.round((loadedCount / allImages.length) * 100) + '%';
-            if (loadedCount === allImages.length) { 
-                // Ждем 2 секунды после загрузки, затем убираем заставку
-                setTimeout(() => {
-                    document.getElementById('startScreen').classList.add('hidden');
-                    buildReels();
-                    initAudio();
-                    loadUserData();
-                }, 2000);
-            }
+            if (loadedCount === allImages.length) { setTimeout(startGame, 500); }
         };
         img.onerror = () => {
             loadedCount++;
-            if (loadedCount === allImages.length) { 
-                setTimeout(() => {
-                    document.getElementById('startScreen').classList.add('hidden');
-                    buildReels();
-                    initAudio();
-                    loadUserData();
-                }, 2000);
-            }
+            if (loadedCount === allImages.length) { setTimeout(startGame, 500); }
         };
     });
 }
@@ -1066,7 +1059,8 @@ const wheelPrizes = [
 
 function spinFortuneWheel() {
     if (isWheelSpinning) return;
-    isWheelSpinning = true; $('spinWheelBtn').disabled = true; $('spinWheelBtn').textContent = 'КРУТИТСЯ...';
+    isWheelSpinning = true; 
+    $('spinWheelBtn').disabled = true;
     haptic('medium'); sfx.spinStart();
 
     let winIndex;
@@ -1082,7 +1076,8 @@ function spinFortuneWheel() {
     $('fortuneWheel').style.transform = `rotate(${currentWheelAngle}deg)`;
 
     setTimeout(() => {
-        isWheelSpinning = false; $('spinWheelBtn').disabled = false; $('spinWheelBtn').textContent = 'КРУТИТЬ';
+        isWheelSpinning = false; 
+        $('spinWheelBtn').disabled = false;
         sfx.win(); spawnConfetti();
         
         const prize = wheelPrizes[winIndex];
@@ -1183,19 +1178,6 @@ function updateTasksUI() {
     $('taskSpinProg').textContent = `${spinProg}/20`;
     $('taskWinProg').textContent = `${winProg}/5`;
     $('taskWheelProg').textContent = `${wheelProg}/1`;
-
-    const btnSpin = $('btnTaskSpin');
-    const btnWin = $('btnTaskWin');
-    const btnWheel = $('btnTaskWheel');
-
-    if (spinProg >= 20 && !taskData.claimedSpin) { btnSpin.disabled = false; btnSpin.style.opacity = 1; } 
-    else { btnSpin.disabled = true; btnSpin.style.opacity = 0.5; if(taskData.claimedSpin) btnSpin.textContent = 'Получено'; }
-    
-    if (winProg >= 5 && !taskData.claimedWin) { btnWin.disabled = false; btnWin.style.opacity = 1; } 
-    else { btnWin.disabled = true; btnWin.style.opacity = 0.5; if(taskData.claimedWin) btnWin.textContent = 'Получено'; }
-    
-    if (wheelProg >= 1 && !taskData.claimedWheel) { btnWheel.disabled = false; btnWheel.style.opacity = 1; } 
-    else { btnWheel.disabled = true; btnWheel.style.opacity = 0.5; if(taskData.claimedWheel) btnWheel.textContent = 'Получено'; }
 }
 
 function saveTasks() {
