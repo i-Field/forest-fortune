@@ -15,30 +15,49 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
 
-html, body { height: 100%; overflow: hidden; background: #000; display: flex; align-items: flex-start; justify-content: center; font-family: Arial, sans-serif; }
+html, body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+}
 
+/* ЭКРАН ЗАГРУЗКИ */
 #startScreen {
-    position: fixed; inset: 0; background: url('start_screen.png?v=1') no-repeat center center / cover, #000;
-    z-index: 2147483647; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 15%; transition: opacity 0.5s;
+    position: fixed;
+    inset: 0;
+    background: url('start_screen.png?v=1') no-repeat center center / cover, #000;
+    z-index: 2147483647;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding-bottom: 9%;
+    transition: opacity 0.45s ease;
 }
 #startScreen.hidden { opacity: 0; pointer-events: none; }
 
+/* ПОЛОСКА ЗАГРУЗКИ ОПУЩЕНА НИЖЕ НА ~10 ММ */
 .progress-container {
-    width: 80%;
-    height: 24px;
-    background: rgba(0,0,0,0.6);
+    width: 82%;
+    height: 22px;
+    background: rgba(0, 0, 0, 0.65);
     border: 2px solid #5c3a21;
     border-radius: 12px;
     overflow: hidden;
     position: relative;
-    box-shadow: 0 0 10px rgba(0,0,0,0.8);
-    margin-bottom: 12mm;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.85);
+    margin-bottom: 10mm;
 }
 .progress-fill {
     width: 0%;
     height: 100%;
     background: linear-gradient(90deg, #2ecc71, #a8ff78);
-    transition: width 0.2s;
+    transition: width 0.2s ease;
 }
 
 #startScreen:not(.hidden) ~ .game-board .btn-maxbet,
@@ -47,22 +66,35 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
     pointer-events: none;
 }
 
-.game-board { position: relative; aspect-ratio: 768 / 1370; width: 100vw; max-height: 100dvh; background: url('bg.png?v=9999999') no-repeat center center; background-size: 100% 100%; overflow: hidden; transition: background 0.5s; }
+/* ИГРОВОЕ ПОЛЕ */
+.game-board {
+    position: relative;
+    aspect-ratio: 768 / 1370;
+    width: 100vw;
+    max-height: 100dvh;
+    background: url('bg.png?v=9999999') no-repeat center center;
+    background-size: 100% 100%;
+    overflow: hidden;
+    transition: background 0.5s;
+}
 
+/* ТРЯСКА ПРИ ФРИСПИНАХ */
 .game-board.free-spins-mode {
-    background-color: rgba(0, 150, 50, 0.4);
+    background-color: rgba(0, 150, 50, 0.35);
     background-blend-mode: multiply;
-    animation: screenShake 0.4s infinite;
+    animation: screenShake 0.35s infinite;
+    will-change: transform;
 }
 @keyframes screenShake {
-    0% { transform: translate(1px, 1px) rotate(0deg); }
-    20% { transform: translate(-2px, 0px) rotate(-0.5deg); }
-    40% { transform: translate(2px, -1px) rotate(0.5deg); }
-    60% { transform: translate(-1px, 2px) rotate(0deg); }
-    80% { transform: translate(1px, -1px) rotate(0.5deg); }
-    100% { transform: translate(1px, 1px) rotate(0deg); }
+    0% { transform: translate3d(0px, 0px, 0) rotate(0deg); }
+    20% { transform: translate3d(-3px, 2px, 0) rotate(-0.6deg); }
+    40% { transform: translate3d(3px, -2px, 0) rotate(0.6deg); }
+    60% { transform: translate3d(-2px, -2px, 0) rotate(-0.4deg); }
+    80% { transform: translate3d(2px, 2px, 0) rotate(0.4deg); }
+    100% { transform: translate3d(0px, 0px, 0) rotate(0deg); }
 }
 
+/* ЖИВОЙ ДЖЕКПОТ */
 #jackpotValue {
     position: absolute; top: 12.5%; left: 50%; transform: translateX(-50%);
     color: #ffd966; font-family: 'Arial Black', Impact, sans-serif; font-size: 5.5vw; letter-spacing: 2px;
@@ -75,6 +107,7 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
     100% { transform: translateX(-50%) scale(1); }
 }
 
+/* ДЕКОРАЦИИ */
 .fire-glow { position: absolute; top: 12.5%; width: 12%; height: 4%; background: radial-gradient(circle, rgba(255, 140, 0, 0.8) 0%, transparent 70%); mix-blend-mode: screen; pointer-events: none; z-index: 5; animation: fireFlicker 1.5s infinite alternate; }
 .fire-left { left: 12%; } .fire-right { right: 12%; }
 @keyframes fireFlicker { 0% { opacity: 0.4; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1.1); } }
@@ -83,6 +116,7 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 .f1 { bottom: 10%; left: 15%; animation-delay: 0s; } .f2 { bottom: 15%; left: 85%; animation-delay: 1s; } .f3 { bottom: 20%; right: 20%; animation-delay: 2s; } .f4 { bottom: 10%; right: 30%; animation-delay: 3s; } .f5 { bottom: 25%; left: 10%; animation-delay: 1.5s; } .f6 { bottom: 15%; right: 10%; animation-delay: 0.5s; }
 @keyframes floatFly { 0%, 100% { transform: translateY(0) scale(0.5); opacity: 0; } 50% { transform: translateY(-80vh) scale(1.5); opacity: 1; } }
 
+/* UI ЭЛЕМЕНТЫ */
 .ui-val {
     position: absolute; display: flex; align-items: center; justify-content: center;
     background: radial-gradient(ellipse at center, var(--wood) 30%, transparent 100%);
@@ -103,7 +137,13 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 .ui-bet { top: calc(68.95% - 1px); left: 45%; width: 9%; font-size: 4.2vw; }
 .ui-total { top: calc(68.8% - 1px); right: 20.5%; width: 9%; font-size: 4.2vw; }
 
-.reels-frame { position: absolute; top: 26.7%; left: 14.5%; right: 14.5%; height: 40.8%; background: #0d2112; border-radius: 4px; overflow: hidden; z-index: 10; }
+/* СЕТКА 5x5 */
+.reels-frame {
+    position: absolute; top: 26.7%; left: 14.5%; right: 14.5%; height: 40.8%;
+    background: #0d2112; border-radius: 4px; overflow: hidden; z-index: 10;
+    opacity: 0; transition: opacity 0.5s ease;
+}
+.reels-frame.ready { opacity: 1; }
 .reels { display: grid; grid-template-columns: repeat(5, 1fr); height: 100%; width: 100%; background: #000; gap: 1px; }
 .reel { background: #0d2112; overflow: hidden; position: relative; height: 100%; }
 .track { position: absolute; left: 0; right: 0; top: 0; display: flex; flex-direction: column; will-change: transform; }
@@ -124,6 +164,7 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 
 .lines-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 20; }
 
+/* КНОПКИ */
 .btn-overlay, .btn-maxbet, .btn-turbo { position: absolute; z-index: 999999; cursor: pointer; border-radius: 8px; pointer-events: auto; transition: transform 0.1s, filter 0.1s, opacity 0.3s; }
 .btn-overlay:active, .btn-maxbet:active, .btn-turbo:active { transform: scale(0.9); filter: brightness(1.5); }
 
@@ -184,6 +225,7 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 .bigwin-amount { font-size: 45px; color: #fff; font-family: 'Arial Black', sans-serif; text-shadow: 0 0 15px #00ffff; }
 @keyframes bigWinPulse { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
 
+/* МОДАЛКИ */
 .modal { position: fixed; inset: 0; background: rgba(0,0,0,.9); display: flex; align-items: center; justify-content: center; z-index: 1000000; opacity: 0; pointer-events: none; transition: opacity .2s; padding: 15px; }
 .modal.active { opacity: 1; pointer-events: auto; }
 .modal-box { background: linear-gradient(180deg, #1a2e1a, #0a1208); border: 2px solid var(--gold); border-radius: 14px; padding: 20px; max-width: 340px; width: 100%; text-align: center; color: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.8); position: relative; overflow-y: auto; max-height: 85vh; }
@@ -198,6 +240,7 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
 .modal-btn.red { background: linear-gradient(180deg, #e74c3c, #922b21); box-shadow: 0 4px 0 #4d0e07; }
 .modal-btn.gold { background: linear-gradient(180deg, #ffd966, #b8860b); color: #1a1200; box-shadow: 0 4px 0 #5c4300; }
 
+/* КАРТИНКИ ФОНА МОДАЛОК */
 .bg-tasks { background: url('bg_tasks.png?v=1') no-repeat center center / 100% 100% !important; border: none !important; box-shadow: none !important; padding: 0 !important; }
 .bg-shop { background: url('bg_shop.png?v=1') no-repeat center center / 100% 100% !important; border: none !important; box-shadow: none !important; padding: 0 !important; }
 
@@ -208,14 +251,108 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
     box-shadow: none !important;
     outline: none !important;
     position: absolute;
-    z-index: 10;
+    z-index: 25;
+    cursor: pointer;
 }
-.invisible-btn:active { background: rgba(255,255,255,0.2) !important; border-radius: 10px; }
+.invisible-btn:active { background: rgba(255, 255, 255, 0.18) !important; border-radius: 12px; }
 
-#wheelModal .modal-box { background: transparent !important; border: none !important; box-shadow: none !important; max-width: 100vw !important; width: 100vw !important; height: 100dvh !important; padding: 0 !important; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-.wheel-container { position: relative; width: 90vw; max-width: 400px; aspect-ratio: 1/1; background: url('wheel_bg.png?v=1') no-repeat center center / contain; }
-.wheel { width: 100%; height: 100%; border-radius: 50%; transition: transform 5s cubic-bezier(0.1, 0.8, 0.1, 1); position: relative; overflow: hidden; }
-.wheel-pointer { position: absolute; top: -5px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 20px solid transparent; border-right: 20px solid transparent; border-top: 35px solid #ff3b30; z-index: 20; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.8)); }
+/* КОЛЕСО ФОРТУНЫ НА ВЕСЬ ЭКРАН */
+#wheelModal { padding: 0 !important; }
+#wheelModal .modal-box {
+    background: url('wheel_bg.png?v=1') no-repeat center center / 100% 100% !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    max-width: 100vw !important;
+    max-height: 100dvh !important;
+    width: 100vw !important;
+    height: 100dvh !important;
+    padding: 0 !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.wheel-stage {
+    position: relative;
+    width: 66vw;
+    max-width: 310px;
+    aspect-ratio: 1 / 1;
+    margin-top: 2%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.wheel-pointer {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 18px solid transparent;
+    border-right: 18px solid transparent;
+    border-top: 30px solid #ff3b30;
+    z-index: 30;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.85));
+}
+
+.wheel {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 4px solid #ffd966;
+    box-shadow: 0 0 25px rgba(255, 217, 102, 0.55), inset 0 0 18px rgba(0,0,0,0.65);
+    background: conic-gradient(
+        #c0392b 0deg 45deg,
+        #27ae60 45deg 90deg,
+        #d4ac0d 90deg 135deg,
+        #1e8449 135deg 180deg,
+        #2471a3 180deg 225deg,
+        #7d3c98 225deg 270deg,
+        #d35400 270deg 315deg,
+        #117864 315deg 360deg
+    );
+    transition: transform 5s cubic-bezier(0.12, 0.82, 0.14, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.wheel-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform-origin: 0 0;
+    font-family: 'Arial Black', Impact, sans-serif;
+    font-size: 13px;
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 0 1px 3px #000, 0 0 6px rgba(0,0,0,0.9);
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+.wheel-center {
+    position: absolute;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #ffe58f 0%, #d49b1a 75%, #7a5200 100%);
+    border: 3px solid #fff3c4;
+    box-shadow: 0 0 14px rgba(0,0,0,0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Georgia, serif;
+    font-weight: 900;
+    font-size: 16px;
+    color: #261400;
+    z-index: 20;
+    pointer-events: none;
+}
 
 .paytable { display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; text-align: left; }
 .pay-row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; }
@@ -330,25 +467,28 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
     </div>
 </div>
 
+<!-- КОЛЕСО ФОРТУНЫ НА ВЕСЬ ЭКРАН -->
 <div class="modal" id="wheelModal">
     <div class="modal-box">
-        <div class="wheel-container">
+        <div class="wheel-stage">
             <div class="wheel-pointer"></div>
             <div class="wheel" id="fortuneWheel"></div>
+            <div class="wheel-center">FF</div>
         </div>
-        <button class="invisible-btn" id="spinWheelBtn" style="width: 60%; height: 8%; bottom: 18%; border-radius: 12px;" onclick="spinFortuneWheel()"></button>
-        <button class="invisible-btn" style="width: 60%; height: 5%; bottom: 10%; border-radius: 12px;" onclick="closeModal('wheelModal')"></button>
+        <button class="invisible-btn" id="spinWheelBtn" style="width: 58%; height: 7.5%; bottom: 16%; left: 21%;" onclick="spinFortuneWheel()">Крутить</button>
+        <button class="invisible-btn" style="width: 44%; height: 6%; bottom: 7.5%; left: 28%;" onclick="closeModal('wheelModal')">Закрыть</button>
     </div>
 </div>
 
+<!-- МАГАЗИН: ПРОЗРАЧНЫЕ КНОПКИ СМЕЩЕНЫ НИЖЕ НА ВЫСОТУ КНОПКИ -->
 <div class="modal" id="shopModal">
-    <div class="modal-box bg-shop" style="padding: 0; background-color: transparent; border: none; box-shadow: none; width: 95vw; height: 80vh; max-width: 500px;">
+    <div class="modal-box bg-shop" style="padding: 0; background-color: transparent; border: none; box-shadow: none; width: 95vw; height: 82vh; max-width: 500px;">
         <div style="position: relative; width: 100%; height: 100%;">
-            <button class="invisible-btn" style="top: 25%; left: 8%; width: 84%; height: 12%;" onclick="buyPackage('p100')">1</button>
-            <button class="invisible-btn" style="top: 39%; left: 8%; width: 84%; height: 12%;" onclick="buyPackage('p500')">2</button>
-            <button class="invisible-btn" style="top: 53%; left: 8%; width: 84%; height: 12%;" onclick="buyPackage('p2000')">3</button>
-            <button class="invisible-btn" style="top: 67%; left: 8%; width: 84%; height: 12%;" onclick="buyPackage('p10000')">4</button>
-            <button class="invisible-btn" style="bottom: 5%; left: 10%; width: 80%; height: 8%;" onclick="closeModal('shopModal')">Закрыть</button>
+            <button class="invisible-btn" style="top: 32%; left: 8%; width: 84%; height: 10.5%;" onclick="buyPackage('p100')">1</button>
+            <button class="invisible-btn" style="top: 44.5%; left: 8%; width: 84%; height: 10.5%;" onclick="buyPackage('p500')">2</button>
+            <button class="invisible-btn" style="top: 57%; left: 8%; width: 84%; height: 10.5%;" onclick="buyPackage('p2000')">3</button>
+            <button class="invisible-btn" style="top: 69.5%; left: 8%; width: 84%; height: 10.5%;" onclick="buyPackage('p10000')">4</button>
+            <button class="invisible-btn" style="top: 83.5%; left: 16%; width: 68%; height: 8.5%;" onclick="closeModal('shopModal')">Закрыть</button>
         </div>
     </div>
 </div>
@@ -375,13 +515,14 @@ html, body { height: 100%; overflow: hidden; background: #000; display: flex; al
     </div>
 </div>
 
+<!-- ЗАДАНИЯ: ПРОЗРАЧНЫЕ КНОПКИ СМЕЩЕНЫ НИЖЕ -->
 <div class="modal" id="tasksModal">
-    <div class="modal-box bg-tasks" style="padding: 0; background-color: transparent; border: none; box-shadow: none; width: 95vw; height: 80vh; max-width: 500px;">
+    <div class="modal-box bg-tasks" style="padding: 0; background-color: transparent; border: none; box-shadow: none; width: 95vw; height: 82vh; max-width: 500px;">
         <div style="position: relative; width: 100%; height: 100%;">
-            <button class="invisible-btn" style="top: 31%; left: 8%; width: 84%; height: 10%;" onclick="claimTask('spin')">1</button>
-            <button class="invisible-btn" style="top: 48%; left: 8%; width: 84%; height: 10%;" onclick="claimTask('win')">2</button>
-            <button class="invisible-btn" style="top: 65%; left: 8%; width: 84%; height: 10%;" onclick="claimTask('wheel')">3</button>
-            <button class="invisible-btn" style="bottom: 5%; left: 10%; width: 80%; height: 8%;" onclick="closeModal('tasksModal')">Закрыть</button>
+            <button class="invisible-btn" style="top: 38%; left: 8%; width: 84%; height: 11%;" onclick="claimTask('spin')">1</button>
+            <button class="invisible-btn" style="top: 53%; left: 8%; width: 84%; height: 11%;" onclick="claimTask('win')">2</button>
+            <button class="invisible-btn" style="top: 68%; left: 8%; width: 84%; height: 11%;" onclick="claimTask('wheel')">3</button>
+            <button class="invisible-btn" style="top: 83.5%; left: 16%; width: 68%; height: 8.5%;" onclick="closeModal('tasksModal')">Закрыть</button>
         </div>
     </div>
 </div>
@@ -594,21 +735,30 @@ function toggleTurbo() {
     notif(turboMode ? '⚡ Турбо-режим ВКЛ' : 'Турбо-режим ВЫКЛ', 'success');
 }
 
+/* ЗАГРУЗКА С ЗАДЕРЖКОЙ 2 СЕК ДО ПОЯВЛЕНИЯ БАРАБАНОВ */
 function preloadImages() {
     const allImages = [...SYMBOLS, 'bg.png', 'start_screen.png', 'wheel_bg.png', 'bg_tasks.png', 'bg_shop.png'];
     let loadedCount = 0;
-    let gameStarted = false;
+    let loadingFinished = false;
 
-    function startGame() {
-        if (gameStarted) return;
-        gameStarted = true;
-        $('loadFill').style.width = '100%';
-        $('startScreen').classList.add('hidden');
-        buildReels();
-        loadUserData();
+    function revealReelsAfterDelay() {
+        setTimeout(() => {
+            buildReels();
+            $('reelsFrame')?.classList.add('ready');
+            loadUserData();
+        }, 2000);
     }
 
-    const fallbackTimer = setTimeout(startGame, 2500);
+    function finishSplash() {
+        if (loadingFinished) return;
+        loadingFinished = true;
+        if ($('loadFill')) $('loadFill').style.width = '100%';
+        $('startScreen').classList.add('hidden');
+        updateUI();
+        revealReelsAfterDelay();
+    }
+
+    const fallbackTimer = setTimeout(finishSplash, 2500);
 
     allImages.forEach(src => {
         const img = new Image();
@@ -620,7 +770,7 @@ function preloadImages() {
             }
             if (loadedCount >= allImages.length) {
                 clearTimeout(fallbackTimer);
-                setTimeout(startGame, 300);
+                setTimeout(finishSplash, 250);
             }
         };
         img.onload = onDone;
@@ -900,7 +1050,7 @@ function stopReelAnim(r, final5) {
 
 async function startSpin() {
     if (isSpinning) return;
-    if (state.balance < totalBet()) {
+    if (!isFreeSpin && state.balance < totalBet()) {
         notif('Мало монет!', 'error');
         haptic('error');
         sfx.lose();
@@ -911,7 +1061,11 @@ async function startSpin() {
     initAudio();
     generatePool(totalBet());
 
-    state.balance -= totalBet();
+    if (!isFreeSpin) {
+        state.balance -= totalBet();
+        state.jackpot += Math.floor(totalBet() * 0.01);
+    }
+
     isSpinning = true;
     stopRequested = false;
     riskUsed = false;
@@ -921,8 +1075,6 @@ async function startSpin() {
     $('winVal').classList.remove('has-win');
     $('btnRiskUI').classList.remove('pulse-risk');
     $('stopVisual').style.display = 'flex';
-
-    state.jackpot += Math.floor(totalBet() * 0.01);
 
     updateUI();
     overlay.innerHTML = '';
@@ -955,14 +1107,16 @@ async function requestStop(pregeneratedGrid) {
 
     isSpinning = false;
     updateUI();
-    syncSpinWithServer(totalBet(), totalWinThisRound);
+    syncSpinWithServer(isFreeSpin ? 0 : totalBet(), totalWinThisRound);
 
     if (freeSpins > 0) {
         freeSpins--;
         isFreeSpin = true;
+        updateUI();
         spinTimeout = setTimeout(startSpin, turboMode ? 800 : 1500);
     } else {
         isFreeSpin = false;
+        updateUI();
         if (autoSpins > 0) {
             autoSpins--;
             spinTimeout = setTimeout(startSpin, turboMode ? 500 : 1000);
@@ -1110,14 +1264,34 @@ function startAuto(count) {
     startSpin();
 }
 
+/* КОЛЕСО ФОРТУНЫ: СЕКТОРЫ И ВРАЩЕНИЕ */
 let isWheelSpinning = false;
 let currentWheelAngle = 0;
 const wheelPrizes = [
-    { type: 'mult', val: 2, text: 'x2' }, { type: 'mult', val: 5, text: 'x5' },
-    { type: 'fs', val: 10, text: '10 FS' }, { type: 'mult', val: 10, text: 'x10' },
-    { type: 'mult', val: 2, text: 'x2' }, { type: 'jackpot', val: 50000, text: 'JP' },
-    { type: 'fs', val: 20, text: '20 FS' }, { type: 'mult', val: 50, text: 'x50' }
+    { type: 'jackpot', val: 50000, text: 'JP' },
+    { type: 'fs', val: 20, text: '20 FS' },
+    { type: 'mult', val: 50, text: 'x50' },
+    { type: 'mult', val: 2, text: 'x2' },
+    { type: 'mult', val: 5, text: 'x5' },
+    { type: 'fs', val: 10, text: '10 FS' },
+    { type: 'mult', val: 10, text: 'x10' },
+    { type: 'mult', val: 3, text: 'x3' }
 ];
+
+function renderWheelLabels() {
+    const wheel = $('fortuneWheel');
+    if (!wheel) return;
+    wheel.querySelectorAll('.wheel-label').forEach(el => el.remove());
+    wheelPrizes.forEach((p, idx) => {
+        const angle = idx * 45 + 22.5;
+        const lbl = document.createElement('div');
+        lbl.className = 'wheel-label';
+        lbl.textContent = p.text;
+        lbl.style.transform = `rotate(${angle - 90}deg) translate(68px) rotate(90deg) translate(-50%, -50%)`;
+        wheel.appendChild(lbl);
+    });
+}
+renderWheelLabels();
 
 function spinFortuneWheel() {
     if (isWheelSpinning) return;
@@ -1128,14 +1302,15 @@ function spinFortuneWheel() {
 
     let winIndex;
     if (Math.random() < 0.00001) {
-        winIndex = 5;
+        winIndex = 0;
     } else {
-        const safeIndices = [0, 1, 2, 3, 4, 6, 7];
+        const safeIndices = [1, 2, 3, 4, 5, 6, 7];
         winIndex = safeIndices[Math.floor(Math.random() * safeIndices.length)];
     }
 
-    const targetAngle = (360 - (winIndex * 45) - 22.5) + 3600;
-    currentWheelAngle += targetAngle;
+    const sectorCenter = winIndex * 45 + 22.5;
+    const targetDelta = ((360 - sectorCenter) % 360) + 360 * 8;
+    currentWheelAngle += targetDelta;
     $('fortuneWheel').style.transform = `rotate(${currentWheelAngle}deg)`;
 
     setTimeout(() => {
@@ -1152,6 +1327,7 @@ function spinFortuneWheel() {
             showBigWin(winAmt);
         } else if (prize.type === 'fs') {
             freeSpins = prize.val;
+            isFreeSpin = true;
             notif(`🎉 Колесо: ${prize.val} ФРИСПИНОВ!`, 'gold');
             setTimeout(startSpin, 1000);
         } else if (prize.type === 'jackpot') {
@@ -1163,7 +1339,7 @@ function spinFortuneWheel() {
         updateUI();
         closeModal('wheelModal');
         syncSpinWithServer(0, state.balance);
-    }, 5200);
+    }, 5100);
 }
 
 function openRiskModal() {
