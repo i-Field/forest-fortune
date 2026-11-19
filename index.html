@@ -420,6 +420,19 @@ html, body {
     background: url('wheel_disc.png?v=1') no-repeat center center / cover;
     transform: rotate(0deg);
     will-change: transform;
+    position: relative;
+}
+
+.wheel-fallback-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+
+.wheel-disc.disc-missing .wheel-fallback-svg {
+    display: block;
 }
 
 .paytable { display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; text-align: left; }
@@ -541,11 +554,31 @@ html, body {
     </div>
 </div>
 
-<!-- КОЛЕСО ФОРТУНЫ: РАМКА wheel_bg.png + ДИСК wheel_disc.png -->
+<!-- КОЛЕСО ФОРТУНЫ: РАМКА wheel_bg.png + ДИСК wheel_disc.png + АВТО-ФОЛЛБЭК -->
 <div class="modal art-modal" id="wheelModal">
     <div class="wheel-sheet">
         <div class="wheel-spinner-wrap">
-            <div class="wheel-disc" id="fortuneWheel"></div>
+            <div class="wheel-disc" id="fortuneWheel">
+                <svg class="wheel-fallback-svg" viewBox="0 0 200 200">
+                    <circle cx="100" cy="100" r="98" fill="#133824" stroke="#ffd966" stroke-width="3"/>
+                    <path d="M100 100 L100 2 A98 98 0 0 1 169.3 30.7 Z" fill="#c0392b"/>
+                    <path d="M100 100 L169.3 30.7 A98 98 0 0 1 198 100 Z" fill="#1e8449"/>
+                    <path d="M100 100 L198 100 A98 98 0 0 1 169.3 169.3 Z" fill="#b7950b"/>
+                    <path d="M100 100 L169.3 169.3 A98 98 0 0 1 100 198 Z" fill="#117864"/>
+                    <path d="M100 100 L100 198 A98 98 0 0 1 30.7 169.3 Z" fill="#1f618d"/>
+                    <path d="M100 100 L30.7 169.3 A98 98 0 0 1 2 100 Z" fill="#1e8449"/>
+                    <path d="M100 100 L2 100 A98 98 0 0 1 30.7 30.7 Z" fill="#7d3c98"/>
+                    <path d="M100 100 L30.7 30.7 A98 98 0 0 1 100 2 Z" fill="#117864"/>
+                    <text x="124" y="34" fill="#ffd966" font-size="11" font-weight="bold" text-anchor="middle" transform="rotate(22.5 124 34)">JP</text>
+                    <text x="166" y="76" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle" transform="rotate(67.5 166 76)">20 FS</text>
+                    <text x="166" y="130" fill="#ffd966" font-size="11" font-weight="bold" text-anchor="middle" transform="rotate(112.5 166 130)">x50</text>
+                    <text x="124" y="170" fill="#fff" font-size="11" font-weight="bold" text-anchor="middle" transform="rotate(157.5 124 170)">x2</text>
+                    <text x="76" y="170" fill="#ffd966" font-size="11" font-weight="bold" text-anchor="middle" transform="rotate(-157.5 76 170)">x5</text>
+                    <text x="34" y="130" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle" transform="rotate(-112.5 34 130)">10 FS</text>
+                    <text x="34" y="76" fill="#ffd966" font-size="11" font-weight="bold" text-anchor="middle" transform="rotate(-67.5 34 76)">x10</text>
+                    <text x="76" y="34" fill="#fff" font-size="11" font-weight="bold" text-anchor="middle" transform="rotate(-22.5 76 34)">x3</text>
+                </svg>
+            </div>
         </div>
         <button class="invisible-btn" id="spinWheelBtn" style="top: 72.2%; left: 22%; width: 56%; height: 7.5%;" onclick="spinFortuneWheel()">Крутить</button>
         <button class="invisible-btn" style="top: 81.8%; left: 32%; width: 36%; height: 5.5%;" onclick="closeModal('wheelModal')">Закрыть</button>
@@ -762,8 +795,22 @@ function canSpinWheelNow() {
 
 function updateWheelButtonState() {
     const btn = $('spinWheelBtn');
-    if (btn) btn.disabled = isWheelSpinning || !canSpinWheelNow();
+    if (btn) {
+        // Не ставим btn.disabled, чтобы клик всегда срабатывал и показывал уведомление
+        btn.style.opacity = canSpinWheelNow() ? '1' : '0.45';
+    }
 }
+
+function checkWheelDiscImage() {
+    const disc = $('fortuneWheel');
+    if (!disc) return;
+    const probe = new Image();
+    probe.src = 'wheel_disc.png?v=1';
+    probe.onerror = () => {
+        disc.classList.add('disc-missing');
+    };
+}
+checkWheelDiscImage();
 
 function updateTasksUI() {
     const spinEl = $('taskSpinProg');
