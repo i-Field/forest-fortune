@@ -233,11 +233,76 @@ html, body {
     100% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 40px #ff0000, inset 0 0 20px #ff0000; }
 }
 
-#bigWinOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2000000; opacity: 0; pointer-events: none; transition: opacity 0.5s; backdrop-filter: blur(5px); }
+/* ОКНО БОЛЬШОГО ВЫИГРЫША / ДЖЕКПОТА / ФРИСПИНОВ */
+#bigWinOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.86);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s;
+    backdrop-filter: blur(5px);
+    padding: 20px;
+}
 #bigWinOverlay.active { opacity: 1; pointer-events: auto; }
-.bigwin-title { font-size: 55px; color: #ffd966; font-family: 'Arial Black', sans-serif; text-transform: uppercase; text-align: center; text-shadow: 0 0 20px #ff0000, 0 0 40px #ffd966; animation: bigWinPulse 0.5s infinite alternate; margin-bottom: 20px; }
-.bigwin-amount { font-size: 45px; color: #fff; font-family: 'Arial Black', sans-serif; text-shadow: 0 0 15px #00ffff; }
-@keyframes bigWinPulse { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
+.bigwin-title {
+    font-size: 46px;
+    color: #ffd966;
+    font-family: 'Arial Black', sans-serif;
+    text-transform: uppercase;
+    text-align: center;
+    text-shadow: 0 0 20px #ff0000, 0 0 40px #ffd966;
+    animation: bigWinPulse 0.6s infinite alternate;
+    margin-bottom: 12px;
+}
+.bigwin-sub {
+    font-size: 16px;
+    color: #a8ff78;
+    font-weight: 800;
+    margin-bottom: 14px;
+    text-align: center;
+}
+.bigwin-amount {
+    font-size: 40px;
+    color: #fff;
+    font-family: 'Arial Black', sans-serif;
+    text-shadow: 0 0 15px #00ffff;
+    margin-bottom: 24px;
+}
+.bigwin-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 280px;
+}
+.story-share-btn {
+    padding: 13px 18px;
+    border-radius: 12px;
+    border: 2px solid #ffd966;
+    background: linear-gradient(90deg, #16a085, #2ecc71);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 0 18px rgba(46, 204, 113, 0.55);
+}
+.story-close-btn {
+    padding: 11px 16px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.35);
+    background: rgba(20, 20, 20, 0.85);
+    color: #ddd;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+}
+@keyframes bigWinPulse { 0% { transform: scale(1); } 100% { transform: scale(1.08); } }
 
 /* МОДАЛКИ */
 .modal { position: fixed; inset: 0; background: rgba(0,0,0,.9); display: flex; align-items: center; justify-content: center; z-index: 1000000; opacity: 0; pointer-events: none; transition: opacity .2s; padding: 15px; }
@@ -329,7 +394,7 @@ html, body {
     height: 100%;
     border-radius: 50%;
     background: url('wheel_disc.png?v=1') no-repeat center center / cover;
-    transition: transform 5s cubic-bezier(0.12, 0.82, 0.14, 1);
+    transition: transform 4.4s cubic-bezier(0.12, 0.82, 0.14, 1);
     will-change: transform;
 }
 
@@ -427,9 +492,15 @@ html, body {
     <div class="btn-turbo" id="btnTurbo" onclick="toggleTurbo()">⚡</div>
 </div>
 
+<!-- БОЛЬШОЙ ВЫИГРЫШ / ДЖЕКПОТ / ФРИСПИНЫ С КНОПКОЙ ПОДЕЛИТЬСЯ В СТОРИС -->
 <div id="bigWinOverlay">
     <div class="bigwin-title" id="bigWinText">BIG WIN!</div>
+    <div class="bigwin-sub" id="bigWinSub"></div>
     <div class="bigwin-amount" id="bigWinAmount">0</div>
+    <div class="bigwin-actions">
+        <button class="story-share-btn" id="shareStoryBtn" onclick="shareWinToStory()">📲 Поделиться в сторис</button>
+        <button class="story-close-btn" onclick="hideBigWin()">Продолжить</button>
+    </div>
 </div>
 
 <div class="modal" id="autoModal">
@@ -540,8 +611,8 @@ html, body {
             <p style="margin-bottom:10px;">Заменяют символы в линиях. <b>wild.png</b> усиливает выигрыш линии: x2 за 1 wild, x4 за 2, x8 за 3+. Во фриспинах кристаллы закрепляются.</p>
             <p style="color:#ffd966; margin-bottom:5px;">🎡 Колесо Фортуны (1 раз в сутки + бонус с барабанов):</p>
             <p style="margin-bottom:10px;">Обычный запуск колеса доступен <b>1 раз в сутки</b>. При выпадении <b>3 и более грибов (mushroom.png)</b> на барабанах даётся <b>дополнительный прокрут колеса</b> сверх суточного лимита.</p>
-            <p style="color:#ffd966; margin-bottom:5px;">⚡ Фриспины и Риск-игра:</p>
-            <p style="margin-bottom:10px;">Фриспины выпадают на колесе (<b>10 FS</b> и <b>20 FS</b>) и в бонусах игры — во время фриспинов выигрыши удваиваются (x2) и включается изумрудный режим. Выигрыши от x2 ставки можно удвоить в <b>Риск-игре</b>.</p>
+            <p style="color:#ffd966; margin-bottom:5px;">⚡ Фриспины и Сторис:</p>
+            <p style="margin-bottom:10px;">Фриспины выпадают на колесе (<b>10 FS</b> и <b>20 FS</b>) и в бонусах — во время фриспинов выигрыши удваиваются (x2) и включается изумрудный режим. При большом выигрыше, джекпоте или серии фриспинов появляется кнопка <b>«Поделиться в сторис»</b>.</p>
         </div>
         <button class="modal-close" onclick="closeModal('paytableModal')">Закрыть</button>
     </div>
@@ -613,10 +684,12 @@ generatePool(15);
 
 let state = { balance: 1000, betPerLine: 1, lines: 15, sound: true, lang: 'ru', jackpot: 500000 };
 let isSpinning = false, stopRequested = false;
+let roundCounter = 0;
 let freeSpins = 0, isFreeSpin = false;
 let bonusWheelSpins = 0;
 let pendingRisk = 0;
-let spinTimeout = null, nextSpinTimer = null;
+let spinTimeout = null, nextSpinTimer = null, bigWinRaf = null, bigWinHideTimer = null;
+let lastShareCaption = '';
 let riskUsed = false;
 let turboMode = false;
 let autoSpins = 0;
@@ -628,7 +701,7 @@ let audioCtx = null;
 let isAudioInit = false;
 
 const $ = (id) => document.getElementById(id);
-const fmt = (n) => Math.round(n).toLocaleString('ru-RU');
+const fmt = (n) => Math.round(Number(n) || 0).toLocaleString('ru-RU');
 
 /* ЗАДАНИЯ + СУТОЧНЫЙ ЛИМИТ КОЛЕСА + БОНУСНЫЕ СПИНЫ С БАРАБАНОВ */
 const todayKey = () => new Date().toDateString();
@@ -862,7 +935,7 @@ async function syncSpinWithServer(betAmount, winAmount) {
             if (typeof data.jackpot === 'number') state.jackpot = data.jackpot;
             if (data.jackpotWon) {
                 state.balance = data.newBalance;
-                showBigWin(data.winAmount);
+                showBigWin(data.winAmount, 'JACKPOT!', '🏆 Супер приз сорван!');
                 notif(`🏆 ДЖЕКПОТ! Вы выиграли ${fmt(data.winAmount)}!`, 'gold');
             }
             updateUI();
@@ -937,6 +1010,37 @@ function shareReferral() {
     }
 }
 
+function hideBigWin() {
+    if (bigWinRaf) { cancelAnimationFrame(bigWinRaf); bigWinRaf = null; }
+    if (bigWinHideTimer) { clearTimeout(bigWinHideTimer); bigWinHideTimer = null; }
+    $('bigWinOverlay')?.classList.remove('active');
+}
+
+function shareWinToStory() {
+    const text = lastShareCaption || 'Затащил в Forest Fortune! 🌲💰';
+    const botLink = 'https://t.me/Forest_Fortune_Bot';
+    haptic('success');
+    sfx.click();
+
+    if (tg?.shareToStory) {
+        try {
+            const mediaUrl = new URL('bg.png', window.location.href).href;
+            tg.shareToStory(mediaUrl, {
+                text,
+                widget_link: { url: botLink, name: 'Forest Fortune' }
+            });
+            return;
+        } catch (e) {}
+    }
+
+    if (tg?.openTelegramLink) {
+        tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(botLink)}&text=${encodeURIComponent(text)}`);
+    } else if (navigator.clipboard) {
+        navigator.clipboard.writeText(`${text} ${botLink}`).catch(() => {});
+        notif('Текст для сторис скопирован!', 'success');
+    }
+}
+
 function notif(msg, type = '') {
     const n = $('notif');
     n.textContent = msg;
@@ -956,42 +1060,66 @@ const closeModal = (id) => { $(id).classList.remove('active'); };
 
 function spawnConfetti() {
     const colors = ['#ff3b30', '#ffcc00', '#2ecc71', '#3498db', '#9b59b6', '#ffd966'];
-    for (let i = 0; i < 40; i++) {
+    for (let i = 0; i < 32; i++) {
         const c = document.createElement('div');
         c.className = 'confetti';
         c.style.left = Math.random() * 100 + 'vw';
         c.style.top = '-20px';
         c.style.background = colors[Math.floor(Math.random() * colors.length)];
-        c.style.animation = `fall ${1 + Math.random() * 2}s linear forwards`;
-        c.style.animationDelay = Math.random() * 0.5 + 's';
+        c.style.animation = `fall ${1 + Math.random() * 1.6}s linear forwards`;
+        c.style.animationDelay = Math.random() * 0.3 + 's';
         document.body.appendChild(c);
-        setTimeout(() => c.remove(), 3000);
+        setTimeout(() => c.remove(), 2200);
     }
 }
 
-function showBigWin(amount) {
+/* БЫСТРЫЙ, ПЛАВНЫЙ СЧЁТЧИК БЕЗ ЗАВИСАНИЙ + КНОПКА СТОРИС */
+function showBigWin(amount, customTitle = '', customSub = '') {
+    hideBigWin();
+    const safeAmount = Math.max(0, Math.round(Number(amount) || 0));
     const overlay = $('bigWinOverlay');
     const text = $('bigWinText');
+    const sub = $('bigWinSub');
     const amtText = $('bigWinAmount');
 
-    if (amount >= 5000) { text.textContent = "JACKPOT!"; text.style.color = "#ff0000"; }
-    else if (amount >= 1000) { text.textContent = "MEGA WIN!"; text.style.color = "#00ffff"; }
-    else { text.textContent = "BIG WIN!"; text.style.color = "#ffd966"; }
+    if (customTitle) {
+        text.textContent = customTitle;
+        text.style.color = customTitle.includes('JACKPOT') ? '#ff4757' : '#ffd966';
+    } else if (safeAmount >= 5000) {
+        text.textContent = "JACKPOT!";
+        text.style.color = "#ff4757";
+    } else if (safeAmount >= 1000) {
+        text.textContent = "MEGA WIN!";
+        text.style.color = "#00ffff";
+    } else {
+        text.textContent = "BIG WIN!";
+        text.style.color = "#ffd966";
+    }
 
+    const modeLabel = isFreeSpin ? '🌿 Режим Фриспинов (x2)' : '✨ Большой выигрыш';
+    sub.textContent = customSub || `${modeLabel} — можно поделиться в сторис!`;
+    lastShareCaption = `${text.textContent} +${fmt(safeAmount)} монет в Forest Fortune!`;
+
+    amtText.textContent = '0';
     overlay.classList.add('active');
-    let currentCount = 0;
-
-    const timer = setInterval(() => {
-        currentCount += Math.ceil(amount / 50);
-        if (currentCount >= amount) {
-            currentCount = amount;
-            clearInterval(timer);
-            setTimeout(() => { overlay.classList.remove('active'); }, 2000);
-        }
-        amtText.textContent = fmt(currentCount);
-    }, 40);
-
     spawnConfetti();
+
+    const durationMs = 1050;
+    const startTs = performance.now();
+
+    function step(now) {
+        const progress = Math.min(1, (now - startTs) / durationMs);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        amtText.textContent = fmt(safeAmount * eased);
+        if (progress < 1) {
+            bigWinRaf = requestAnimationFrame(step);
+        } else {
+            bigWinRaf = null;
+            amtText.textContent = fmt(safeAmount);
+            bigWinHideTimer = setTimeout(hideBigWin, 3600);
+        }
+    }
+    bigWinRaf = requestAnimationFrame(step);
 }
 
 const reelsEl = $('reels');
@@ -1036,7 +1164,7 @@ function updateUI() {
     if (jpEl) {
         jpEl.textContent = fmt(state.jackpot);
         jpEl.classList.add('bump');
-        setTimeout(() => jpEl.classList.remove('bump'), 300);
+        setTimeout(() => jpEl.classList.remove('bump'), 250);
     }
 
     if (isFreeSpin || freeSpins > 0) {
@@ -1049,68 +1177,80 @@ function updateUI() {
     }
 }
 
-function startReelSpin(r) {
+function startReelSpin(r, activeRoundId) {
     const track = tracks[r];
+    if (!track) return;
     let html = '';
-    for (let i = 0; i < 40; i++) html += makeCellHtml(randSym());
+    for (let i = 0; i < 36; i++) html += makeCellHtml(randSym());
     track.innerHTML = html;
     let lastTime = performance.now();
-    const speed = turboMode ? 4000 : 2000;
+    const speed = turboMode ? 4200 : 2100;
     const frameHeight = (track.clientHeight || 200) / 5;
 
     function frame(now) {
-        if (!isSpinning) return;
-        const dt = (now - lastTime) / 1000;
+        if (!isSpinning || activeRoundId !== roundCounter) return;
+        const dt = Math.min(0.05, (now - lastTime) / 1000);
         lastTime = now;
         reelPositions[r] -= speed * dt;
-        if (reelPositions[r] <= -(20 * frameHeight)) reelPositions[r] += 20 * frameHeight;
+        if (reelPositions[r] <= -(18 * frameHeight)) reelPositions[r] += 18 * frameHeight;
         track.style.transform = `translate3d(0, ${reelPositions[r]}px, 0)`;
         reelAnimFrames[r] = requestAnimationFrame(frame);
     }
     reelAnimFrames[r] = requestAnimationFrame(frame);
 }
 
-function stopReelAnim(r, final5) {
+function stopReelAnim(r, final5, activeRoundId) {
     return new Promise(resolve => {
-        const delay = turboMode ? r * 50 : r * 200;
+        const delay = turboMode ? r * 45 : r * 180;
         setTimeout(() => {
+            if (activeRoundId !== roundCounter) return resolve();
             cancelAnimationFrame(reelAnimFrames[r]);
             const track = tracks[r];
+            if (!track) return resolve();
             const currentY = reelPositions[r];
             const frameHeight = (track.clientHeight || 200) / 5;
 
             let html = '';
-            for (let i = 0; i < 15; i++) html += makeCellHtml(randSym());
+            for (let i = 0; i < 14; i++) html += makeCellHtml(randSym());
             final5.forEach(s => { html += makeCellHtml(s); });
-            for (let i = 0; i < 5; i++) html += makeCellHtml(randSym());
+            for (let i = 0; i < 4; i++) html += makeCellHtml(randSym());
 
             track.innerHTML = html;
-            let startY = currentY % (15 * frameHeight);
-            if (startY > 0) startY -= 15 * frameHeight;
+            let startY = currentY % (14 * frameHeight);
+            if (startY > 0) startY -= 14 * frameHeight;
 
             track.style.transition = 'none';
             track.style.transform = `translate3d(0, ${startY}px, 0)`;
             track.getBoundingClientRect();
 
-            const animTime = turboMode ? 200 : 800 + r * 200;
+            const animTime = turboMode ? 180 : 720 + r * 160;
             track.style.transition = `transform ${animTime}ms cubic-bezier(0.1, 0.8, 0.2, 1)`;
-            track.style.transform = `translate3d(0, -${15 * frameHeight}px, 0)`;
+            track.style.transform = `translate3d(0, -${14 * frameHeight}px, 0)`;
 
             setTimeout(() => {
+                if (activeRoundId !== roundCounter) return resolve();
                 track.style.transition = 'none';
                 track.style.transform = 'translate3d(0,0,0)';
                 track.innerHTML = final5.map(s => makeCellHtml(s)).join('');
                 haptic('light');
                 sfx.reelStop();
                 resolve();
-            }, animTime + 50);
+            }, animTime + 40);
         }, delay);
     });
 }
 
+function clearAllLoopTimers() {
+    if (spinTimeout) { clearTimeout(spinTimeout); spinTimeout = null; }
+    if (nextSpinTimer) { clearTimeout(nextSpinTimer); nextSpinTimer = null; }
+    for (let i = 0; i < REELS; i++) {
+        if (reelAnimFrames[i]) { cancelAnimationFrame(reelAnimFrames[i]); reelAnimFrames[i] = null; }
+    }
+}
+
 async function startSpin() {
     if (isSpinning) return;
-    if (nextSpinTimer) { clearTimeout(nextSpinTimer); nextSpinTimer = null; }
+    clearAllLoopTimers();
 
     if (!isFreeSpin && state.balance < totalBet()) {
         notif('Мало монет!', 'error');
@@ -1131,6 +1271,8 @@ async function startSpin() {
     taskData.spins++;
     saveTasks();
 
+    roundCounter++;
+    const currentRound = roundCounter;
     isSpinning = true;
     stopRequested = false;
     riskUsed = false;
@@ -1150,55 +1292,71 @@ async function startSpin() {
 
     const finalGrid = genGrid();
     reelPositions = [0, 0, 0, 0, 0];
-    tracks.forEach((tr, i) => startReelSpin(i));
+    tracks.forEach((tr, i) => startReelSpin(i, currentRound));
 
-    const timeoutDur = turboMode ? 2000 : 5000;
+    const timeoutDur = turboMode ? 1800 : 4200;
     spinTimeout = setTimeout(() => {
-        if (!stopRequested && isSpinning) requestStop(finalGrid);
+        if (!stopRequested && isSpinning && currentRound === roundCounter) {
+            requestStop(finalGrid, currentRound);
+        }
     }, timeoutDur);
 }
 
-async function requestStop(pregeneratedGrid) {
-    if (!isSpinning || stopRequested) return;
+async function requestStop(pregeneratedGrid, expectedRound = roundCounter) {
+    if (!isSpinning || stopRequested || expectedRound !== roundCounter) return;
     stopRequested = true;
     if (spinTimeout) { clearTimeout(spinTimeout); spinTimeout = null; }
-
     $('stopVisual').style.display = 'none';
 
-    const currentGrid = pregeneratedGrid || genGrid();
-    await Promise.all(tracks.map((tr, i) => stopReelAnim(i, currentGrid[i])));
+    try {
+        const currentGrid = pregeneratedGrid || genGrid();
+        await Promise.all(tracks.map((tr, i) => stopReelAnim(i, currentGrid[i], expectedRound)));
+        if (expectedRound !== roundCounter) return;
 
-    await runCascades(currentGrid);
+        await runCascades(currentGrid, expectedRound);
+        if (expectedRound !== roundCounter) return;
 
-    if (totalWinThisRound > 0) {
-        taskData.wins++;
-        saveTasks();
-    }
+        if (totalWinThisRound > 0) {
+            taskData.wins++;
+            saveTasks();
+        }
 
-    isSpinning = false;
-    updateUI();
-    syncSpinWithServer(isFreeSpin ? 0 : totalBet(), totalWinThisRound);
+        syncSpinWithServer(isFreeSpin ? 0 : totalBet(), totalWinThisRound);
+    } finally {
+        if (expectedRound === roundCounter) {
+            isSpinning = false;
+            stopRequested = false;
+            $('stopVisual').style.display = 'none';
+            updateUI();
 
-    if (freeSpins > 0) {
-        freeSpins--;
-        isFreeSpin = true;
-        updateUI();
-        nextSpinTimer = setTimeout(startSpin, turboMode ? 800 : 1500);
-    } else {
-        isFreeSpin = false;
-        updateUI();
-        if (autoSpins > 0) {
-            autoSpins--;
-            nextSpinTimer = setTimeout(startSpin, turboMode ? 500 : 1000);
+            if (freeSpins > 0) {
+                freeSpins--;
+                isFreeSpin = true;
+                updateUI();
+                nextSpinTimer = setTimeout(() => {
+                    if (!isSpinning) startSpin();
+                }, turboMode ? 750 : 1400);
+            } else {
+                isFreeSpin = false;
+                updateUI();
+                if (autoSpins > 0) {
+                    autoSpins--;
+                    nextSpinTimer = setTimeout(() => {
+                        if (!isSpinning) startSpin();
+                    }, turboMode ? 500 : 950);
+                }
+            }
         }
     }
 }
 
-async function runCascades(grid) {
+async function runCascades(grid, activeRoundId) {
     let cascadeCount = 0;
     totalWinThisRound = 0;
+    const wasFreeSpinRound = isFreeSpin;
 
-    while (true) {
+    while (cascadeCount < 8) {
+        if (activeRoundId !== roundCounter) break;
         let total = 0;
         const winCells = [];
 
@@ -1253,12 +1411,6 @@ async function runCascades(grid) {
             haptic('success');
             sfx.win();
 
-            if (totalWinThisRound >= totalBet() * 10 && cascadeCount === 0) {
-                showBigWin(totalWinThisRound);
-            } else {
-                spawnConfetti();
-            }
-
             if (isFreeSpin) {
                 for (let r = 0; r < REELS; r++) {
                     for (let c = 0; c < ROWS; c++) {
@@ -1269,7 +1421,8 @@ async function runCascades(grid) {
                 }
             }
 
-            await new Promise(r => setTimeout(r, turboMode ? 500 : 1200));
+            await new Promise(r => setTimeout(r, turboMode ? 450 : 1050));
+            if (activeRoundId !== roundCounter) break;
             sfx.cascade();
 
             winCells.forEach(cell => { grid[cell.r][cell.c] = null; });
@@ -1283,7 +1436,7 @@ async function runCascades(grid) {
             }
 
             for (let r = 0; r < REELS; r++) {
-                tracks[r].innerHTML = grid[r].map(s => makeCellHtml(s)).join('');
+                if (tracks[r]) tracks[r].innerHTML = grid[r].map(s => makeCellHtml(s)).join('');
             }
             document.querySelectorAll('.cell').forEach(c => c.classList.remove('win'));
 
@@ -1292,6 +1445,8 @@ async function runCascades(grid) {
             break;
         }
     }
+
+    if (activeRoundId !== roundCounter) return;
 
     let scatterCount = 0;
     for (let r = 0; r < REELS; r++) {
@@ -1306,11 +1461,21 @@ async function runCascades(grid) {
         notif(`🍄 ${scatterCount} ГРИБА! Дополнительный спин Колеса Фортуны!`, 'gold');
         haptic('heavy');
         if (!isFreeSpin) {
-            setTimeout(() => { openModal('wheelModal'); }, 900);
+            setTimeout(() => { openModal('wheelModal'); }, 800);
         }
     }
 
     if (totalWinThisRound > 0) {
+        if (totalWinThisRound >= totalBet() * 8 || wasFreeSpinRound) {
+            showBigWin(
+                totalWinThisRound,
+                wasFreeSpinRound ? 'FREE SPINS WIN!' : '',
+                wasFreeSpinRound ? '🌿 Серия фриспинов завершена — поделись в сторис!' : ''
+            );
+        } else {
+            spawnConfetti();
+        }
+
         if (totalWinThisRound >= totalBet() * 2 && !isFreeSpin) {
             pendingRisk = totalWinThisRound;
             $('btnRiskUI').classList.add('pulse-risk');
@@ -1396,24 +1561,27 @@ function spinFortuneWheel() {
         if (prize.type === 'jackpot') {
             state.balance += state.jackpot;
             notif(`🏆 СУПЕР ПРИЗ! ДЖЕКПОТ +${fmt(state.jackpot)}!`, 'gold');
-            showBigWin(state.jackpot);
+            showBigWin(state.jackpot, 'JACKPOT!', '🏆 Джекпот с Колеса Фортуны!');
             state.jackpot = 50000;
         } else if (prize.type === 'fs') {
             freeSpins += prize.val;
             isFreeSpin = true;
             notif(`🌿 Колесо: +${prize.val} ФРИСПИНОВ!`, 'gold');
-            setTimeout(startSpin, 900);
+            showBigWin(prize.val, `+${prize.val} FREE SPINS`, '🌿 Фриспины активированы — поделись в сторис!');
+            setTimeout(() => { if (!isSpinning) startSpin(); }, 1100);
         } else {
             const winAmt = totalBet() * prize.val;
             state.balance += winAmt;
             notif(`🎉 Колесо: х${prize.val}! Выигрыш +${fmt(winAmt)}`, 'gold');
-            showBigWin(winAmt);
+            if (prize.val >= 10) {
+                showBigWin(winAmt, `WHEEL x${prize.val}!`, '🎉 Крупный множитель на Колесе Фортуны!');
+            }
         }
         updateUI();
         updateWheelButtonState();
         closeModal('wheelModal');
         syncSpinWithServer(0, state.balance);
-    }, 5100);
+    }, 4500);
 }
 
 function openRiskModal() {
@@ -1508,7 +1676,7 @@ function toggleAuto() { if (!isSpinning) openModal('autoModal'); }
 $('spinBtn').onclick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (isSpinning) requestStop();
+    if (isSpinning) requestStop(null, roundCounter);
     else startSpin();
 };
 
