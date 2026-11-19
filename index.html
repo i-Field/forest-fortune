@@ -334,6 +334,16 @@ html, body {
 .art-sheet.tasks-art { background-image: url('bg_tasks.png?v=1'); }
 .art-sheet.shop-art { background-image: url('bg_shop.png?v=1'); }
 
+/* ПРИТЕМНЕНИЕ ФОНА ЗАДАНИЙ И МАГАЗИНА */
+.art-sheet::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(2, 10, 6, 0.34);
+    pointer-events: none;
+    z-index: 5;
+}
+
 .invisible-btn {
     background: transparent !important;
     border: none !important;
@@ -346,19 +356,23 @@ html, body {
 }
 .invisible-btn:active { background: rgba(255, 255, 255, 0.22) !important; border-radius: 10px; }
 
+/* МАСКА ПОВЕРХ НАРИСОВАННЫХ ЦИФР + ДЕЙСТВУЮЩИЙ ПОКАЗАТЕЛЬ */
 .task-prog-badge {
     position: absolute;
-    right: 17.5%;
-    width: 15%;
-    height: 4.5%;
+    right: 15.2%;
+    width: 19.5%;
+    height: 4.6%;
     display: flex;
     align-items: center;
     justify-content: center;
+    background: linear-gradient(180deg, #253430, #16211e);
+    border: 1px solid rgba(255, 217, 102, 0.38);
+    border-radius: 8px;
     font-family: 'Arial Black', Impact, sans-serif;
-    font-size: 3.6vw;
+    font-size: 3.4vw;
     font-weight: 900;
-    color: #fff;
-    text-shadow: 0 1px 3px #000, 0 0 6px rgba(0, 0, 0, 0.9);
+    color: #ffd966;
+    text-shadow: 0 1px 2px #000;
     pointer-events: none;
     z-index: 20;
 }
@@ -370,8 +384,17 @@ html, body {
     aspect-ratio: 768 / 1370;
     width: 100vw;
     max-height: 100dvh;
-    background: url('wheel_bg.png?v=1') no-repeat center center / 100% 100%;
+    background: url('wheel_bg.png?v=1') no-repeat center center / 100% 100%, #071710;
     overflow: hidden;
+}
+
+.wheel-sheet::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.22);
+    pointer-events: none;
+    z-index: 4;
 }
 
 .wheel-spinner-wrap {
@@ -387,6 +410,7 @@ html, body {
     justify-content: center;
     pointer-events: none;
     z-index: 15;
+    box-shadow: 0 0 24px rgba(0, 0, 0, 0.75);
 }
 
 .wheel-disc {
@@ -394,7 +418,7 @@ html, body {
     height: 100%;
     border-radius: 50%;
     background: url('wheel_disc.png?v=1') no-repeat center center / cover;
-    transition: transform 4.4s cubic-bezier(0.12, 0.82, 0.14, 1);
+    transform: rotate(0deg);
     will-change: transform;
 }
 
@@ -561,16 +585,16 @@ html, body {
     </div>
 </div>
 
-<!-- ЗАДАНИЯ: ПРОЗРАЧНЫЕ КНОПКИ И СЧЁТЧИКИ ПО КООРДИНАТАМ КАРТИНКИ -->
+<!-- ЗАДАНИЯ: ПЕРЕКРЫТИЕ СТАРЫХ ЦИФР + ДЕЙСТВУЮЩИЙ ПОКАЗАТЕЛЬ -->
 <div class="modal art-modal" id="tasksModal">
     <div class="art-sheet tasks-art">
-        <div class="task-prog-badge" id="taskSpinProg" style="top: 34.4%;">0/20</div>
+        <div class="task-prog-badge" id="taskSpinProg" style="top: 34.3%;">0/20</div>
         <button class="invisible-btn" style="top: 39.2%; left: 16%; width: 44%; height: 6.5%;" onclick="claimTask('spin')">Забрать 500</button>
 
-        <div class="task-prog-badge" id="taskWinProg" style="top: 48.2%;">0/5</div>
+        <div class="task-prog-badge" id="taskWinProg" style="top: 48.1%;">0/5</div>
         <button class="invisible-btn" style="top: 53.0%; left: 16%; width: 44%; height: 6.5%;" onclick="claimTask('win')">Забрать 1000</button>
 
-        <div class="task-prog-badge" id="taskWheelProg" style="top: 62.0%;">0/1</div>
+        <div class="task-prog-badge" id="taskWheelProg" style="top: 61.9%;">0/1</div>
         <button class="invisible-btn" style="top: 66.8%; left: 16%; width: 44%; height: 6.5%;" onclick="claimTask('wheel')">Забрать 2000</button>
 
         <button class="invisible-btn" style="top: 76.5%; left: 15%; width: 70%; height: 7.5%;" onclick="closeModal('tasksModal')">Закрыть</button>
@@ -688,7 +712,7 @@ let roundCounter = 0;
 let freeSpins = 0, isFreeSpin = false;
 let bonusWheelSpins = 0;
 let pendingRisk = 0;
-let spinTimeout = null, nextSpinTimer = null, bigWinRaf = null, bigWinHideTimer = null;
+let spinTimeout = null, nextSpinTimer = null, bigWinRaf = null, bigWinHideTimer = null, wheelRaf = null;
 let lastShareCaption = '';
 let riskUsed = false;
 let turboMode = false;
@@ -1503,7 +1527,7 @@ function startAuto(count) {
     startSpin();
 }
 
-/* КОЛЕСО ФОРТУНЫ: 1 РАЗ В СУТКИ + ДОП. СПИНЫ ЗА ГРИБЫ, ФРИСПИНЫ В СЕКТОРАХ */
+/* РЕАЛИСТИЧНОЕ ВРАЩЕНИЕ КОЛЕСА С ИНЕРЦИЕЙ И ЛЁГКИМ ОТСКОКОМ В КОНЦЕ */
 let isWheelSpinning = false;
 let currentWheelAngle = 0;
 const wheelPrizes = [
@@ -1516,6 +1540,54 @@ const wheelPrizes = [
     { type: 'mult', val: 10 },
     { type: 'mult', val: 3 }
 ];
+
+function animateWheelRealistic(targetAngle, onFinish) {
+    if (wheelRaf) cancelAnimationFrame(wheelRaf);
+    const disc = $('fortuneWheel');
+    if (!disc) { if (onFinish) onFinish(); return; }
+
+    const startAngle = currentWheelAngle;
+    const totalDelta = targetAngle - startAngle;
+    const duration = 4600;
+    const startTime = performance.now();
+
+    function easeWheel(t) {
+        if (t < 0.16) {
+            const k = t / 0.16;
+            return 0.12 * k * k;
+        }
+        const u = (t - 0.16) / 0.84;
+        const base = 0.12 + 0.88 * (1 - Math.pow(1 - u, 3.2));
+        const settleBounce = Math.sin(u * Math.PI * 3) * (1 - u) * 0.012;
+        return Math.min(1, base + settleBounce);
+    }
+
+    let lastTickDeg = Math.floor(startAngle / 45);
+
+    function frame(now) {
+        const elapsed = now - startTime;
+        const t = Math.min(1, elapsed / duration);
+        const angle = startAngle + totalDelta * easeWheel(t);
+        disc.style.transform = `rotate(${angle.toFixed(2)}deg)`;
+
+        const tickDeg = Math.floor(angle / 45);
+        if (tickDeg !== lastTickDeg) {
+            lastTickDeg = tickDeg;
+            playTone(620 + (1 - t) * 260, 'triangle', 0.045, 0.25);
+        }
+
+        if (t < 1) {
+            wheelRaf = requestAnimationFrame(frame);
+        } else {
+            wheelRaf = null;
+            currentWheelAngle = targetAngle % 360;
+            disc.style.transform = `rotate(${currentWheelAngle.toFixed(2)}deg)`;
+            if (onFinish) onFinish();
+        }
+    }
+
+    wheelRaf = requestAnimationFrame(frame);
+}
 
 function spinFortuneWheel() {
     if (isWheelSpinning) return;
@@ -1548,11 +1620,14 @@ function spinFortuneWheel() {
     }
 
     const sectorCenter = winIndex * 45 + 22.5;
-    const targetDelta = ((360 - sectorCenter) % 360) + 360 * 8;
-    currentWheelAngle += targetDelta;
-    $('fortuneWheel').style.transform = `rotate(${currentWheelAngle}deg)`;
+    const normalizedCurrent = ((currentWheelAngle % 360) + 360) % 360;
+    const desiredEnd = (360 - sectorCenter) % 360;
+    let deltaToSector = (desiredEnd - normalizedCurrent + 360) % 360;
+    if (deltaToSector < 15) deltaToSector += 360;
 
-    setTimeout(() => {
+    const finalTargetAngle = currentWheelAngle + 360 * 7 + deltaToSector;
+
+    animateWheelRealistic(finalTargetAngle, () => {
         isWheelSpinning = false;
         sfx.win();
         spawnConfetti();
@@ -1581,7 +1656,7 @@ function spinFortuneWheel() {
         updateWheelButtonState();
         closeModal('wheelModal');
         syncSpinWithServer(0, state.balance);
-    }, 4500);
+    });
 }
 
 function openRiskModal() {
