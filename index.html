@@ -41,7 +41,7 @@ html, body {
 }
 #startScreen.hidden { opacity: 0; pointer-events: none; }
 
-/* ПОЛОСКА ЗАГРУЗКИ ОПУЩЕНА НИЖЕ НА ~10 ММ */
+/* ПОЛОСКА ЗАГРУЗКИ ОПУЩЕНА НИЖЕ */
 .progress-container {
     width: 82%;
     height: 22px;
@@ -75,22 +75,36 @@ html, body {
     background: url('bg.png?v=9999999') no-repeat center center;
     background-size: 100% 100%;
     overflow: hidden;
-    transition: background 0.5s;
+    transition: background 0.5s, filter 0.5s;
 }
 
-/* ТРЯСКА ПРИ ФРИСПИНАХ */
+/* ПРИГЛУШЁННЫЙ ИЗУМРУДНЫЙ СВЕТ + РЕАЛИСТИЧНОЕ ЗЕМЛЕТРЯСЕНИЕ ВО ФРИСПИНАХ */
 .game-board.free-spins-mode {
-    background-color: rgba(0, 150, 50, 0.35);
-    background-blend-mode: multiply;
-    animation: screenShake 0.35s infinite;
+    filter: saturate(0.8) brightness(0.9);
+    animation: quakeTremor 1.35s infinite ease-in-out;
     will-change: transform;
 }
-@keyframes screenShake {
-    0% { transform: translate3d(0px, 0px, 0) rotate(0deg); }
-    20% { transform: translate3d(-3px, 2px, 0) rotate(-0.6deg); }
-    40% { transform: translate3d(3px, -2px, 0) rotate(0.6deg); }
-    60% { transform: translate3d(-2px, -2px, 0) rotate(-0.4deg); }
-    80% { transform: translate3d(2px, 2px, 0) rotate(0.4deg); }
+.game-board.free-spins-mode::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 45%, rgba(12, 102, 68, 0.2) 0%, rgba(4, 48, 33, 0.46) 100%);
+    pointer-events: none;
+    z-index: 4;
+}
+
+@keyframes quakeTremor {
+    0%   { transform: translate3d(0px, 0px, 0) rotate(0deg); }
+    6%   { transform: translate3d(-4px, 2px, 0) rotate(-0.45deg); }
+    12%  { transform: translate3d(5px, -3px, 0) rotate(0.55deg); }
+    18%  { transform: translate3d(-6px, -2px, 0) rotate(-0.6deg); }
+    24%  { transform: translate3d(4px, 3px, 0) rotate(0.4deg); }
+    30%  { transform: translate3d(-2px, -1px, 0) rotate(-0.2deg); }
+    45%  { transform: translate3d(1px, 1px, 0) rotate(0.1deg); }
+    60%  { transform: translate3d(-3px, 2px, 0) rotate(-0.35deg); }
+    68%  { transform: translate3d(3px, -2px, 0) rotate(0.35deg); }
+    76%  { transform: translate3d(-2px, 1px, 0) rotate(-0.2deg); }
+    88%  { transform: translate3d(1px, -1px, 0) rotate(0.1deg); }
     100% { transform: translate3d(0px, 0px, 0) rotate(0deg); }
 }
 
@@ -284,102 +298,39 @@ html, body {
     z-index: 20;
 }
 
-/* КОЛЕСО ФОРТУНЫ НА ВЕСЬ ЭКРАН */
+/* КОЛЕСО ФОРТУНЫ: РАМКА wheel_bg.png + ВРАЩАЮЩИЙСЯ ДИСК wheel_disc.png */
 #wheelModal { padding: 0 !important; }
-#wheelModal .modal-box {
-    background: url('wheel_bg.png?v=1') no-repeat center center / 100% 100% !important;
-    border: none !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-    max-width: 100vw !important;
-    max-height: 100dvh !important;
-    width: 100vw !important;
-    height: 100dvh !important;
-    padding: 0 !important;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+.wheel-sheet {
+    position: relative;
+    aspect-ratio: 768 / 1370;
+    width: 100vw;
+    max-height: 100dvh;
+    background: url('wheel_bg.png?v=1') no-repeat center center / 100% 100%;
     overflow: hidden;
 }
 
-.wheel-stage {
-    position: relative;
-    width: 66vw;
-    max-width: 310px;
+.wheel-spinner-wrap {
+    position: absolute;
+    top: 23.6%;
+    left: 20.6%;
+    width: 58.8%;
     aspect-ratio: 1 / 1;
-    margin-top: 2%;
+    border-radius: 50%;
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
+    pointer-events: none;
+    z-index: 15;
 }
 
-.wheel-pointer {
-    position: absolute;
-    top: -14px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 0;
-    border-left: 18px solid transparent;
-    border-right: 18px solid transparent;
-    border-top: 30px solid #ff3b30;
-    z-index: 30;
-    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.85));
-}
-
-.wheel {
+.wheel-disc {
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    border: 4px solid #ffd966;
-    box-shadow: 0 0 25px rgba(255, 217, 102, 0.55), inset 0 0 18px rgba(0,0,0,0.65);
-    background: conic-gradient(
-        #c0392b 0deg 45deg,
-        #27ae60 45deg 90deg,
-        #d4ac0d 90deg 135deg,
-        #1e8449 135deg 180deg,
-        #2471a3 180deg 225deg,
-        #7d3c98 225deg 270deg,
-        #d35400 270deg 315deg,
-        #117864 315deg 360deg
-    );
+    background: url('wheel_disc.png?v=1') no-repeat center center / cover;
     transition: transform 5s cubic-bezier(0.12, 0.82, 0.14, 1);
-    position: relative;
-    overflow: hidden;
-}
-
-.wheel-label {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform-origin: 0 0;
-    font-family: 'Arial Black', Impact, sans-serif;
-    font-size: 13px;
-    font-weight: 900;
-    color: #fff;
-    text-shadow: 0 1px 3px #000, 0 0 6px rgba(0,0,0,0.9);
-    pointer-events: none;
-    white-space: nowrap;
-}
-
-.wheel-center {
-    position: absolute;
-    width: 52px;
-    height: 52px;
-    border-radius: 50%;
-    background: radial-gradient(circle, #ffe58f 0%, #d49b1a 75%, #7a5200 100%);
-    border: 3px solid #fff3c4;
-    box-shadow: 0 0 14px rgba(0,0,0,0.85);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: Georgia, serif;
-    font-weight: 900;
-    font-size: 16px;
-    color: #261400;
-    z-index: 20;
-    pointer-events: none;
+    will-change: transform;
 }
 
 .paytable { display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; text-align: left; }
@@ -495,16 +446,14 @@ html, body {
     </div>
 </div>
 
-<!-- КОЛЕСО ФОРТУНЫ НА ВЕСЬ ЭКРАН -->
-<div class="modal" id="wheelModal">
-    <div class="modal-box">
-        <div class="wheel-stage">
-            <div class="wheel-pointer"></div>
-            <div class="wheel" id="fortuneWheel"></div>
-            <div class="wheel-center">FF</div>
+<!-- КОЛЕСО ФОРТУНЫ: РАМКА wheel_bg.png + ДИСК wheel_disc.png -->
+<div class="modal art-modal" id="wheelModal">
+    <div class="wheel-sheet">
+        <div class="wheel-spinner-wrap">
+            <div class="wheel-disc" id="fortuneWheel"></div>
         </div>
-        <button class="invisible-btn" id="spinWheelBtn" style="width: 58%; height: 7.5%; bottom: 16%; left: 21%;" onclick="spinFortuneWheel()">Крутить</button>
-        <button class="invisible-btn" style="width: 44%; height: 6%; bottom: 7.5%; left: 28%;" onclick="closeModal('wheelModal')">Закрыть</button>
+        <button class="invisible-btn" id="spinWheelBtn" style="top: 72.2%; left: 22%; width: 56%; height: 7.5%;" onclick="spinFortuneWheel()">Крутить</button>
+        <button class="invisible-btn" style="top: 81.8%; left: 32%; width: 36%; height: 5.5%;" onclick="closeModal('wheelModal')">Закрыть</button>
     </div>
 </div>
 
@@ -563,7 +512,7 @@ html, body {
     <div class="modal-box">
         <div class="modal-title">📋 ПРАВИЛА И ВЫПЛАТЫ</div>
         <div class="modal-text" style="text-align:left; font-size: 12px;">
-            <p style="margin-bottom:10px;">Собери <b>3, 4 или 5</b> одинаковых символа на активной линии.</p>
+            <p style="margin-bottom:10px;">Собери <b>3, 4 или 5</b> одинаковых символов слева направо на активной линии. Выигрышные линии запускают каскад.</p>
             <div class="paytable">
                 <div class="pay-row"><img src="ufo.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 30 | 4: 200 | 5: 1500</span></div>
                 <div class="pay-row"><img src="weed_cross.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 30 | 4: 150 | 5: 1000</span></div>
@@ -588,9 +537,11 @@ html, body {
                 <div class="pay-row"><img src="coin.png" onerror="this.src='https://via.placeholder.com/30/000000/FFFFFF?text=?'"><span>3: 2 | 4: 5 | 5: 30</span></div>
             </div>
             <p style="color:#ffd966; margin-bottom:5px;">💎 WILD (Кристаллы):</p>
-            <p style="margin-bottom:10px;">Оба кристалла заменяют любой символ. Новый (wild.png) дает x2 (x4 за два, x8 за три).</p>
-            <p style="color:#ffd966; margin-bottom:5px;">🍄 Грибы (Скаттеры):</p>
-            <p style="margin-bottom:10px;">3 и более гриба запускают <b>Колесо Фортуны</b>!</p>
+            <p style="margin-bottom:10px;">Заменяют символы в линиях. <b>wild.png</b> усиливает выигрыш линии: x2 за 1 wild, x4 за 2, x8 за 3+. Во фриспинах кристаллы закрепляются.</p>
+            <p style="color:#ffd966; margin-bottom:5px;">🎡 Колесо Фортуны (1 раз в сутки + бонус с барабанов):</p>
+            <p style="margin-bottom:10px;">Обычный запуск колеса доступен <b>1 раз в сутки</b>. При выпадении <b>3 и более грибов (mushroom.png)</b> на барабанах даётся <b>дополнительный прокрут колеса</b> сверх суточного лимита.</p>
+            <p style="color:#ffd966; margin-bottom:5px;">⚡ Фриспины и Риск-игра:</p>
+            <p style="margin-bottom:10px;">Фриспины выпадают на колесе (<b>10 FS</b> и <b>20 FS</b>) и в бонусах игры — во время фриспинов выигрыши удваиваются (x2) и включается изумрудный режим. Выигрыши от x2 ставки можно удвоить в <b>Риск-игре</b>.</p>
         </div>
         <button class="modal-close" onclick="closeModal('paytableModal')">Закрыть</button>
     </div>
@@ -663,8 +614,9 @@ generatePool(15);
 let state = { balance: 1000, betPerLine: 1, lines: 15, sound: true, lang: 'ru', jackpot: 500000 };
 let isSpinning = false, stopRequested = false;
 let freeSpins = 0, isFreeSpin = false;
+let bonusWheelSpins = 0;
 let pendingRisk = 0;
-let spinTimeout = null;
+let spinTimeout = null, nextSpinTimer = null;
 let riskUsed = false;
 let turboMode = false;
 let autoSpins = 0;
@@ -677,6 +629,78 @@ let isAudioInit = false;
 
 const $ = (id) => document.getElementById(id);
 const fmt = (n) => Math.round(n).toLocaleString('ru-RU');
+
+/* ЗАДАНИЯ + СУТОЧНЫЙ ЛИМИТ КОЛЕСА + БОНУСНЫЕ СПИНЫ С БАРАБАНОВ */
+const todayKey = () => new Date().toDateString();
+
+let taskData;
+try {
+    taskData = JSON.parse(localStorage.getItem('ff_tasks'));
+} catch (e) {
+    taskData = null;
+}
+
+if (!taskData || taskData.lastDate !== todayKey()) {
+    taskData = { spins: 0, wins: 0, wheel: 0, claimedSpin: false, claimedWin: false, claimedWheel: false, lastDate: todayKey() };
+    try { localStorage.setItem('ff_tasks', JSON.stringify(taskData)); } catch (e) {}
+}
+
+function hasFreeDailyWheelSpin() {
+    try {
+        return localStorage.getItem('ff_wheel_date') !== todayKey();
+    } catch (e) {
+        return true;
+    }
+}
+
+function markDailyWheelSpinUsed() {
+    try {
+        localStorage.setItem('ff_wheel_date', todayKey());
+    } catch (e) {}
+}
+
+function canSpinWheelNow() {
+    return bonusWheelSpins > 0 || hasFreeDailyWheelSpin();
+}
+
+function updateWheelButtonState() {
+    const btn = $('spinWheelBtn');
+    if (btn) btn.disabled = isWheelSpinning || !canSpinWheelNow();
+}
+
+function updateTasksUI() {
+    const spinEl = $('taskSpinProg');
+    const winEl = $('taskWinProg');
+    const wheelEl = $('taskWheelProg');
+
+    if (spinEl) spinEl.textContent = `${Math.min(taskData.spins, 20)}/20`;
+    if (winEl) winEl.textContent = `${Math.min(taskData.wins, 5)}/5`;
+    if (wheelEl) wheelEl.textContent = `${Math.min(taskData.wheel, 1)}/1`;
+}
+
+function saveTasks() {
+    taskData.lastDate = todayKey();
+    try { localStorage.setItem('ff_tasks', JSON.stringify(taskData)); } catch (e) {}
+    updateTasksUI();
+}
+
+function claimTask(type) {
+    let reward = 0;
+    if (type === 'spin' && taskData.spins >= 20 && !taskData.claimedSpin) { reward = 500; taskData.claimedSpin = true; }
+    if (type === 'win' && taskData.wins >= 5 && !taskData.claimedWin) { reward = 1000; taskData.claimedWin = true; }
+    if (type === 'wheel' && taskData.wheel >= 1 && !taskData.claimedWheel) { reward = 2000; taskData.claimedWheel = true; }
+
+    if (reward > 0) {
+        state.balance += reward;
+        updateUI();
+        notif(`Задание выполнено! +${reward} 🪙`, 'gold');
+        sfx.win();
+        spawnConfetti();
+        saveTasks();
+    } else {
+        notif('Задание ещё не выполнено или уже получено', 'error');
+    }
+}
 
 function haptic(type) {
     if (tg?.HapticFeedback) {
@@ -767,7 +791,7 @@ function toggleTurbo() {
 
 /* ЗАГРУЗКА С ЗАДЕРЖКОЙ 2 СЕК ДО ПОЯВЛЕНИЯ БАРАБАНОВ */
 function preloadImages() {
-    const allImages = [...SYMBOLS, 'bg.png', 'start_screen.png', 'wheel_bg.png', 'bg_tasks.png', 'bg_shop.png'];
+    const allImages = [...SYMBOLS, 'bg.png', 'start_screen.png', 'wheel_bg.png', 'wheel_disc.png', 'bg_tasks.png', 'bg_shop.png'];
     let loadedCount = 0;
     let loadingFinished = false;
 
@@ -923,6 +947,7 @@ function notif(msg, type = '') {
 
 const openModal = (id) => {
     if (id === 'tasksModal') updateTasksUI();
+    if (id === 'wheelModal') updateWheelButtonState();
     $(id).classList.add('active');
     haptic('light');
     sfx.click();
@@ -1014,7 +1039,7 @@ function updateUI() {
         setTimeout(() => jpEl.classList.remove('bump'), 300);
     }
 
-    if (isFreeSpin) {
+    if (isFreeSpin || freeSpins > 0) {
         $('freeSpinsCounter').style.display = 'block';
         $('freeSpinsCounter').textContent = `FS: ${freeSpins}`;
         $('gameBoard').classList.add('free-spins-mode');
@@ -1085,6 +1110,8 @@ function stopReelAnim(r, final5) {
 
 async function startSpin() {
     if (isSpinning) return;
+    if (nextSpinTimer) { clearTimeout(nextSpinTimer); nextSpinTimer = null; }
+
     if (!isFreeSpin && state.balance < totalBet()) {
         notif('Мало монет!', 'error');
         haptic('error');
@@ -1100,6 +1127,9 @@ async function startSpin() {
         state.balance -= totalBet();
         state.jackpot += Math.floor(totalBet() * 0.01);
     }
+
+    taskData.spins++;
+    saveTasks();
 
     isSpinning = true;
     stopRequested = false;
@@ -1131,7 +1161,7 @@ async function startSpin() {
 async function requestStop(pregeneratedGrid) {
     if (!isSpinning || stopRequested) return;
     stopRequested = true;
-    if (spinTimeout) clearTimeout(spinTimeout);
+    if (spinTimeout) { clearTimeout(spinTimeout); spinTimeout = null; }
 
     $('stopVisual').style.display = 'none';
 
@@ -1139,6 +1169,11 @@ async function requestStop(pregeneratedGrid) {
     await Promise.all(tracks.map((tr, i) => stopReelAnim(i, currentGrid[i])));
 
     await runCascades(currentGrid);
+
+    if (totalWinThisRound > 0) {
+        taskData.wins++;
+        saveTasks();
+    }
 
     isSpinning = false;
     updateUI();
@@ -1148,13 +1183,13 @@ async function requestStop(pregeneratedGrid) {
         freeSpins--;
         isFreeSpin = true;
         updateUI();
-        spinTimeout = setTimeout(startSpin, turboMode ? 800 : 1500);
+        nextSpinTimer = setTimeout(startSpin, turboMode ? 800 : 1500);
     } else {
         isFreeSpin = false;
         updateUI();
         if (autoSpins > 0) {
             autoSpins--;
-            spinTimeout = setTimeout(startSpin, turboMode ? 500 : 1000);
+            nextSpinTimer = setTimeout(startSpin, turboMode ? 500 : 1000);
         }
     }
 }
@@ -1265,10 +1300,14 @@ async function runCascades(grid) {
         }
     }
 
-    if (scatterCount >= 3 && !isFreeSpin) {
-        notif('🎉 3 ГРИБА! КОЛЕСО ФОРТУНЫ!', 'gold');
+    if (scatterCount >= 3) {
+        bonusWheelSpins++;
+        updateWheelButtonState();
+        notif(`🍄 ${scatterCount} ГРИБА! Дополнительный спин Колеса Фортуны!`, 'gold');
         haptic('heavy');
-        setTimeout(() => { openModal('wheelModal'); }, 1000);
+        if (!isFreeSpin) {
+            setTimeout(() => { openModal('wheelModal'); }, 900);
+        }
     }
 
     if (totalWinThisRound > 0) {
@@ -1299,39 +1338,39 @@ function startAuto(count) {
     startSpin();
 }
 
-/* КОЛЕСО ФОРТУНЫ: СЕКТОРЫ И ВРАЩЕНИЕ */
+/* КОЛЕСО ФОРТУНЫ: 1 РАЗ В СУТКИ + ДОП. СПИНЫ ЗА ГРИБЫ, ФРИСПИНЫ В СЕКТОРАХ */
 let isWheelSpinning = false;
 let currentWheelAngle = 0;
 const wheelPrizes = [
-    { type: 'jackpot', val: 50000, text: 'JP' },
-    { type: 'fs', val: 20, text: '20 FS' },
-    { type: 'mult', val: 50, text: 'x50' },
-    { type: 'mult', val: 2, text: 'x2' },
-    { type: 'mult', val: 5, text: 'x5' },
-    { type: 'fs', val: 10, text: '10 FS' },
-    { type: 'mult', val: 10, text: 'x10' },
-    { type: 'mult', val: 3, text: 'x3' }
+    { type: 'jackpot', val: 50000 },
+    { type: 'fs', val: 20 },
+    { type: 'mult', val: 50 },
+    { type: 'mult', val: 2 },
+    { type: 'mult', val: 5 },
+    { type: 'fs', val: 10 },
+    { type: 'mult', val: 10 },
+    { type: 'mult', val: 3 }
 ];
-
-function renderWheelLabels() {
-    const wheel = $('fortuneWheel');
-    if (!wheel) return;
-    wheel.querySelectorAll('.wheel-label').forEach(el => el.remove());
-    wheelPrizes.forEach((p, idx) => {
-        const angle = idx * 45 + 22.5;
-        const lbl = document.createElement('div');
-        lbl.className = 'wheel-label';
-        lbl.textContent = p.text;
-        lbl.style.transform = `rotate(${angle - 90}deg) translate(68px) rotate(90deg) translate(-50%, -50%)`;
-        wheel.appendChild(lbl);
-    });
-}
-renderWheelLabels();
 
 function spinFortuneWheel() {
     if (isWheelSpinning) return;
+    if (!canSpinWheelNow()) {
+        notif('Колесо Фортуны доступно 1 раз в сутки! Приходи завтра.', 'error');
+        updateWheelButtonState();
+        return;
+    }
+
+    if (bonusWheelSpins > 0) {
+        bonusWheelSpins--;
+    } else {
+        markDailyWheelSpinUsed();
+    }
+
+    taskData.wheel++;
+    saveTasks();
+
     isWheelSpinning = true;
-    $('spinWheelBtn').disabled = true;
+    updateWheelButtonState();
     haptic('medium');
     sfx.spinStart();
 
@@ -1350,28 +1389,28 @@ function spinFortuneWheel() {
 
     setTimeout(() => {
         isWheelSpinning = false;
-        $('spinWheelBtn').disabled = false;
         sfx.win();
         spawnConfetti();
 
         const prize = wheelPrizes[winIndex];
-        if (prize.type === 'mult') {
-            const winAmt = totalBet() * prize.val;
-            state.balance += winAmt;
-            notif(`🎉 Колесо: х${prize.val}! Выигрыш +${fmt(winAmt)}`, 'gold');
-            showBigWin(winAmt);
-        } else if (prize.type === 'fs') {
-            freeSpins = prize.val;
-            isFreeSpin = true;
-            notif(`🎉 Колесо: ${prize.val} ФРИСПИНОВ!`, 'gold');
-            setTimeout(startSpin, 1000);
-        } else if (prize.type === 'jackpot') {
+        if (prize.type === 'jackpot') {
             state.balance += state.jackpot;
             notif(`🏆 СУПЕР ПРИЗ! ДЖЕКПОТ +${fmt(state.jackpot)}!`, 'gold');
             showBigWin(state.jackpot);
             state.jackpot = 50000;
+        } else if (prize.type === 'fs') {
+            freeSpins += prize.val;
+            isFreeSpin = true;
+            notif(`🌿 Колесо: +${prize.val} ФРИСПИНОВ!`, 'gold');
+            setTimeout(startSpin, 900);
+        } else {
+            const winAmt = totalBet() * prize.val;
+            state.balance += winAmt;
+            notif(`🎉 Колесо: х${prize.val}! Выигрыш +${fmt(winAmt)}`, 'gold');
+            showBigWin(winAmt);
         }
         updateUI();
+        updateWheelButtonState();
         closeModal('wheelModal');
         syncSpinWithServer(0, state.balance);
     }, 5100);
@@ -1493,80 +1532,8 @@ $('betInc').onclick = () => {
 
 window.addEventListener('resize', () => { if (!isSpinning) buildReels(); });
 
-/* ============================================================
-   СИСТЕМА ЗАДАНИЙ
-   ============================================================ */
-let taskData;
-try {
-    taskData = JSON.parse(localStorage.getItem('ff_tasks'));
-} catch (e) {
-    taskData = null;
-}
-
-const today = new Date().toDateString();
-if (!taskData || taskData.lastDate !== today) {
-    taskData = { spins: 0, wins: 0, wheel: 0, claimedSpin: false, claimedWin: false, claimedWheel: false, lastDate: today };
-    try { localStorage.setItem('ff_tasks', JSON.stringify(taskData)); } catch (e) {}
-}
-
-function updateTasksUI() {
-    const spinEl = $('taskSpinProg');
-    const winEl = $('taskWinProg');
-    const wheelEl = $('taskWheelProg');
-
-    if (spinEl) spinEl.textContent = `${Math.min(taskData.spins, 20)}/20`;
-    if (winEl) winEl.textContent = `${Math.min(taskData.wins, 5)}/5`;
-    if (wheelEl) wheelEl.textContent = `${Math.min(taskData.wheel, 1)}/1`;
-}
-
-function saveTasks() {
-    taskData.lastDate = new Date().toDateString();
-    try { localStorage.setItem('ff_tasks', JSON.stringify(taskData)); } catch (e) {}
-    updateTasksUI();
-}
-
-function claimTask(type) {
-    let reward = 0;
-    if (type === 'spin' && taskData.spins >= 20 && !taskData.claimedSpin) { reward = 500; taskData.claimedSpin = true; }
-    if (type === 'win' && taskData.wins >= 5 && !taskData.claimedWin) { reward = 1000; taskData.claimedWin = true; }
-    if (type === 'wheel' && taskData.wheel >= 1 && !taskData.claimedWheel) { reward = 2000; taskData.claimedWheel = true; }
-
-    if (reward > 0) {
-        state.balance += reward;
-        updateUI();
-        notif(`Задание выполнено! +${reward} 🪙`, 'gold');
-        sfx.win();
-        spawnConfetti();
-        saveTasks();
-    } else {
-        notif('Задание ещё не выполнено или уже получено', 'error');
-    }
-}
-
-const originalStartSpin = startSpin;
-startSpin = async function() {
-    taskData.spins++;
-    saveTasks();
-    await originalStartSpin();
-};
-
-const originalRunCascades = runCascades;
-runCascades = async function(grid) {
-    await originalRunCascades(grid);
-    if (totalWinThisRound > 0) {
-        taskData.wins++;
-        saveTasks();
-    }
-};
-
-const originalSpinFortuneWheel = spinFortuneWheel;
-spinFortuneWheel = function() {
-    taskData.wheel++;
-    saveTasks();
-    originalSpinFortuneWheel();
-};
-
 updateTasksUI();
+updateWheelButtonState();
 </script>
 </body>
 </html>
